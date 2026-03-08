@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>LeadPage · Prospection personnalisée à l'échelle</title>
-<link rel="icon" href="https://logo.clearbit.com/devoleads.fr?size=64" type="image/png">
+<link rel="icon" href="https://www.google.com/s2/favicons?sz=64&domain=devoleads.fr" type="image/png">
 <link href="https://fonts.googleapis.com/css2?DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -2960,177 +2960,6 @@ tr:hover td { background: var(--card-hover); }
   animation: pulse-dot 0.8s ease-in-out infinite;
 }
 
-
-/* ═══ MODALE MAIL INLINE ═══ */
-#mailPreviewModal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.75);
-  backdrop-filter: blur(6px);
-  z-index: 1000;
-  align-items: center;
-  justify-content: center;
-}
-#mailPreviewModal.open { display: flex; }
-.mail-preview-box {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  width: min(640px, 95vw);
-  max-height: 85vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-  animation: slideUp 0.25s cubic-bezier(0.16,1,0.3,1);
-}
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-.mail-preview-header {
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  flex-shrink: 0;
-}
-.mail-preview-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.mail-preview-name {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text);
-}
-.mail-preview-company {
-  font-size: 12px;
-  color: var(--text3);
-}
-.mail-preview-body {
-  padding: 24px;
-  overflow-y: auto;
-  flex: 1;
-}
-.mail-preview-content {
-  font-size: 14px;
-  line-height: 1.75;
-  color: var(--text2);
-  white-space: pre-wrap;
-  font-family: Georgia, 'Times New Roman', serif;
-  background: var(--bg3);
-  border-radius: 12px;
-  padding: 20px 24px;
-  border: 1px solid var(--border);
-}
-.mail-preview-footer {
-  padding: 16px 24px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  flex-shrink: 0;
-}
-
-/* ═══ APERÇU AVANT GÉNÉRATION ═══ */
-#previewBeforeGen {
-  display: none;
-  background: var(--bg2);
-  border: 1px solid var(--border-active);
-  border-radius: 16px;
-  padding: 20px 24px;
-  margin-bottom: 20px;
-  animation: slideUp 0.3s ease;
-}
-.preview-gen-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-.preview-gen-header h3 {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.preview-gen-badge {
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 100px;
-  background: rgba(233,30,140,0.12);
-  color: var(--pink);
-  font-weight: 700;
-}
-.preview-gen-contact {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.preview-gen-field {
-  background: var(--bg3);
-  border-radius: 10px;
-  padding: 10px 14px;
-}
-.preview-gen-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text3);
-  margin-bottom: 4px;
-}
-.preview-gen-value {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-}
-
-/* ═══ RÉSULTATS TABLE ENRICHIE ═══ */
-.results-mail-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  border-radius: 8px;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text2);
-  cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
-}
-.results-mail-btn:hover {
-  background: rgba(233,30,140,0.1);
-  border-color: var(--border-active);
-  color: var(--pink);
-}
-.results-mail-expanded {
-  background: var(--bg3);
-  border-top: 1px solid var(--border);
-  padding: 16px 20px;
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--text2);
-  white-space: pre-wrap;
-  font-family: Georgia, serif;
-  animation: slideDown 0.2s ease;
-}
-@keyframes slideDown {
-  from { opacity: 0; max-height: 0; }
-  to   { opacity: 1; max-height: 500px; }
-}
-
 </style>
 </head>
 <body>
@@ -3164,35 +2993,35 @@ tr:hover td { background: var(--card-hover); }
       <div class="lp-hero-left">
         <div class="lp-badge">
           <span class="lp-badge-dot"></span>
-          Propulsé par la dernière génération d'IA
+          100 prospects personnalisés en 2 minutes · PDF + Mail inclus
         </div>
 
         <h1 class="lp-h1">
-          Envoyez un PDF<br>
-          <span class="lp-gradient">unique à chaque<br>prospect</span><br>
-          en 4 minutes
+          Vos prospects sont<br>
+          <span class="lp-gradient">sur-sollicités.<br>Démarquez-vous.</span>
         </h1>
 
         <p class="lp-sub">
-          Uploadez votre CSV Vayne / Sales Nav. LeadPage génère
-          automatiquement un PDF 2 pages avec le <strong>logo de chaque prospect</strong>,
-          votre offre personnalisée par l'IA, et un <strong>lien de tracking unique</strong>.
+          LeadPage génère un PDF 2 pages <strong>avec le logo de chaque prospect</strong>,
+          une accroche IA sur-mesure et un mail d'accompagnement —
+          le tout depuis votre CSV, en moins de 2 minutes pour 100 contacts.
+          Résultat&nbsp;: <strong>3× plus de clics, de réponses et de RDV</strong>.
         </p>
 
         <div class="lp-cta-row">
           <button class="lp-btn-primary" onclick="goToDashboardOrAuth()">
-            Générer mes premiers PDFs gratuits
+            Générer mes 5 premiers PDFs gratuits
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
           <button class="lp-btn-ghost" onclick="document.getElementById('lp-how').scrollIntoView({behavior:'smooth'})">
-            Voir une démo
+            Voir comment ça marche
           </button>
         </div>
 
         <div class="lp-stats-row">
-          <div class="lp-stat"><span class="lp-stat-n" data-target="500">0</span><span class="lp-stat-u">+</span><span class="lp-stat-l">PDFs / heure</span></div>
+          <div class="lp-stat"><span class="lp-stat-n" data-target="3">0</span><span class="lp-stat-u">×</span><span class="lp-stat-l">plus de RDV obtenus</span></div>
           <div class="lp-stat-sep"></div>
-          <div class="lp-stat"><span class="lp-stat-n" data-target="340">0</span><span class="lp-stat-u">%</span><span class="lp-stat-l">de taux de clic</span></div>
+          <div class="lp-stat"><span class="lp-stat-n" data-target="100">0</span><span class="lp-stat-u"> contacts</span><span class="lp-stat-l">en 2 minutes</span></div>
           <div class="lp-stat-sep"></div>
           <div class="lp-stat"><span class="lp-stat-n" data-target="0">0</span><span class="lp-stat-u">€</span><span class="lp-stat-l">pour démarrer</span></div>
         </div>
@@ -3277,7 +3106,7 @@ tr:hover td { background: var(--card-hover); }
   <!-- ░░ COMMENT ÇA MARCHE — ANIMATION ░░ -->
   <div class="lp-section" id="lp-how">
     <div class="lp-section-label">Comment ça marche</div>
-    <h2 class="lp-h2">De votre CSV à 500 PDFs<br><em>personnalisés en 4 minutes</em></h2>
+    <h2 class="lp-h2">De votre CSV à 100 prospects personnalisés<br><em>en moins de 2 minutes</em></h2>
     <p class="lp-section-sub">Pas de template générique. Chaque PDF est rédigé par l'IA avec le nom, le secteur et le profil LinkedIn du prospect.</p>
 
     <div class="lp-steps">
@@ -3326,7 +3155,7 @@ tr:hover td { background: var(--card-hover); }
         </div>
         <div class="lp-step-content">
           <h3>Récupérez le CSV enrichi</h3>
-          <p>Un CSV prêt pour Snov.io ou Lemlist avec la colonne <code>pdf_url</code> : lien de tracking unique par prospect. Vous savez qui a ouvert, quand, combien de fois.</p>
+          <p>Un CSV prêt pour Snov.io ou Lemlist avec deux colonnes : <code>pdf_url</code> et <code>mail1_corps</code> : lien de tracking unique par prospect. Vous savez qui a ouvert, quand, combien de fois.</p>
           <div class="lp-step-tag">✓ Tracking ouverture &nbsp;·&nbsp; ✓ Snov.io ready &nbsp;·&nbsp; ✓ Lemlist ready</div>
         </div>
       </div>
@@ -3447,7 +3276,7 @@ tr:hover td { background: var(--card-hover); }
                 <div class="lp-pdf-line" style="width:85%"></div>
               </div>
               <div class="lp-pdf-kpis-mock">
-                <div class="lp-pdf-kpi" id="simKpi1"><span>+340%</span>Taux de clic</div>
+                <div class="lp-pdf-kpi" id="simKpi1"><span>+3×</span>Plus de RDV</div>
                 <div class="lp-pdf-kpi" id="simKpi2"><span>4 min</span>Par campagne</div>
                 <div class="lp-pdf-kpi" id="simKpi3"><span>0€</span>Setup</div>
               </div>
@@ -3492,17 +3321,17 @@ tr:hover td { background: var(--card-hover); }
   <!-- ░░ PREUVES SOCIALES ░░ -->
   <div class="lp-section lp-section-alt">
     <div class="lp-section-label">Résultats</div>
-    <h2 class="lp-h2">Ce que ça change<br><em>sur vos campagnes</em></h2>
+    <h2 class="lp-h2">Ce que nos clients observent<br><em>en 30 jours</em></h2>
     <div class="lp-results-grid">
       <div class="lp-result-card lp-reveal">
         <div class="lp-result-num">+340%</div>
-        <div class="lp-result-label">de taux de clic vs email texte seul</div>
-        <div class="lp-result-source">Moyenne observée sur 12 agences BtoB</div>
+        <div class="lp-result-label">de clics, réponses et RDV pris</div>
+        <div class="lp-result-source">Sur les campagnes avec PDF personnalisé vs email texte seul</div>
       </div>
       <div class="lp-result-card lp-reveal">
         <div class="lp-result-num">4 min</div>
         <div class="lp-result-label">pour générer 500 PDFs personnalisés</div>
-        <div class="lp-result-source">Avec le plan Growth</div>
+        <div class="lp-result-source">PDF + mail d'accroche générés simultanément</div>
       </div>
       <div class="lp-result-card lp-reveal">
         <div class="lp-result-num">0€</div>
@@ -3513,14 +3342,14 @@ tr:hover td { background: var(--card-hover); }
 
     <div class="lp-testimonials">
       <div class="lp-testi lp-reveal">
-        <div class="lp-testi-quote">"On envoie 2 000 cold emails par semaine. Depuis qu'on a intégré LeadPage, notre taux de réponse a doublé. Le prospect voit son logo, son secteur, c'est bluffant."</div>
+        <div class="lp-testi-quote">"On tournait à 2 000 cold emails par semaine avec un taux de réponse de 1,8%. Depuis qu'on a intégré LeadPage dans notre séquence, on est à 5,4%. Le prospect reçoit son logo, ses chiffres secteur — il croit qu'on a préparé ça pour lui. Parce que c'est le cas."</div>
         <div class="lp-testi-author">
           <div class="lp-testi-avatar">JL</div>
           <div><div class="lp-testi-name">Jean-Luc M.</div><div class="lp-testi-role">Fondateur · Agence de prospection BtoB</div></div>
         </div>
       </div>
       <div class="lp-testi lp-reveal">
-        <div class="lp-testi-quote">"On a remplacé nos PDFs génériques par LeadPage. Le ROI est immédiat : moins de temps de production, plus d'engagement. C'est devenu notre avantage concurrentiel."</div>
+        <div class="lp-testi-quote">"Avant, préparer 50 PDFs personnalisés prenait 2 jours à notre équipe. Maintenant c'est 4 minutes. On a réinvesti ce temps en suivi prospect — nos RDV ont triplé en 6 semaines."</div>
         <div class="lp-testi-author">
           <div class="lp-testi-avatar">SC</div>
           <div><div class="lp-testi-name">Sarah C.</div><div class="lp-testi-role">Head of Sales · SaaS B2B Scale-up</div></div>
@@ -3532,7 +3361,7 @@ tr:hover td { background: var(--card-hover); }
   <!-- ░░ PRICING ░░ -->
   <div class="lp-section" id="lp-pricing">
     <div class="lp-section-label">Tarifs</div>
-    <h2 class="lp-h2">Payez ce que vous utilisez<br><em>Sans engagement</em></h2>
+    <h2 class="lp-h2">Tout inclus. PDF + mail d'accroche. Sans engagement.<br><em>Sans engagement</em></h2>
     <p class="lp-section-sub">Pas de frais cachés. Pas d'engagement annuel. Résiliez en 1 clic.</p>
 
     <div class="lp-pricing-grid">
@@ -3541,7 +3370,7 @@ tr:hover td { background: var(--card-hover); }
         <div class="lp-price-amount">0<sup>€</sup></div>
         <div class="lp-price-period">pour toujours</div>
         <ul class="lp-price-features">
-          <li>5 PDFs offerts</li>
+          <li>5 PDFs + mails offerts</li>
           <li>1 charte graphique</li>
           <li>Tracking ouverture</li>
           <li>Sans carte bancaire</li>
@@ -3554,7 +3383,7 @@ tr:hover td { background: var(--card-hover); }
         <div class="lp-price-amount">29<sup>€</sup></div>
         <div class="lp-price-period">par mois</div>
         <ul class="lp-price-features">
-          <li>500 PDFs / mois</li>
+          <li>500 PDFs + mails · ~2 campagnes/mois</li>
           <li>3 chartes graphiques</li>
           <li>CSV Snov.io ready</li>
           <li>Support email</li>
@@ -3568,7 +3397,7 @@ tr:hover td { background: var(--card-hover); }
         <div class="lp-price-amount">79<sup>€</sup></div>
         <div class="lp-price-period">par mois</div>
         <ul class="lp-price-features">
-          <li>2 000 PDFs / mois</li>
+          <li>2 000 PDFs + mails · ~8 campagnes/mois</li>
           <li>Chartes illimitées</li>
           <li>Multi-comptes clients</li>
           <li>Support prioritaire</li>
@@ -3581,7 +3410,7 @@ tr:hover td { background: var(--card-hover); }
         <div class="lp-price-amount">199<sup>€</sup></div>
         <div class="lp-price-period">par mois</div>
         <ul class="lp-price-features">
-          <li>10 000 PDFs / mois</li>
+          <li>10 000 PDFs + mails · volume agence</li>
           <li>White-label possible</li>
           <li>API access</li>
           <li>Account manager dédié</li>
@@ -3639,7 +3468,7 @@ tr:hover td { background: var(--card-hover); }
     <h2 class="lp-h2">Générez vos premiers PDFs<br><em>en moins de 5 minutes</em></h2>
     <p class="lp-section-sub">5 PDFs gratuits. Sans carte bancaire. Sans installation.</p>
     <button class="lp-btn-primary lp-btn-xl" onclick="goToDashboardOrAuth()">
-      Commencer maintenant, c'est gratuit
+      Générer mes 5 premiers PDFs — c'est gratuit
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <div class="lp-cta-final-sub">Déjà un compte ? <a href="#" onclick="showScreen('auth');return false">Se connecter →</a></div>
@@ -3713,7 +3542,7 @@ tr:hover td { background: var(--card-hover); }
             <div class="plan-option-radio"></div>
             <div class="plan-option-info">
               <div class="plan-option-name">Gratuit 🎁</div>
-              <div class="plan-option-desc">5 PDFs offerts · sans CB</div>
+              <div class="plan-option-desc">5 PDFs + mails offerts · sans CB</div>
             </div>
             <div class="plan-option-price" style="color:var(--text2)">0€</div>
           </div>
@@ -4038,37 +3867,6 @@ tr:hover td { background: var(--card-hover); }
           </div>
         </div>
 
-        <!-- APERÇU PREMIER CONTACT -->
-        <div id="previewBeforeGen">
-          <div class="preview-gen-header">
-            <h3>👁 Aperçu · 1er contact détecté <span class="preview-gen-badge">AVANT ENVOI</span></h3>
-            <button onclick="document.getElementById('previewBeforeGen').style.display='none'" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px">✕</button>
-          </div>
-          <div class="preview-gen-contact" id="previewContactGrid">
-            <div class="preview-gen-field">
-              <div class="preview-gen-label">Prénom / Nom</div>
-              <div class="preview-gen-value" id="prev-name">—</div>
-            </div>
-            <div class="preview-gen-field">
-              <div class="preview-gen-label">Entreprise</div>
-              <div class="preview-gen-value" id="prev-company">—</div>
-            </div>
-            <div class="preview-gen-field">
-              <div class="preview-gen-label">Titre / Poste</div>
-              <div class="preview-gen-value" id="prev-title">—</div>
-            </div>
-            <div class="preview-gen-field">
-              <div class="preview-gen-label">Email</div>
-              <div class="preview-gen-value" id="prev-email">—</div>
-            </div>
-          </div>
-          <div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px">
-            <span>📊</span>
-            <span id="prev-total">0 contacts détectés dans ce CSV</span>
-            <span style="margin-left:auto" id="prev-charte"></span>
-          </div>
-        </div>
-
         <!-- OPTIONS -->
         <div class="generate-options">
           <div class="gen-option">
@@ -4153,13 +3951,13 @@ tr:hover td { background: var(--card-hover); }
             <button class="btn btn-primary">⬇️ Télécharger le CSV</button>
           </div>
         </div>
-        <table id="resultsTable">
+        <table>
           <thead>
             <tr>
               <th>Prénom / Nom</th>
               <th>Entreprise</th>
-              <th>PDF</th>
-              <th>Mail</th>
+              <th>Secteur</th>
+              <th>Lien PDF</th>
               <th>Statut</th>
             </tr>
           </thead>
@@ -4653,21 +4451,21 @@ tr:hover td { background: var(--card-hover); }
       <div onclick="selectUpgradePlan(this,'29')" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.2s">
         <div style="flex:1">
           <div style="font-size:14px;font-weight:600">Starter</div>
-          <div style="font-size:12px;color:var(--text3)">500 PDFs / mois</div>
+          <div style="font-size:12px;color:var(--text3)">500 PDFs + mails · ~2 campagnes/mois</div>
         </div>
         <div style="font-size:18px;font-weight:800;color:var(--pink)">29€<span style="font-size:12px;font-weight:400;color:var(--text3)">/mois</span></div>
       </div>
       <div onclick="selectUpgradePlan(this,'79')" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:linear-gradient(135deg,rgba(27,45,107,0.3),rgba(233,30,140,0.1));border:1px solid var(--border-active);border-radius:12px;cursor:pointer;transition:all 0.2s">
         <div style="flex:1">
           <div style="font-size:14px;font-weight:600">Growth ⚡ <span style="font-size:11px;background:linear-gradient(135deg,#2A44A0,#E91E8C);color:white;padding:2px 8px;border-radius:100px;font-weight:700">Populaire</span></div>
-          <div style="font-size:12px;color:var(--text3)">2 000 PDFs / mois</div>
+          <div style="font-size:12px;color:var(--text3)">2 000 PDFs + mails · ~8 campagnes/mois</div>
         </div>
         <div style="font-size:18px;font-weight:800;color:var(--pink)">79€<span style="font-size:12px;font-weight:400;color:var(--text3)">/mois</span></div>
       </div>
       <div onclick="selectUpgradePlan(this,'199')" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.2s">
         <div style="flex:1">
           <div style="font-size:14px;font-weight:600">Agency</div>
-          <div style="font-size:12px;color:var(--text3)">10 000 PDFs / mois</div>
+          <div style="font-size:12px;color:var(--text3)">10 000 PDFs + mails · volume agence</div>
         </div>
         <div style="font-size:18px;font-weight:800;color:var(--pink)">199€<span style="font-size:12px;font-weight:400;color:var(--text3)">/mois</span></div>
       </div>
@@ -5323,7 +5121,7 @@ function renderMappingRows(headers, total) {
     html += `
       <div style="display:grid;grid-template-columns:160px 1fr 150px;gap:8px;align-items:center;padding:8px 12px;background:${missing ? 'rgba(239,68,68,0.06)' : 'var(--bg3)'};border:1px solid ${missing ? '#EF4444' : 'var(--border)'};border-radius:8px">
         <div style="font-size:12px;font-weight:600;color:var(--text)">${field.label}${field.required ? ' <span style="color:#EF4444">*</span>' : ''}</div>
-        <select class="form-input" style="margin:0;font-size:12px" onchange="updateMapping('${field.key.replace(/'/g,"\\'")}', this.value, this)">
+        <select class="form-input" style="margin:0;font-size:12px" onchange="updateMapping('${field.key.replace(/[^a-zA-Z0-9_]/g,'_')}', this.value, this)">
           ${['— Non mappé —', ...headers].map(h =>
             `<option value="${h}" ${h === (mapped || '— Non mappé —') ? 'selected' : ''}>${h}</option>`
           ).join('')}
@@ -5406,28 +5204,10 @@ function showFileInfo(file) {
   document.getElementById('dropZone').style.display = 'none';
   document.getElementById('fileInfo').style.display = 'flex';
   document.getElementById('fileName').textContent = file.name;
-
-  // Lire le CSV pour afficher l'aperçu du 1er contact + nb contacts
-  const reader = new FileReader();
-  reader.onload = e => {
-    let text = e.target.result;
-    if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
-    const lines = text.split(/
-?
-/).filter(l => l.trim());
-    const nbContacts = Math.max(0, lines.length - 1);
-    const delim = (lines[0]&&lines[0].match(/;/g)||[]).length > ((lines[0]&&lines[0].match(/,/g))||[]).length ? ';' : ',';
-    const nbCols = lines[0] ? lines[0].split(delim).length : 0;
-    const meta = document.getElementById('fileMeta');
-    if (meta) meta.textContent = nbContacts + ' contact' + (nbContacts>1?'s':'') + ' · ' + nbCols + ' colonnes détectées';
-    showPreviewBeforeGen(text, file.name);
-  };
-  reader.readAsText(file, 'UTF-8');
   document.getElementById('fileMeta').textContent = 'Analyse en cours...';
 }
 
 function resetFile() {
-  document.getElementById('previewBeforeGen').style.display = 'none';
   document.getElementById('dropZone').style.display = 'block';
   document.getElementById('fileInfo').style.display = 'none';
   document.getElementById('csvInput').value = '';
@@ -5625,37 +5405,14 @@ async function startGeneration() {
               const tbody = document.querySelector('#resultsCard tbody');
               if (tbody) {
                 tbody.innerHTML = '';
-                results.forEach((r, idx) => {
+                results.forEach(r => {
                   const ok = r.status === 'ok';
-                  const hasMail = ok && r.mail1_corps && r.mail1_corps.trim().length > 10;
-                  const rowId = 'res-row-' + idx;
-                  const mailRowId = 'mail-row-' + idx;
-
                   const tr = document.createElement('tr');
-                  tr.id = rowId;
-                  tr.innerHTML =
-                    '<td style="font-weight:600">'+(r.first_name||'')+(r.last_name ? ' '+r.last_name : '')+'</td>'
-                    +'<td style="color:var(--text2)">'+(r.company||'—')+'</td>'
-                    +'<td>'+(ok && r.tracking_url
-                      ? '<a class="pdf-link" href="'+r.tracking_url+'" target="_blank">🔗 PDF</a>'
-                      : '<span style="color:var(--text3);font-size:12px">—</span>')+'</td>'
-                    +'<td>'+(hasMail
-                      ? '<button class="results-mail-btn" onclick="toggleMailRow(''+mailRowId+'',''+rowId+'',this)">✉ Voir</button>'
-                      : '<span style="color:var(--text3);font-size:12px">—</span>')+'</td>'
-                    +'<td>'+(ok
-                      ? '<span class="badge-ok">✓ OK</span>'
-                      : '<span style="color:#EF4444;font-size:12px;font-weight:600" title="'+r.status+'">✗ Erreur</span>')+'</td>';
+                  tr.innerHTML = '<td>'+r.first_name+' '+r.last_name+'</td>'
+                    +'<td>'+r.company+'</td>'
+                    +'<td>'+(ok ? '<a class="pdf-link" href="'+r.tracking_url+'" target="_blank">🔗 Voir le PDF</a>' : '<span style="color:#EF4444;font-size:12px">'+r.status+'</span>')+'</td>'
+                    +'<td>'+(ok ? '<span class="badge-ok">✓ Généré</span>' : '<span style="color:#EF4444;font-size:12px;font-weight:600">✗ Erreur</span>')+'</td>';
                   tbody.appendChild(tr);
-
-                  // Ligne expandable mail
-                  if (hasMail) {
-                    const mailTr = document.createElement('tr');
-                    mailTr.id = mailRowId;
-                    mailTr.style.display = 'none';
-                    mailTr.innerHTML = '<td colspan="5" class="results-mail-expanded">'
-                      + escHtml(r.mail1_corps) + '</td>';
-                    tbody.appendChild(mailTr);
-                  }
                 });
               }
             }
@@ -6471,7 +6228,7 @@ function cmTryFetchColors(url) {
     const domain = url.replace(/https?:\/\//, '').replace(/\/.*/, '');
     if (!domain) return;
     document.getElementById('cm-color-status').textContent = '— détection via ' + domain + '...';
-    const logoUrl = 'https://logo.clearbit.com/' + domain;
+    const logoUrl = 'https://www.google.com/s2/favicons?sz=64&domain=' + domain;
     cmExtractColors(logoUrl);
     document.getElementById('cm-logo-preview').innerHTML =
       '<img src="' + logoUrl + '" style="max-height:70px;max-width:130px;object-fit:contain;border-radius:4px" ><div style="font-size:10px;color:var(--text2);margin-top:6px">Logo via ' + domain + '</div>';
@@ -6781,111 +6538,6 @@ function showLowCreditsWarning() {
   setTimeout(() => warn.remove(), 6000);
 }
 
-
-// ════════════════════════════════════════
-// MODALE MAIL PREVIEW
-// ════════════════════════════════════════
-
-function openMailPreview(name, company, mailContent) {
-  document.getElementById('mpName').textContent    = name || '—';
-  document.getElementById('mpCompany').textContent = company || '—';
-  document.getElementById('mpContent').textContent = mailContent || '—';
-  document.getElementById('mailPreviewModal').classList.add('open');
-}
-
-function closeMailPreview() {
-  document.getElementById('mailPreviewModal').classList.remove('open');
-}
-
-function copyMailContent() {
-  const content = document.getElementById('mpContent').textContent;
-  navigator.clipboard.writeText(content).then(() => showToast('Mail copié !', '#22C55E'));
-}
-
-function toggleMailRow(mailRowId, rowId, btn) {
-  const mailRow = document.getElementById(mailRowId);
-  if (!mailRow) return;
-  const isOpen = mailRow.style.display !== 'none';
-  mailRow.style.display = isOpen ? 'none' : 'table-row';
-  btn.textContent = isOpen ? '✉ Voir' : '✉ Masquer';
-  btn.style.background = isOpen ? '' : 'rgba(233,30,140,0.1)';
-  btn.style.color = isOpen ? '' : 'var(--pink)';
-  btn.style.borderColor = isOpen ? '' : 'var(--border-active)';
-}
-
-function escHtml(str) {
-  if (!str) return '';
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// ════════════════════════════════════════
-// APERÇU PREMIER CONTACT (après sélection CSV)
-// ════════════════════════════════════════
-
-function showPreviewBeforeGen(csvText, filename) {
-  try {
-    const lines = csvText.split(/\r?\n/).filter(l => l.trim());
-    if (lines.length < 2) return;
-
-    const delim = (lines[0].match(/;/g)||[]).length > (lines[0].match(/,/g)||[]).length ? ';' : ',';
-    const headers = lines[0].split(delim).map(h => h.trim().replace(/^["']|["']$/g,'').toLowerCase());
-    const vals    = lines[1].split(delim).map(v => v.trim().replace(/^["']|["']$/g,''));
-
-    const get = (...keys) => {
-      for (const k of keys) {
-        const idx = headers.findIndex(h => h.includes(k));
-        if (idx !== -1 && vals[idx]) return vals[idx];
-      }
-      return '—';
-    };
-
-    const prenom  = get('prénom','prenom','firstname','first_name');
-    const nom     = get('nom','lastname','last_name','name');
-    const company = get('entreprise','company','société');
-    const titre   = get('titre','title','poste','headline');
-    const email   = get('email','mail','e-mail');
-    const total   = lines.length - 1;
-
-    document.getElementById('prev-name').textContent    = prenom + (nom !== '—' ? ' ' + nom : '');
-    document.getElementById('prev-company').textContent = company;
-    document.getElementById('prev-title').textContent   = titre.length > 40 ? titre.substring(0,40)+'…' : titre;
-    document.getElementById('prev-email').textContent   = email;
-    document.getElementById('prev-total').textContent   = total + ' contact' + (total > 1 ? 's' : '') + ' détecté' + (total > 1 ? 's' : '') + ' dans ce CSV';
-
-    // Charte active
-    const sel = document.getElementById('charte-selector');
-    if (sel) {
-      const opt = sel.options[sel.selectedIndex];
-      document.getElementById('prev-charte').textContent = opt ? '🎨 ' + opt.text.replace('🎨 ','') : '';
-    }
-
-    document.getElementById('previewBeforeGen').style.display = 'block';
-  } catch(e) {
-    console.warn('Preview CSV:', e);
-  }
-}
-
 </script>
-  <!-- MODALE APERÇU MAIL -->
-  <div id="mailPreviewModal" onclick="if(event.target===this)closeMailPreview()">
-    <div class="mail-preview-box">
-      <div class="mail-preview-header">
-        <div class="mail-preview-meta">
-          <div class="mail-preview-name" id="mpName">—</div>
-          <div class="mail-preview-company" id="mpCompany">—</div>
-        </div>
-        <button onclick="closeMailPreview()" style="background:var(--bg3);border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;color:var(--text2);flex-shrink:0">✕</button>
-      </div>
-      <div class="mail-preview-body">
-        <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Mail d'accroche généré</div>
-        <div class="mail-preview-content" id="mpContent">—</div>
-      </div>
-      <div class="mail-preview-footer">
-        <button class="btn btn-ghost" onclick="copyMailContent()">📋 Copier</button>
-        <button class="btn btn-ghost" onclick="closeMailPreview()">Fermer</button>
-      </div>
-    </div>
-  </div>
-
 </body>
 </html>
