@@ -3631,26 +3631,31 @@ tr:hover td { background: var(--card-hover); }
         </div>
 
         <!-- OPTIONS -->
-        <div class="generate-options">
-          <div class="gen-option">
-            <label>
-              <input type="checkbox" checked> Génération du contenu
-            </label>
-            <p>Analyse le profil et personnalise le texte</p>
+        <!-- OPTIONS DE GÉNÉRATION -->
+        <div style="margin-top:20px">
+          <p style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px">Ce que vous souhaitez générer</p>
+          <div class="generate-options">
+
+            <div class="gen-option" id="opt-pdf-box" style="border:2px solid var(--pink);position:relative">
+              <div style="position:absolute;top:8px;right:10px;background:var(--pink);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px">Recommandé</div>
+              <label style="cursor:pointer">
+                <input type="checkbox" id="opt-pdf" checked onchange="updateGenOptions()">
+                📄 PDF personnalisé
+              </label>
+              <p>1 PDF 2 pages ultra-personnalisé par prospect · Hébergé + lien unique dans le CSV</p>
+            </div>
+
+            <div class="gen-option" id="opt-mail1-box">
+              <label style="cursor:pointer">
+                <input type="checkbox" id="opt-mail1" onchange="updateGenOptions()">
+                ✉️ Mail d'accroche (mail 1)
+              </label>
+              <p>Mail Devoleads → prospect · Objet + corps prêts à coller dans Lemlist / Snov.io</p>
+            </div>
+
           </div>
-          <div class="gen-option">
-            <label>
-              <input type="checkbox" checked> Logo prospect automatique
-            </label>
-            <p>Récupère le logo via Clearbit / favicon</p>
-          </div>
-          <div class="gen-option">
-            <label>
-              <input type="checkbox" checked> Hébergement + lien unique
-            </label>
-            <p>PDF accessible via URL dans le CSV final</p>
-          </div>
-          </div>
+          <p id="opt-warning" style="display:none;font-size:12px;color:#EF4444;margin-top:8px">⚠️ Sélectionnez au moins une option</p>
+        </div>
 
       </div>
 
@@ -5020,7 +5025,29 @@ function updateMappingStatus() {
   }
 }
 
-function confirmMapping() {
+function updateGenOptions() {
+  const pdf   = document.getElementById('opt-pdf')?.checked;
+  const mail1 = document.getElementById('opt-mail1')?.checked;
+  const warn  = document.getElementById('opt-warning');
+  const btn   = document.querySelector('[onclick="startGeneration()"]');
+  const none  = !pdf && !mail1;
+  if (warn) warn.style.display = none ? 'block' : 'none';
+  if (btn)  { btn.disabled = none; btn.style.opacity = none ? '0.5' : '1'; }
+  // Bordure active sur les options cochées
+  if (document.getElementById('opt-pdf-box'))
+    document.getElementById('opt-pdf-box').style.borderColor = pdf ? 'var(--pink)' : 'var(--border)';
+  if (document.getElementById('opt-mail1-box'))
+    document.getElementById('opt-mail1-box').style.borderColor = mail1 ? 'var(--pink)' : 'var(--border)';
+}
+
+function getGenOptions() {
+  return {
+    pdf:   document.getElementById('opt-pdf')?.checked   ?? true,
+    mail1: document.getElementById('opt-mail1')?.checked ?? false,
+  };
+}
+
+
   try { localStorage.setItem('lp_mapping', JSON.stringify(currentMapping)); } catch(e) {}
   closeMappingModal();
   showToast('Mapping confirmé — cliquez sur ⚡ Générer les PDFs', '#22C55E');
@@ -5133,7 +5160,10 @@ async function startGeneration() {
 
     formData.append('file', fileToSend);
     formData.append('name', campaignName);
-    // Pas de charte_id : le backend utilise automatiquement la charte active
+    // Options de génération
+    const genOpts = getGenOptions();
+    formData.append('generate_pdf',   genOpts.pdf   ? '1' : '0');
+    formData.append('generate_mail1', genOpts.mail1 ? '1' : '0');
 
     const res = await fetch(API_URL + '/api/campaigns/', {
       method: 'POST',
