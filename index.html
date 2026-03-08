@@ -5048,6 +5048,7 @@ function getGenOptions() {
 }
 
 
+function confirmMapping() {
   try { localStorage.setItem('lp_mapping', JSON.stringify(currentMapping)); } catch(e) {}
   closeMappingModal();
   showToast('Mapping confirmé — cliquez sur ⚡ Générer les PDFs', '#22C55E');
