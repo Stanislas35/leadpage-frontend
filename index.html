@@ -4747,8 +4747,7 @@ const LP_FIELDS = [
   { key: 'Titre', label: 'Titre / Poste', required: false, group: 'important', aliases: [
     'titre','poste','title','job_title','job title','jobtitle','fonction','position','role',
     'métier','metier','intitule','headline du profil','headline','intitulé du poste',
-    "description sur l'emploi","description sur l emploi",'poste actuel','current title',
-    'occupation','designation','job function','intitule poste',
+    'poste actuel','current title','occupation','designation','job function','intitule poste',
   ]},
   { key: "Secteurs d'activité", label: "Secteur d'activité", required: false, group: 'important', aliases: [
     "secteurs d'activité","secteurs d'activite","secteur d'activité","secteur d'activite",
@@ -4770,6 +4769,7 @@ const LP_FIELDS = [
   { key: "Résumé du profil", label: 'Résumé du profil', required: false, group: 'bonus', aliases: [
     "résumé du profil","resume du profil",'résumé','resume','summary','profil','bio','about',
     'description_profil','linkedin_summary','profile summary','about me',
+    "description sur l'emploi","description sur l emploi",
     'note','notes','commentaire','commentaires','profil linkedin',
   ]},
   { key: "Description de l'entreprise", label: "Description entreprise", required: false, group: 'bonus', aliases: [
@@ -4788,14 +4788,12 @@ const LP_FIELDS = [
     'url linkedin','linkedin','linkedin_url','linkedin url','linkedin_profile','linkedin profile',
     'profil_linkedin','profil linkedin','lien linkedin','linkedin link',
     "urn linkedin de l'utilisateur",'urn linkedin utilisateur','salesnavigator url',
-    'sales navigator url','li url','linkedin public url',
+    'sales navigator url','li url','linkedin public url','url linkedin profil utilisateur',
   ]},
   { key: 'Site web entreprise', label: 'Site web entreprise', required: false, group: 'bonus', aliases: [
     'site web entreprise',"site web de l'entreprise",'site web','website','site_web',
     'web','site','homepage','company_website','companywebsite','company website',
-    'domain','company domain','url site','lien site',
-    'url linkedin (entreprise)','url linkedin entreprise',
-    "urn linkedin de l'entreprise",'urn linkedin entreprise','website entreprise',
+    'domain','company domain','url site','lien site','website entreprise',
   ]},
   { key: 'Téléphone', label: 'Téléphone', required: false, group: 'bonus', aliases: [
     'téléphone','telephone','numéro de téléphone','numero de telephone',
