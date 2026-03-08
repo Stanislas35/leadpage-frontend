@@ -3562,7 +3562,7 @@ tr:hover td { background: var(--card-hover); }
         </div>
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <input type="text" id="campaign-name" class="form-input" placeholder="Nom de la campagne..." style="width:200px;margin:0">
-          <button class="btn btn-primary" onclick="startGeneration()">
+          <button class="btn btn-primary" id="btn-generate" onclick="startGeneration()" disabled style="opacity:0.4;cursor:not-allowed" title="Confirmez d'abord le mapping CSV">
             ⚡ Générer les PDFs
           </button>
         </div>
@@ -4912,6 +4912,9 @@ async function parseCsvHeaders(file) {
 
 // ── Ouvrir la modale de mapping ───────────────────────────────
 async function openMappingModal(file) {
+  // Réinitialiser le bouton Générer jusqu'à confirmation du mapping
+  const genBtn = document.getElementById('btn-generate');
+  if (genBtn) { genBtn.disabled = true; genBtn.style.opacity = '0.4'; genBtn.style.cursor = 'not-allowed'; }
   try {
     const { headers, preview, total, text } = await parseCsvHeaders(file);
     csvHeaders     = headers;
@@ -5029,7 +5032,7 @@ function updateGenOptions() {
   const pdf   = document.getElementById('opt-pdf')?.checked;
   const mail1 = document.getElementById('opt-mail1')?.checked;
   const warn  = document.getElementById('opt-warning');
-  const btn   = document.querySelector('[onclick="startGeneration()"]');
+  const btn   = document.getElementById('btn-generate');
   const none  = !pdf && !mail1;
   if (warn) warn.style.display = none ? 'block' : 'none';
   if (btn)  { btn.disabled = none; btn.style.opacity = none ? '0.5' : '1'; }
@@ -5051,7 +5054,16 @@ function getGenOptions() {
 function confirmMapping() {
   try { localStorage.setItem('lp_mapping', JSON.stringify(currentMapping)); } catch(e) {}
   closeMappingModal();
-  showToast('Mapping confirmé — cliquez sur ⚡ Générer les PDFs', '#22C55E');
+  // Activer le bouton Générer
+  const btn = document.getElementById('btn-generate');
+  if (btn) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+    btn.style.animation = 'pulse 1s ease 2';
+    btn.textContent = '⚡ Générer les PDFs';
+  }
+  showToast('Mapping confirmé ✅ — cliquez sur ⚡ Générer les PDFs', '#22C55E');
 }
 
 function handleFileSelect(input) {
@@ -5098,7 +5110,7 @@ async function startGeneration() {
   if (typeof freeCredits !== 'undefined' && freeCredits <= 0) { showUpgradeModal(); return; }
   if (!selectedCsvFile) { showToast('Selectionnez un fichier CSV dabord', '#EF4444'); return; }
 
-  const btn = document.querySelector('[onclick="startGeneration()"]');
+  const btn = document.getElementById('btn-generate');
   if (btn && btn.dataset.loading) return;
 
   const campaignName = (document.getElementById('campaign-name').value.trim()) || ('Campagne ' + new Date().toLocaleDateString('fr-FR'));
