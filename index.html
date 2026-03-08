@@ -4729,14 +4729,22 @@ let currentMapping  = {};  // { leadsField: csvColumn }
 // ── Champs LeadPage avec aliases et metadata ──────────────────
 const LP_FIELDS = [
   // ── OBLIGATOIRES ──
-  { key: 'Prénom',                      label: 'Prénom',               required: true,  group: 'required',  aliases: ['prénom','prenom','firstname','first_name'] },
-  { key: 'Entreprise',                  label: 'Entreprise',           required: true,  group: 'required',  aliases: ['entreprise','company','company_name','companyname','organisation'] },
+  { key: 'Prénom',                      label: 'Prénom',               required: true,  group: 'required',  aliases: ['prénom','prenom','firstname','first_name','given_name'] },
+  { key: 'Entreprise',                  label: 'Entreprise',           required: true,  group: 'required',  aliases: ['entreprise','company','company_name','companyname','organisation','organization','société','societe','account'] },
   // ── IMPORTANTS ──
-  { key: 'Nom',                         label: 'Nom',                  required: false, group: 'important', aliases: ['nom','lastname','last_name','surname'] },
-  { key: 'Titre',                       label: 'Titre / Poste',        required: false, group: 'important', aliases: ['titre','poste','headline du profil','headline','job_title','title'] },
-  { key: 'Site web entreprise',         label: 'Site web entreprise',  required: false, group: 'important', aliases: ['site web entreprise','url linkedin (entreprise)','website','site web'] },
-  { key: "Résumé du profil",            label: 'Description LinkedIn', required: false, group: 'important', aliases: ["résumé du profil","resume du profil",'résumé du profil','description sur l\'emploi',"description sur l'emploi",'summary','résumé','resume'] },
-  { key: 'A commencé le',               label: 'En poste depuis',      required: false, group: 'important', aliases: ['a commencé le','a commence le','début','start_date','date_debut'] },
+  { key: 'Nom',                         label: 'Nom',                  required: false, group: 'important', aliases: ['nom','lastname','last_name','surname','family_name'] },
+  { key: 'Titre',                       label: 'Titre / Poste',        required: false, group: 'important', aliases: ['titre','headline du profil','poste','title','job_title','jobtitle','headline','fonction','position','role'] },
+  { key: "Secteurs d'activité",         label: "Secteur d'activité",   required: false, group: 'important', aliases: ["secteurs d'activité","secteurs d'activite","secteur d'activité","secteur d'activite",'secteur','secteurs','industry','sector'] },
+  { key: "Taille de l'entreprise",      label: "Taille entreprise",    required: false, group: 'important', aliases: ["taille de l'entreprise","taille de l entreprise",'taille','effectif','employees','headcount','company_size'] },
+  { key: 'Lieu',                        label: 'Lieu / Ville',         required: false, group: 'important', aliases: ['lieu','ville','city','location','localisation'] },
+  // ── BONUS ──
+  { key: "Résumé du profil",            label: 'Résumé du profil',     required: false, group: 'bonus',     aliases: ["résumé du profil","resume du profil",'résumé','resume','summary'] },
+  { key: "Description de l'entreprise", label: "Description entreprise", required: false, group: 'bonus',  aliases: ["description de l'entreprise","description de l entreprise","description sur l'emploi","description sur l emploi",'description entreprise','company_description','about_company'] },
+  { key: 'Email',                       label: 'Email',                required: false, group: 'bonus',     aliases: ['email','e-mail','mail','courriel'] },
+  { key: 'LinkedIn',                    label: 'LinkedIn URL',         required: false, group: 'bonus',     aliases: ['url linkedin (profil utilisateur)','linkedin','linkedin_url','lien linkedin'] },
+  { key: 'Site web entreprise',         label: 'Site web entreprise',  required: false, group: 'bonus',     aliases: ['site web entreprise','url linkedin (entreprise)','website','site web','domain','homepage'] },
+  { key: 'Téléphone',                   label: 'Téléphone',            required: false, group: 'bonus',     aliases: ['numéro de téléphone','numero de telephone','téléphone','telephone','phone','mobile'] },
+  { key: 'A commencé le',               label: 'En poste depuis',      required: false, group: 'bonus',     aliases: ['a commencé le','a commence le','début','start_date','date_debut'] },
 ];
 
 // ── Normalisation pour comparaison ───────────────────────────
@@ -4813,37 +4821,43 @@ function closeMappingModal() {
 }
 
 // ── Rendu des lignes de mapping ───────────────────────────────
+// Logique : colonne CSV (gauche, fixe) → champ LeadPage (droite, sélectionnable)
 function renderMappingRows(headers, total) {
   const container = document.getElementById('mapping-rows');
 
-  const GROUPS = {
-    required:  { label: '🔴 Obligatoires', color: '#EF4444' },
-    important: { label: '🟡 Importants',   color: '#F59E0B' },
-  };
+  // Construire le mapping inverse : csvCol → lpField
+  const colToField = {};
+  for (const [lpKey, csvCol] of Object.entries(currentMapping)) {
+    colToField[csvCol] = lpKey;
+  }
 
-  let html = '';
-  let lastGroup = null;
+  // Options champs LeadPage pour le select
+  const lpOptions = ['— Ignorer —', ...LP_FIELDS.map(f => f.key)];
+  const lpLabels  = { '— Ignorer —': '— Ignorer —' };
+  for (const f of LP_FIELDS) lpLabels[f.key] = f.label + (f.required ? ' *' : '') + (f.group === 'important' ? ' 🟡' : f.group === 'bonus' ? ' 🟢' : ' 🔴');
 
-  for (const field of LP_FIELDS.filter(f => f.group !== 'bonus')) {
-    if (field.group !== lastGroup) {
-      const g = GROUPS[field.group];
-      html += `<div style="font-size:11px;font-weight:700;color:${g.color};letter-spacing:0.08em;text-transform:uppercase;margin-top:${lastGroup ? '14px' : '0'};margin-bottom:4px">${g.label}</div>`;
-      lastGroup = field.group;
-    }
+  let html = `
+    <div style="display:grid;grid-template-columns:1fr 1fr 150px;gap:8px;padding:6px 12px;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em">
+      <div>Colonne de votre fichier</div>
+      <div>Champ LeadPage</div>
+      <div>Aperçu</div>
+    </div>`;
 
-    const mapped  = currentMapping[field.key] || '';
-    const preview = mapped ? getPreviewValue(mapped) : '';
-    const missing = field.required && !mapped;
+  for (const h of headers) {
+    const mappedLp  = colToField[h] || '— Ignorer —';
+    const preview   = getPreviewValue(h);
+    const isReq     = mappedLp !== '— Ignorer —' && LP_FIELDS.find(f => f.key === mappedLp)?.required;
+    const safeH     = h.replace(/[^a-z0-9]/gi, '_');
 
     html += `
-      <div style="display:grid;grid-template-columns:160px 1fr 150px;gap:8px;align-items:center;padding:8px 12px;background:${missing ? 'rgba(239,68,68,0.06)' : 'var(--bg3)'};border:1px solid ${missing ? '#EF4444' : 'var(--border)'};border-radius:8px">
-        <div style="font-size:12px;font-weight:600;color:var(--text)">${field.label}${field.required ? ' <span style="color:#EF4444">*</span>' : ''}</div>
-        <select class="form-input" style="margin:0;font-size:12px" onchange="updateMapping('${field.key.replace(/'/g,"\\'")}', this.value, this)">
-          ${['— Non mappé —', ...headers].map(h =>
-            `<option value="${h}" ${h === (mapped || '— Non mappé —') ? 'selected' : ''}>${h}</option>`
+      <div style="display:grid;grid-template-columns:1fr 1fr 150px;gap:8px;align-items:center;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px">
+        <div style="font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${h}">${h}</div>
+        <select class="form-input" style="margin:0;font-size:12px" onchange="updateMappingFromCsv('${h.replace(/'/g,"\\'")}', this.value)">
+          ${lpOptions.map(lp =>
+            `<option value="${lp}" ${lp === mappedLp ? 'selected' : ''}>${lpLabels[lp]}</option>`
           ).join('')}
         </select>
-        <div id="mp-preview-${field.key.replace(/[^a-z]/gi,'_')}" style="font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${preview}">
+        <div style="font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${preview}">
           ${preview ? `<span style="color:#22C55E">✓</span> ${preview}` : '<span style="color:var(--text3)">—</span>'}
         </div>
       </div>`;
@@ -4856,6 +4870,18 @@ function renderMappingRows(headers, total) {
   if (meta) meta.textContent = `${total} contact${total>1?'s':''} · ${headers.length} colonnes détectées`;
 }
 
+function updateMappingFromCsv(csvCol, lpKey) {
+  // Retirer l'ancien mapping pour ce champ LP si déjà utilisé
+  for (const [k, v] of Object.entries(currentMapping)) {
+    if (v === csvCol) delete currentMapping[k];
+    if (k === lpKey)  delete currentMapping[k];
+  }
+  if (lpKey !== '— Ignorer —') {
+    currentMapping[lpKey] = csvCol;
+  }
+  updateMappingStatus();
+}
+
 function getPreviewValue(col) {
   if (!csvPreviewRows.length) return '';
   const idx = csvHeaders.indexOf(col);
@@ -4863,42 +4889,20 @@ function getPreviewValue(col) {
   return csvPreviewRows[0]?.[idx] || '';
 }
 
-function updateMapping(fieldKey, colValue, sel) {
-  if (colValue === '— Non mappé —') {
-    delete currentMapping[fieldKey];
-  } else {
-    currentMapping[fieldKey] = colValue;
-  }
-  // Mettre à jour l'aperçu
-  const safeKey = fieldKey.replace(/[^a-z]/gi,'_');
-  const preview = colValue !== '— Non mappé —' ? getPreviewValue(colValue) : '';
-  const prevEl  = document.getElementById('mp-preview-' + safeKey);
-  if (prevEl) prevEl.innerHTML = preview ? `<span style="color:#22C55E">✓</span> ${preview}` : '<span style="color:var(--text3)">—</span>';
-
-  // Mettre à jour style de la ligne
-  const row = sel.closest('div[style*="grid-template"]');
-  const field = LP_FIELDS.find(f => f.key === fieldKey);
-  if (row && field?.required) {
-    const missing = !currentMapping[fieldKey];
-    row.style.background = missing ? 'rgba(239,68,68,0.06)' : 'var(--bg3)';
-    row.style.borderColor = missing ? '#EF4444' : 'var(--border)';
-  }
-  updateMappingStatus();
-}
 
 function updateMappingStatus() {
-  const mapped    = new Set(Object.values(currentMapping));
-  const unmapped  = csvHeaders.filter(h => !mapped.has(h));
-  const unmapEl   = document.getElementById('mapping-unmapped');
+  const missingRequired = LP_FIELDS.filter(f => f.required && !currentMapping[f.key]);
+  const mapped   = new Set(Object.values(currentMapping));
+  const unmapped = csvHeaders.filter(h => !mapped.has(h));
+  const unmapEl  = document.getElementById('mapping-unmapped');
   if (unmapEl) unmapEl.textContent = unmapped.length ? unmapped.join(', ') : 'aucune';
 
-  const missingRequired = LP_FIELDS.filter(f => f.required && !currentMapping[f.key]);
   const btn = document.getElementById('mapping-confirm-btn');
   if (btn) {
-    btn.disabled = missingRequired.length > 0;
+    btn.disabled     = missingRequired.length > 0;
     btn.style.opacity = missingRequired.length > 0 ? '0.5' : '1';
-    btn.textContent = missingRequired.length > 0
-      ? `⚠️ Champs requis manquants (${missingRequired.length})`
+    btn.textContent  = missingRequired.length > 0
+      ? `⚠️ Champs requis manquants : ${missingRequired.map(f=>f.label).join(', ')}`
       : '✅ Confirmer le mapping';
   }
 }
