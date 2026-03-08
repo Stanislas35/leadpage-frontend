@@ -2960,6 +2960,177 @@ tr:hover td { background: var(--card-hover); }
   animation: pulse-dot 0.8s ease-in-out infinite;
 }
 
+
+/* ═══ MODALE MAIL INLINE ═══ */
+#mailPreviewModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+#mailPreviewModal.open { display: flex; }
+.mail-preview-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  width: min(640px, 95vw);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  animation: slideUp 0.25s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.mail-preview-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.mail-preview-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mail-preview-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+.mail-preview-company {
+  font-size: 12px;
+  color: var(--text3);
+}
+.mail-preview-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+.mail-preview-content {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text2);
+  white-space: pre-wrap;
+  font-family: Georgia, 'Times New Roman', serif;
+  background: var(--bg3);
+  border-radius: 12px;
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+}
+.mail-preview-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+/* ═══ APERÇU AVANT GÉNÉRATION ═══ */
+#previewBeforeGen {
+  display: none;
+  background: var(--bg2);
+  border: 1px solid var(--border-active);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  animation: slideUp 0.3s ease;
+}
+.preview-gen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.preview-gen-header h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.preview-gen-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 100px;
+  background: rgba(233,30,140,0.12);
+  color: var(--pink);
+  font-weight: 700;
+}
+.preview-gen-contact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.preview-gen-field {
+  background: var(--bg3);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+.preview-gen-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 4px;
+}
+.preview-gen-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ═══ RÉSULTATS TABLE ENRICHIE ═══ */
+.results-mail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.results-mail-btn:hover {
+  background: rgba(233,30,140,0.1);
+  border-color: var(--border-active);
+  color: var(--pink);
+}
+.results-mail-expanded {
+  background: var(--bg3);
+  border-top: 1px solid var(--border);
+  padding: 16px 20px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text2);
+  white-space: pre-wrap;
+  font-family: Georgia, serif;
+  animation: slideDown 0.2s ease;
+}
+@keyframes slideDown {
+  from { opacity: 0; max-height: 0; }
+  to   { opacity: 1; max-height: 500px; }
+}
+
 </style>
 </head>
 <body>
@@ -3867,6 +4038,37 @@ tr:hover td { background: var(--card-hover); }
           </div>
         </div>
 
+        <!-- APERÇU PREMIER CONTACT -->
+        <div id="previewBeforeGen">
+          <div class="preview-gen-header">
+            <h3>👁 Aperçu · 1er contact détecté <span class="preview-gen-badge">AVANT ENVOI</span></h3>
+            <button onclick="document.getElementById('previewBeforeGen').style.display='none'" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px">✕</button>
+          </div>
+          <div class="preview-gen-contact" id="previewContactGrid">
+            <div class="preview-gen-field">
+              <div class="preview-gen-label">Prénom / Nom</div>
+              <div class="preview-gen-value" id="prev-name">—</div>
+            </div>
+            <div class="preview-gen-field">
+              <div class="preview-gen-label">Entreprise</div>
+              <div class="preview-gen-value" id="prev-company">—</div>
+            </div>
+            <div class="preview-gen-field">
+              <div class="preview-gen-label">Titre / Poste</div>
+              <div class="preview-gen-value" id="prev-title">—</div>
+            </div>
+            <div class="preview-gen-field">
+              <div class="preview-gen-label">Email</div>
+              <div class="preview-gen-value" id="prev-email">—</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px">
+            <span>📊</span>
+            <span id="prev-total">0 contacts détectés dans ce CSV</span>
+            <span style="margin-left:auto" id="prev-charte"></span>
+          </div>
+        </div>
+
         <!-- OPTIONS -->
         <div class="generate-options">
           <div class="gen-option">
@@ -3951,13 +4153,13 @@ tr:hover td { background: var(--card-hover); }
             <button class="btn btn-primary">⬇️ Télécharger le CSV</button>
           </div>
         </div>
-        <table>
+        <table id="resultsTable">
           <thead>
             <tr>
               <th>Prénom / Nom</th>
               <th>Entreprise</th>
-              <th>Secteur</th>
-              <th>Lien PDF</th>
+              <th>PDF</th>
+              <th>Mail</th>
               <th>Statut</th>
             </tr>
           </thead>
@@ -5204,10 +5406,28 @@ function showFileInfo(file) {
   document.getElementById('dropZone').style.display = 'none';
   document.getElementById('fileInfo').style.display = 'flex';
   document.getElementById('fileName').textContent = file.name;
+
+  // Lire le CSV pour afficher l'aperçu du 1er contact + nb contacts
+  const reader = new FileReader();
+  reader.onload = e => {
+    let text = e.target.result;
+    if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+    const lines = text.split(/
+?
+/).filter(l => l.trim());
+    const nbContacts = Math.max(0, lines.length - 1);
+    const delim = (lines[0]&&lines[0].match(/;/g)||[]).length > ((lines[0]&&lines[0].match(/,/g))||[]).length ? ';' : ',';
+    const nbCols = lines[0] ? lines[0].split(delim).length : 0;
+    const meta = document.getElementById('fileMeta');
+    if (meta) meta.textContent = nbContacts + ' contact' + (nbContacts>1?'s':'') + ' · ' + nbCols + ' colonnes détectées';
+    showPreviewBeforeGen(text, file.name);
+  };
+  reader.readAsText(file, 'UTF-8');
   document.getElementById('fileMeta').textContent = 'Analyse en cours...';
 }
 
 function resetFile() {
+  document.getElementById('previewBeforeGen').style.display = 'none';
   document.getElementById('dropZone').style.display = 'block';
   document.getElementById('fileInfo').style.display = 'none';
   document.getElementById('csvInput').value = '';
@@ -5405,14 +5625,37 @@ async function startGeneration() {
               const tbody = document.querySelector('#resultsCard tbody');
               if (tbody) {
                 tbody.innerHTML = '';
-                results.forEach(r => {
+                results.forEach((r, idx) => {
                   const ok = r.status === 'ok';
+                  const hasMail = ok && r.mail1_corps && r.mail1_corps.trim().length > 10;
+                  const rowId = 'res-row-' + idx;
+                  const mailRowId = 'mail-row-' + idx;
+
                   const tr = document.createElement('tr');
-                  tr.innerHTML = '<td>'+r.first_name+' '+r.last_name+'</td>'
-                    +'<td>'+r.company+'</td>'
-                    +'<td>'+(ok ? '<a class="pdf-link" href="'+r.tracking_url+'" target="_blank">🔗 Voir le PDF</a>' : '<span style="color:#EF4444;font-size:12px">'+r.status+'</span>')+'</td>'
-                    +'<td>'+(ok ? '<span class="badge-ok">✓ Généré</span>' : '<span style="color:#EF4444;font-size:12px;font-weight:600">✗ Erreur</span>')+'</td>';
+                  tr.id = rowId;
+                  tr.innerHTML =
+                    '<td style="font-weight:600">'+(r.first_name||'')+(r.last_name ? ' '+r.last_name : '')+'</td>'
+                    +'<td style="color:var(--text2)">'+(r.company||'—')+'</td>'
+                    +'<td>'+(ok && r.tracking_url
+                      ? '<a class="pdf-link" href="'+r.tracking_url+'" target="_blank">🔗 PDF</a>'
+                      : '<span style="color:var(--text3);font-size:12px">—</span>')+'</td>'
+                    +'<td>'+(hasMail
+                      ? '<button class="results-mail-btn" onclick="toggleMailRow(''+mailRowId+'',''+rowId+'',this)">✉ Voir</button>'
+                      : '<span style="color:var(--text3);font-size:12px">—</span>')+'</td>'
+                    +'<td>'+(ok
+                      ? '<span class="badge-ok">✓ OK</span>'
+                      : '<span style="color:#EF4444;font-size:12px;font-weight:600" title="'+r.status+'">✗ Erreur</span>')+'</td>';
                   tbody.appendChild(tr);
+
+                  // Ligne expandable mail
+                  if (hasMail) {
+                    const mailTr = document.createElement('tr');
+                    mailTr.id = mailRowId;
+                    mailTr.style.display = 'none';
+                    mailTr.innerHTML = '<td colspan="5" class="results-mail-expanded">'
+                      + escHtml(r.mail1_corps) + '</td>';
+                    tbody.appendChild(mailTr);
+                  }
                 });
               }
             }
@@ -6538,6 +6781,111 @@ function showLowCreditsWarning() {
   setTimeout(() => warn.remove(), 6000);
 }
 
+
+// ════════════════════════════════════════
+// MODALE MAIL PREVIEW
+// ════════════════════════════════════════
+
+function openMailPreview(name, company, mailContent) {
+  document.getElementById('mpName').textContent    = name || '—';
+  document.getElementById('mpCompany').textContent = company || '—';
+  document.getElementById('mpContent').textContent = mailContent || '—';
+  document.getElementById('mailPreviewModal').classList.add('open');
+}
+
+function closeMailPreview() {
+  document.getElementById('mailPreviewModal').classList.remove('open');
+}
+
+function copyMailContent() {
+  const content = document.getElementById('mpContent').textContent;
+  navigator.clipboard.writeText(content).then(() => showToast('Mail copié !', '#22C55E'));
+}
+
+function toggleMailRow(mailRowId, rowId, btn) {
+  const mailRow = document.getElementById(mailRowId);
+  if (!mailRow) return;
+  const isOpen = mailRow.style.display !== 'none';
+  mailRow.style.display = isOpen ? 'none' : 'table-row';
+  btn.textContent = isOpen ? '✉ Voir' : '✉ Masquer';
+  btn.style.background = isOpen ? '' : 'rgba(233,30,140,0.1)';
+  btn.style.color = isOpen ? '' : 'var(--pink)';
+  btn.style.borderColor = isOpen ? '' : 'var(--border-active)';
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ════════════════════════════════════════
+// APERÇU PREMIER CONTACT (après sélection CSV)
+// ════════════════════════════════════════
+
+function showPreviewBeforeGen(csvText, filename) {
+  try {
+    const lines = csvText.split(/\r?\n/).filter(l => l.trim());
+    if (lines.length < 2) return;
+
+    const delim = (lines[0].match(/;/g)||[]).length > (lines[0].match(/,/g)||[]).length ? ';' : ',';
+    const headers = lines[0].split(delim).map(h => h.trim().replace(/^["']|["']$/g,'').toLowerCase());
+    const vals    = lines[1].split(delim).map(v => v.trim().replace(/^["']|["']$/g,''));
+
+    const get = (...keys) => {
+      for (const k of keys) {
+        const idx = headers.findIndex(h => h.includes(k));
+        if (idx !== -1 && vals[idx]) return vals[idx];
+      }
+      return '—';
+    };
+
+    const prenom  = get('prénom','prenom','firstname','first_name');
+    const nom     = get('nom','lastname','last_name','name');
+    const company = get('entreprise','company','société');
+    const titre   = get('titre','title','poste','headline');
+    const email   = get('email','mail','e-mail');
+    const total   = lines.length - 1;
+
+    document.getElementById('prev-name').textContent    = prenom + (nom !== '—' ? ' ' + nom : '');
+    document.getElementById('prev-company').textContent = company;
+    document.getElementById('prev-title').textContent   = titre.length > 40 ? titre.substring(0,40)+'…' : titre;
+    document.getElementById('prev-email').textContent   = email;
+    document.getElementById('prev-total').textContent   = total + ' contact' + (total > 1 ? 's' : '') + ' détecté' + (total > 1 ? 's' : '') + ' dans ce CSV';
+
+    // Charte active
+    const sel = document.getElementById('charte-selector');
+    if (sel) {
+      const opt = sel.options[sel.selectedIndex];
+      document.getElementById('prev-charte').textContent = opt ? '🎨 ' + opt.text.replace('🎨 ','') : '';
+    }
+
+    document.getElementById('previewBeforeGen').style.display = 'block';
+  } catch(e) {
+    console.warn('Preview CSV:', e);
+  }
+}
+
 </script>
+  <!-- MODALE APERÇU MAIL -->
+  <div id="mailPreviewModal" onclick="if(event.target===this)closeMailPreview()">
+    <div class="mail-preview-box">
+      <div class="mail-preview-header">
+        <div class="mail-preview-meta">
+          <div class="mail-preview-name" id="mpName">—</div>
+          <div class="mail-preview-company" id="mpCompany">—</div>
+        </div>
+        <button onclick="closeMailPreview()" style="background:var(--bg3);border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;color:var(--text2);flex-shrink:0">✕</button>
+      </div>
+      <div class="mail-preview-body">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Mail d'accroche généré</div>
+        <div class="mail-preview-content" id="mpContent">—</div>
+      </div>
+      <div class="mail-preview-footer">
+        <button class="btn btn-ghost" onclick="copyMailContent()">📋 Copier</button>
+        <button class="btn btn-ghost" onclick="closeMailPreview()">Fermer</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
