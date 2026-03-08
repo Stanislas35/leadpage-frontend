@@ -4724,27 +4724,89 @@ function handleDrop(e) {
 let selectedCsvFile = null;
 let csvHeaders      = [];
 let csvPreviewRows  = [];
+let csvParsedText   = null;  // texte CSV déjà décodé correctement
 let currentMapping  = {};  // { leadsField: csvColumn }
 
 // ── Champs LeadPage avec aliases et metadata ──────────────────
 const LP_FIELDS = [
   // ── OBLIGATOIRES ──
-  { key: 'Prénom',                      label: 'Prénom',               required: true,  group: 'required',  aliases: ['prénom','prenom','firstname','first_name','given_name'] },
-  { key: 'Entreprise',                  label: 'Entreprise',           required: true,  group: 'required',  aliases: ['entreprise','company','company_name','companyname','organisation','organization','société','societe','account'] },
+  { key: 'Prénom', label: 'Prénom', required: true, group: 'required', aliases: [
+    'prénom','prenom','firstname','first_name','first name','given_name','forename','nombre',
+    'prenom du contact','contact prénom','givenname',
+  ]},
+  { key: 'Entreprise', label: 'Entreprise', required: true, group: 'required', aliases: [
+    'entreprise','company','company_name','companyname','company name','organisation','organization',
+    'société','societe','nom_entreprise','nom entreprise',"nom d'entreprise",'account','account name',
+    'employeur','nom de la société','nom de lentreprise','nom societe',
+  ]},
   // ── IMPORTANTS ──
-  { key: 'Nom',                         label: 'Nom',                  required: false, group: 'important', aliases: ['nom','lastname','last_name','surname','family_name'] },
-  { key: 'Titre',                       label: 'Titre / Poste',        required: false, group: 'important', aliases: ['titre','headline du profil','poste','title','job_title','jobtitle','headline','fonction','position','role'] },
-  { key: "Secteurs d'activité",         label: "Secteur d'activité",   required: false, group: 'important', aliases: ["secteurs d'activité","secteurs d'activite","secteur d'activité","secteur d'activite",'secteur','secteurs','industry','sector'] },
-  { key: "Taille de l'entreprise",      label: "Taille entreprise",    required: false, group: 'important', aliases: ["taille de l'entreprise","taille de l entreprise",'taille','effectif','employees','headcount','company_size'] },
-  { key: 'Lieu',                        label: 'Lieu / Ville',         required: false, group: 'important', aliases: ['lieu','ville','city','location','localisation'] },
+  { key: 'Nom', label: 'Nom', required: false, group: 'important', aliases: [
+    'nom','lastname','last_name','last name','surname','family_name','apellido',
+    'nom du contact','contact nom','familyname',
+  ]},
+  { key: 'Titre', label: 'Titre / Poste', required: false, group: 'important', aliases: [
+    'titre','poste','title','job_title','job title','jobtitle','fonction','position','role',
+    'métier','metier','intitule','headline du profil','headline','intitulé du poste',
+    "description sur l'emploi","description sur l emploi",'poste actuel','current title',
+    'occupation','designation','job function','intitule poste',
+  ]},
+  { key: "Secteurs d'activité", label: "Secteur d'activité", required: false, group: 'important', aliases: [
+    "secteurs d'activité","secteurs d'activite","secteur d'activité","secteur d'activite",
+    'secteur','secteurs','industry','sector','industrie','domaine','vertical','industries',
+    'secteur activite','business sector','industry sector',
+  ]},
+  { key: "Taille de l'entreprise", label: "Taille entreprise", required: false, group: 'important', aliases: [
+    "taille de l'entreprise","taille de l entreprise","taille de lentreprise",
+    'taille','effectif','employees','headcount','company_size','companysize','company size',
+    'nb_employes','employés','nb salaries','nombre employes','company headcount',
+    'number of employees','staff count','workforce','taille entreprise',
+  ]},
+  { key: 'Lieu', label: 'Lieu / Ville', required: false, group: 'important', aliases: [
+    'lieu','ville','city','location','region','pays','country','localisation','géographie',
+    'adresse du siège social','adresse siege social','headquarters','hq location',
+    'location name','geo','zone geographique','province','état','state','adresse',
+  ]},
   // ── BONUS ──
-  { key: "Résumé du profil",            label: 'Résumé du profil',     required: false, group: 'bonus',     aliases: ["résumé du profil","resume du profil",'résumé','resume','summary'] },
-  { key: "Description de l'entreprise", label: "Description entreprise", required: false, group: 'bonus',  aliases: ["description de l'entreprise","description de l entreprise","description sur l'emploi","description sur l emploi",'description entreprise','company_description','about_company'] },
-  { key: 'Email',                       label: 'Email',                required: false, group: 'bonus',     aliases: ['email','e-mail','mail','courriel'] },
-  { key: 'LinkedIn',                    label: 'LinkedIn URL',         required: false, group: 'bonus',     aliases: ['url linkedin (profil utilisateur)','linkedin','linkedin_url','lien linkedin'] },
-  { key: 'Site web entreprise',         label: 'Site web entreprise',  required: false, group: 'bonus',     aliases: ['site web entreprise','url linkedin (entreprise)','website','site web','domain','homepage'] },
-  { key: 'Téléphone',                   label: 'Téléphone',            required: false, group: 'bonus',     aliases: ['numéro de téléphone','numero de telephone','téléphone','telephone','phone','mobile'] },
-  { key: 'A commencé le',               label: 'En poste depuis',      required: false, group: 'bonus',     aliases: ['a commencé le','a commence le','début','start_date','date_debut'] },
+  { key: "Résumé du profil", label: 'Résumé du profil', required: false, group: 'bonus', aliases: [
+    "résumé du profil","resume du profil",'résumé','resume','summary','profil','bio','about',
+    'description_profil','linkedin_summary','profile summary','about me',
+    'note','notes','commentaire','commentaires','profil linkedin',
+  ]},
+  { key: "Description de l'entreprise", label: "Description entreprise", required: false, group: 'bonus', aliases: [
+    "description de l'entreprise","description de l entreprise","description de lentreprise",
+    'description entreprise','company_description','companydescription','company description',
+    'about_company','about company','activite','activité','company overview','company bio',
+    'company summary','description societe',
+  ]},
+  { key: 'Email', label: 'Email', required: false, group: 'bonus', aliases: [
+    'email','e-mail','mail','courriel','email_address','emailaddress','email address',
+    'adresse email','adresse mail','professional email','work email','email pro',
+    'email professionnel','contact email',
+  ]},
+  { key: 'LinkedIn', label: 'LinkedIn URL', required: false, group: 'bonus', aliases: [
+    'url linkedin (profil utilisateur)','url linkedin (profil)','url linkedin profil',
+    'url linkedin','linkedin','linkedin_url','linkedin url','linkedin_profile','linkedin profile',
+    'profil_linkedin','profil linkedin','lien linkedin','linkedin link',
+    "urn linkedin de l'utilisateur",'urn linkedin utilisateur','salesnavigator url',
+    'sales navigator url','li url','linkedin public url',
+  ]},
+  { key: 'Site web entreprise', label: 'Site web entreprise', required: false, group: 'bonus', aliases: [
+    'site web entreprise',"site web de l'entreprise",'site web','website','site_web',
+    'web','site','homepage','company_website','companywebsite','company website',
+    'domain','company domain','url site','lien site',
+    'url linkedin (entreprise)','url linkedin entreprise',
+    "urn linkedin de l'entreprise",'urn linkedin entreprise','website entreprise',
+  ]},
+  { key: 'Téléphone', label: 'Téléphone', required: false, group: 'bonus', aliases: [
+    'téléphone','telephone','numéro de téléphone','numero de telephone',
+    'phone','tel','mobile','phone_number','phone number','direct phone',
+    'direct dial','mobile phone','work phone','office phone','numero','gsm',
+  ]},
+  { key: 'A commencé le', label: 'En poste depuis', required: false, group: 'bonus', aliases: [
+    'a commencé le','a commence le','début','debut','start_date','start date',
+    'depuis','poste_depuis','date_debut','date debut','in role since',
+    'tenure start','date prise de poste','position start date',
+  ]},
 ];
 
 // ── Normalisation pour comparaison ───────────────────────────
@@ -4756,49 +4818,78 @@ function normalize(s) {
 
 // ── Détection automatique du mapping ─────────────────────────
 function autoDetectMapping(headers) {
+  // currentMapping = { lpKey: csvCol }
   const mapping = {};
-  const used    = new Set();
+  const usedLp  = new Set();
 
-  // Passe 1 : correspondance exacte uniquement
-  for (const field of LP_FIELDS) {
-    const norm_aliases = field.aliases.map(normalize);
-    for (const h of headers) {
-      const nh = normalize(h);
-      if (norm_aliases.includes(nh) && !used.has(h)) {
-        mapping[field.key] = h;
-        used.add(h);
-        break;
+  for (const h of headers) {
+    const nh = normalize(h);
+    let bestField = null;
+    let bestScore = 0;
+
+    for (const field of LP_FIELDS) {
+      if (usedLp.has(field.key)) continue;
+      for (const alias of field.aliases) {
+        const na = normalize(alias);
+        // Score 3 : correspondance exacte
+        if (nh === na) { bestField = field; bestScore = 3; break; }
+        // Score 2 : header commence par alias ou alias = header complet
+        if (bestScore < 2 && (nh.startsWith(na) || na.startsWith(nh)) && na.length > 3) {
+          bestField = field; bestScore = 2;
+        }
       }
+      if (bestScore === 3) break;
+    }
+
+    if (bestField && bestScore >= 2) {
+      mapping[bestField.key] = h;
+      usedLp.add(bestField.key);
     }
   }
   return mapping;
 }
 
-// ── Lire les headers du CSV ───────────────────────────────────
 async function parseCsvHeaders(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const text  = e.target.result;
-      const lines = text.split(/\r?\n/).filter(l => l.trim());
-      if (!lines.length) return reject('CSV vide');
-      const delim = (lines[0].match(/;/g) || []).length > (lines[0].match(/,/g) || []).length ? ';' : ',';
-      const headers = lines[0].split(delim).map(h => h.trim().replace(/^["']|["']$/g, ''));
-      // Garder 3 premières lignes pour aperçu
-      const preview = lines.slice(1, 4).map(l => l.split(delim).map(c => c.trim().replace(/^["']|["']$/g, '')));
-      resolve({ headers, preview, total: lines.length - 1, delim });
-    };
-    reader.onerror = reject;
-    reader.readAsText(file, 'utf-8');
-  });
+  // Essayer plusieurs encodages comme le backend Python
+  const encodings = ['utf-8', 'iso-8859-1', 'windows-1252'];
+  let text = null;
+
+  for (const enc of encodings) {
+    try {
+      text = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload  = e => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsText(file, enc);
+      });
+      // Vérifier que les accents français sont bien présents
+      if (text.includes('?') && enc !== 'windows-1252') continue;
+      break;
+    } catch(e) { continue; }
+  }
+
+  if (!text) throw new Error('Impossible de lire le fichier');
+
+  // Retirer le BOM UTF-8 si présent
+  text = text.replace(/^\uFEFF/, '');
+
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  if (!lines.length) throw new Error('CSV vide');
+
+  const delim   = (lines[0].match(/;/g)||[]).length > (lines[0].match(/,/g)||[]).length ? ';' : ',';
+  const headers = lines[0].split(delim).map(h => h.trim().replace(/^["']|["']$/g, ''));
+  const preview = lines.slice(1, 4).map(l => l.split(delim).map(c => c.trim().replace(/^["']|["']$/g, '')));
+
+  return { headers, preview, total: lines.length - 1, delim, text };
 }
 
 // ── Ouvrir la modale de mapping ───────────────────────────────
 async function openMappingModal(file) {
   try {
-    const { headers, preview, total } = await parseCsvHeaders(file);
+    const { headers, preview, total, text } = await parseCsvHeaders(file);
     csvHeaders     = headers;
     csvPreviewRows = preview;
+    csvParsedText  = text;  // stocker pour l'envoi
     currentMapping = autoDetectMapping(headers);
 
     // Sauvegarder le mapping précédent si existant
@@ -4933,8 +5024,9 @@ function resetFile() {
   document.getElementById('fileInfo').style.display = 'none';
   document.getElementById('csvInput').value = '';
   selectedCsvFile = null;
-  csvHeaders = [];
-  currentMapping = {};
+  csvHeaders      = [];
+  csvParsedText   = null;
+  currentMapping  = {};
 }
 
 // -- GENERATION ---------------------------
@@ -4989,9 +5081,9 @@ async function startGeneration() {
     const formData = new FormData();
     // Appliquer le mapping : re-créer le CSV avec les bonnes colonnes LeadPage
     let fileToSend = selectedCsvFile;
-    if (Object.keys(currentMapping).length > 0) {
+    if (Object.keys(currentMapping).length > 0 && csvParsedText) {
       try {
-        const text = await selectedCsvFile.text();
+        const text = csvParsedText;  // déjà décodé avec le bon encodage
         const lines = text.split(/\r?\n/).filter(l => l.trim());
         const delim = (lines[0].match(/;/g)||[]).length > (lines[0].match(/,/g)||[]).length ? ';' : ',';
         const origHeaders = lines[0].split(delim).map(h => h.trim().replace(/^["']|["']$/g,''));
