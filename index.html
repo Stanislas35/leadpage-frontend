@@ -4729,22 +4729,14 @@ let currentMapping  = {};  // { leadsField: csvColumn }
 // ── Champs LeadPage avec aliases et metadata ──────────────────
 const LP_FIELDS = [
   // ── OBLIGATOIRES ──
-  { key: 'Prénom',                    label: 'Prénom',                    required: true,  group: 'required',  aliases: ['prénom','prenom','firstname','first_name','given_name','forename','nombre'] },
-  { key: 'Entreprise',                label: 'Entreprise',                required: true,  group: 'required',  aliases: ['entreprise','company','company_name','companyname','organisation','organization','société','societe','nom_entreprise','nom entreprise',"nom d'entreprise",'account'] },
+  { key: 'Prénom',                      label: 'Prénom',               required: true,  group: 'required',  aliases: ['prénom','prenom','firstname','first_name'] },
+  { key: 'Entreprise',                  label: 'Entreprise',           required: true,  group: 'required',  aliases: ['entreprise','company','company_name','companyname','organisation'] },
   // ── IMPORTANTS ──
-  { key: 'Nom',                       label: 'Nom',                       required: false, group: 'important', aliases: ['nom','lastname','last_name','surname','family_name','apellido'] },
-  { key: 'Titre',                     label: 'Titre / Poste',             required: false, group: 'important', aliases: ['titre','poste','title','job_title','jobtitle','fonction','position','role','métier','metier','intitule','headline du profil','headline'] },
-  { key: "Secteurs d'activité",       label: "Secteur d'activité",        required: false, group: 'important', aliases: ["secteurs d'activité","secteurs d'activite",'secteur','secteurs','industry','sector','industrie','domaine','vertical'] },
-  { key: "Taille de l'entreprise",    label: "Taille entreprise",         required: false, group: 'important', aliases: ["taille de l'entreprise","taille de l entreprise",'taille','effectif','employees','headcount','company_size','companysize','nb_employes','employés','nb salaries'] },
-  { key: 'Lieu',                      label: 'Lieu / Ville',              required: false, group: 'important', aliases: ['lieu','ville','city','location','region','pays','country','localisation','géographie'] },
-  // ── BONUS ──
-  { key: "Résumé du profil",          label: 'Résumé du profil',          required: false, group: 'bonus',     aliases: ["résumé du profil","resume du profil",'résumé','resume','summary','profil','bio','about','description_profil','linkedin_summary','description sur l\'emploi',"description sur l'emploi"] },
-  { key: "Description de l'entreprise", label: "Description entreprise", required: false, group: 'bonus',     aliases: ["description de l'entreprise","description de l entreprise",'description entreprise','company_description','companydescription','about_company','activite','activité'] },
-  { key: 'Email',                     label: 'Email',                     required: false, group: 'bonus',     aliases: ['email','e-mail','mail','courriel','email_address','emailaddress'] },
-  { key: 'LinkedIn',                  label: 'LinkedIn URL',              required: false, group: 'bonus',     aliases: ['url linkedin (profil utilisateur)','url linkedin','linkedin','linkedin_url','linkedin_profile','profil_linkedin','lien linkedin'] },
-  { key: 'Site web entreprise',       label: 'Site web entreprise',       required: false, group: 'bonus',     aliases: ['site web entreprise','site web','website','site_web','web','url','site','homepage','company_website','companywebsite','domain','url linkedin (entreprise)'] },
-  { key: 'Téléphone',                 label: 'Téléphone',                 required: false, group: 'bonus',     aliases: ['téléphone','telephone','numéro de téléphone','numero de telephone','phone','tel','mobile','phone_number'] },
-  { key: 'A commencé le',             label: 'En poste depuis',           required: false, group: 'bonus',     aliases: ['a commencé le','a commence le','début','debut','start_date','depuis','poste_depuis','date_debut'] },
+  { key: 'Nom',                         label: 'Nom',                  required: false, group: 'important', aliases: ['nom','lastname','last_name','surname'] },
+  { key: 'Titre',                       label: 'Titre / Poste',        required: false, group: 'important', aliases: ['titre','poste','headline du profil','headline','job_title','title'] },
+  { key: 'Site web entreprise',         label: 'Site web entreprise',  required: false, group: 'important', aliases: ['site web entreprise','url linkedin (entreprise)','website','site web'] },
+  { key: "Résumé du profil",            label: 'Description LinkedIn', required: false, group: 'important', aliases: ["résumé du profil","resume du profil",'résumé du profil','description sur l\'emploi',"description sur l'emploi",'summary','résumé','resume'] },
+  { key: 'A commencé le',               label: 'En poste depuis',      required: false, group: 'important', aliases: ['a commencé le','a commence le','début','start_date','date_debut'] },
 ];
 
 // ── Normalisation pour comparaison ───────────────────────────
@@ -4825,15 +4817,14 @@ function renderMappingRows(headers, total) {
   const container = document.getElementById('mapping-rows');
 
   const GROUPS = {
-    required:  { label: '🔴 Obligatoires',  color: '#EF4444' },
-    important: { label: '🟡 Importants',    color: '#F59E0B' },
-    bonus:     { label: '🟢 Bonus',         color: '#22C55E' },
+    required:  { label: '🔴 Obligatoires', color: '#EF4444' },
+    important: { label: '🟡 Importants',   color: '#F59E0B' },
   };
 
   let html = '';
   let lastGroup = null;
 
-  for (const field of LP_FIELDS) {
+  for (const field of LP_FIELDS.filter(f => f.group !== 'bonus')) {
     if (field.group !== lastGroup) {
       const g = GROUPS[field.group];
       html += `<div style="font-size:11px;font-weight:700;color:${g.color};letter-spacing:0.08em;text-transform:uppercase;margin-top:${lastGroup ? '14px' : '0'};margin-bottom:4px">${g.label}</div>`;
