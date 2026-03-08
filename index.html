@@ -3869,25 +3869,23 @@ tr:hover td { background: var(--card-hover); }
 
         <!-- OPTIONS -->
         <div class="generate-options">
-          <div class="gen-option">
-            <label>
-              <input type="checkbox" checked> Génération du contenu
+          <div class="gen-option" id="opt-pdf" style="border:2px solid var(--border-active);position:relative">
+            <span style="position:absolute;top:-1px;right:10px;background:var(--pink);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:0 0 6px 6px;letter-spacing:0.05em">Recommandé</span>
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+              <input type="checkbox" id="chk-pdf" checked onchange="validateGenOptions()">
+              <span style="font-weight:700">📄 PDF personnalisé</span>
             </label>
-            <p>Analyse le profil et personnalise le texte</p>
+            <p>PDF 2 pages avec logo prospect, accroche IA et lien de tracking unique</p>
           </div>
-          <div class="gen-option">
-            <label>
-              <input type="checkbox" checked> Logo prospect automatique
+          <div class="gen-option" id="opt-mail">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+              <input type="checkbox" id="chk-mail" onchange="validateGenOptions()">
+              <span style="font-weight:700">✉ Mail d'accroche (mail 1)</span>
             </label>
-            <p>Récupère le logo via Clearbit / favicon</p>
+            <p>Email personnalisé prêt à coller dans Snov.io ou Lemlist — inclus dans le CSV</p>
           </div>
-          <div class="gen-option">
-            <label>
-              <input type="checkbox" checked> Hébergement + lien unique
-            </label>
-            <p>PDF accessible via URL dans le CSV final</p>
-          </div>
-          </div>
+        </div>
+        <div id="gen-opt-error" style="display:none;color:#EF4444;font-size:12px;margin-top:-12px;margin-bottom:8px">⚠ Sélectionnez au moins une option</div>
 
       </div>
 
@@ -5320,6 +5318,10 @@ async function startGeneration() {
 
     formData.append('file', fileToSend);
     formData.append('name', campaignName);
+    const doPdf   = document.getElementById('chk-pdf')   ? (document.getElementById('chk-pdf').checked   ? '1' : '0') : '1';
+    const doMail1 = document.getElementById('chk-mail')  ? (document.getElementById('chk-mail').checked  ? '1' : '0') : '0';
+    formData.append('generate_pdf',   doPdf);
+    formData.append('generate_mail1', doMail1);
     // Pas de charte_id : le backend utilise automatiquement la charte active
 
     const res = await fetch(API_URL + '/api/campaigns/', {
@@ -6541,6 +6543,16 @@ function showLowCreditsWarning() {
   setTimeout(() => warn.remove(), 6000);
 }
 
+
+function validateGenOptions() {
+  const pdf   = document.getElementById('chk-pdf');
+  const mail  = document.getElementById('chk-mail');
+  const err   = document.getElementById('gen-opt-error');
+  const btn   = document.querySelector('[onclick="startGeneration()"]');
+  const valid = (pdf && pdf.checked) || (mail && mail.checked);
+  if (err) err.style.display = valid ? 'none' : 'block';
+  if (btn) btn.disabled = !valid;
+}
 </script>
 </body>
 </html>
