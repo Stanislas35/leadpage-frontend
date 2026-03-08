@@ -2727,6 +2727,239 @@ tr:hover td { background: var(--card-hover); }
   .lp-sim-preview { display: none; }
 }
 
+
+/* ═══ CAMPAIGN CARDS ═══ */
+.camp-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.camp-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: center;
+  transition: all 0.2s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+.camp-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--border);
+  transition: all 0.2s;
+}
+.camp-card.status-done::before   { background: #22C55E; }
+.camp-card.status-processing::before { background: var(--pink); box-shadow: 0 0 12px rgba(233,30,140,0.5); }
+.camp-card.status-error::before  { background: #EF4444; }
+.camp-card:hover { border-color: var(--border-active); transform: translateY(-1px); }
+
+.camp-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.camp-card-meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.camp-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--text3);
+}
+.camp-meta-item strong {
+  color: var(--text2);
+  font-weight: 600;
+}
+.camp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.camp-badge-done       { background: rgba(34,197,94,0.12); color: #22C55E; }
+.camp-badge-processing { background: rgba(233,30,140,0.12); color: var(--pink); }
+.camp-badge-error      { background: rgba(239,68,68,0.12);  color: #EF4444; }
+.camp-badge-pending    { background: rgba(255,255,255,0.06); color: var(--text3); }
+.camp-badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.camp-badge-processing .camp-badge-dot {
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+.camp-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ═══ EMPTY STATE ═══ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+}
+.empty-state-icon {
+  width: 72px; height: 72px;
+  border-radius: 20px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+.empty-state h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.empty-state p {
+  font-size: 14px;
+  color: var(--text3);
+  max-width: 320px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* ═══ DASHBOARD HEADER STATS ═══ */
+.dash-header-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.dash-stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.dash-stat-card::after {
+  content: attr(data-icon);
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 28px;
+  opacity: 0.12;
+}
+.dash-stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 8px;
+}
+.dash-stat-value {
+  font-size: 26px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--blue-light), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.dash-stat-sub {
+  font-size: 12px;
+  color: var(--text3);
+}
+
+/* ═══ PROGRESS LOG AMÉLIORÉ ═══ */
+.progress-log {
+  max-height: 180px;
+  overflow-y: auto;
+  background: var(--bg3);
+  border-radius: 10px;
+  padding: 12px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11.5px;
+  margin-top: 12px;
+  border: 1px solid var(--border);
+}
+.log-line {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 2px 0;
+  line-height: 1.5;
+}
+.log-time { color: var(--text3); flex-shrink: 0; }
+.log-ok   { color: #22C55E; flex-shrink: 0; font-weight: 700; }
+.log-err  { color: #EF4444; flex-shrink: 0; font-weight: 700; }
+.log-processing { color: var(--pink); flex-shrink: 0; }
+.log-msg  { color: var(--text2); }
+.log-contact { color: var(--text); font-weight: 600; }
+
+/* ═══ PROGRESS CARD AMÉLIORÉE ═══ */
+.progress-contact-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg3);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin: 10px 0;
+  font-size: 13px;
+}
+.progress-contact-strip .contact-name {
+  font-weight: 600;
+  color: var(--text);
+}
+.progress-contact-strip .contact-company {
+  color: var(--text3);
+  font-size: 12px;
+}
+.progress-workers {
+  display: flex;
+  gap: 6px;
+  margin: 10px 0;
+}
+.worker-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.3s;
+}
+.worker-dot.active {
+  background: var(--pink);
+  box-shadow: 0 0 6px rgba(233,30,140,0.6);
+  animation: pulse-dot 0.8s ease-in-out infinite;
+}
+
 </style>
 </head>
 <body>
@@ -3532,25 +3765,29 @@ tr:hover td { background: var(--card-hover); }
 
       <!-- KPIs -->
       <div class="kpi-row fade-up" id="dash-kpi">
-        <div class="kpi-card">
+        <div class="kpi-card" style="position:relative;overflow:hidden">
+          <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;opacity:0.08">📄</div>
           <div class="kpi-label">PDFs générés</div>
           <div class="kpi-value" id="kpi-pdfs">—</div>
-          <div class="kpi-sub">ce mois-ci</div>
+          <div class="kpi-sub">total</div>
         </div>
-        <div class="kpi-card">
+        <div class="kpi-card" style="position:relative;overflow:hidden">
+          <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;opacity:0.08">✉</div>
+          <div class="kpi-label">Mails générés</div>
+          <div class="kpi-value" id="kpi-mails">—</div>
+          <div class="kpi-sub">total</div>
+        </div>
+        <div class="kpi-card" style="position:relative;overflow:hidden">
+          <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;opacity:0.08">📁</div>
           <div class="kpi-label">Campagnes</div>
           <div class="kpi-value" id="kpi-campaigns">—</div>
           <div class="kpi-sub">au total</div>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Taux de clic moyen</div>
-          <div class="kpi-value" id="kpi-clicks">—</div>
-          <div class="kpi-sub">sur les liens PDF</div>
-        </div>
-        <div class="kpi-card">
+        <div class="kpi-card" style="position:relative;overflow:hidden">
+          <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;opacity:0.08">⚡</div>
           <div class="kpi-label">Crédits restants</div>
           <div class="kpi-value" id="kpi-credits">—</div>
-          <div class="kpi-sub">PDFs gratuits restants</div>
+          <div class="kpi-sub" id="kpi-credits-sub">sur votre plan</div>
         </div>
       </div>
 
@@ -3562,7 +3799,7 @@ tr:hover td { background: var(--card-hover); }
         </div>
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <input type="text" id="campaign-name" class="form-input" placeholder="Nom de la campagne..." style="width:200px;margin:0">
-          <button class="btn btn-primary" id="btn-generate" onclick="startGeneration()" disabled style="opacity:0.4;cursor:not-allowed" title="Confirmez d'abord le mapping CSV">
+          <button class="btn btn-primary" onclick="startGeneration()">
             ⚡ Générer les PDFs
           </button>
         </div>
@@ -3631,53 +3868,75 @@ tr:hover td { background: var(--card-hover); }
         </div>
 
         <!-- OPTIONS -->
-        <!-- OPTIONS DE GÉNÉRATION -->
-        <div style="margin-top:20px">
-          <p style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px">Ce que vous souhaitez générer</p>
-          <div class="generate-options">
-
-            <div class="gen-option" id="opt-pdf-box" style="border:2px solid var(--pink);position:relative">
-              <div style="position:absolute;top:8px;right:10px;background:var(--pink);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px">Recommandé</div>
-              <label style="cursor:pointer">
-                <input type="checkbox" id="opt-pdf" checked onchange="updateGenOptions()">
-                📄 PDF personnalisé
-              </label>
-              <p>1 PDF 2 pages ultra-personnalisé par prospect · Hébergé + lien unique dans le CSV</p>
-            </div>
-
-            <div class="gen-option" id="opt-mail1-box">
-              <label style="cursor:pointer">
-                <input type="checkbox" id="opt-mail1" onchange="updateGenOptions()">
-                ✉️ Mail d'accroche (mail 1)
-              </label>
-              <p>Mail Devoleads → prospect · Objet + corps prêts à coller dans Lemlist / Snov.io</p>
-            </div>
-
+        <div class="generate-options">
+          <div class="gen-option">
+            <label>
+              <input type="checkbox" checked> Génération du contenu
+            </label>
+            <p>Analyse le profil et personnalise le texte</p>
           </div>
-          <p id="opt-warning" style="display:none;font-size:12px;color:#EF4444;margin-top:8px">⚠️ Sélectionnez au moins une option</p>
-        </div>
+          <div class="gen-option">
+            <label>
+              <input type="checkbox" checked> Logo prospect automatique
+            </label>
+            <p>Récupère le logo via Clearbit / favicon</p>
+          </div>
+          <div class="gen-option">
+            <label>
+              <input type="checkbox" checked> Hébergement + lien unique
+            </label>
+            <p>PDF accessible via URL dans le CSV final</p>
+          </div>
+          </div>
 
       </div>
 
       <!-- PROGRESS CARD -->
       <div class="progress-card" id="progressCard">
         <div class="progress-header">
-          <div>
-            <h2>Génération en cours</h2>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <h2 style="margin:0">Génération en cours</h2>
+            <div style="font-size:12px;color:var(--text3)" id="progressSubtitle">Initialisation...</div>
           </div>
-          <div class="status-badge processing" id="statusBadge">
-            <div class="status-dot"></div>
-            En cours...
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="display:flex;gap:5px;align-items:center" title="Workers actifs">
+              <span style="font-size:11px;color:var(--text3)">Workers</span>
+              <div class="progress-workers" id="workersIndicator">
+                <div class="worker-dot" id="w1"></div>
+                <div class="worker-dot" id="w2"></div>
+                <div class="worker-dot" id="w3"></div>
+                <div class="worker-dot" id="w4"></div>
+                <div class="worker-dot" id="w5"></div>
+              </div>
+            </div>
+            <div class="status-badge processing" id="statusBadge">
+              <div class="status-dot"></div>
+              En cours...
+            </div>
           </div>
         </div>
-        <div class="progress-bar-wrap" style="position:relative">
+
+        <!-- Barre de progression -->
+        <div class="progress-bar-wrap" style="position:relative;margin:16px 0 8px">
           <div class="progress-bar-fill" id="progressBar"></div>
           <span id="progressPct" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--text2)">0%</span>
         </div>
         <div class="progress-meta">
-          <span id="progressText">0 / 1 PDFs générés</span>
+          <span id="progressText">0 / 0 contacts traités</span>
           <span id="progressTime">Temps restant : calcul en cours...</span>
         </div>
+
+        <!-- Contact actif -->
+        <div class="progress-contact-strip" id="currentContactStrip" style="display:none">
+          <span style="font-size:16px">⚡</span>
+          <div>
+            <div class="contact-name" id="currentContactName">—</div>
+            <div class="contact-company" id="currentContactCompany">—</div>
+          </div>
+          <div style="margin-left:auto;font-size:11px;color:var(--text3)" id="currentContactStep">Génération IA...</div>
+        </div>
+
+        <!-- Log en direct -->
         <div class="progress-log" id="progressLog"></div>
       </div>
 
@@ -3716,26 +3975,36 @@ tr:hover td { background: var(--card-hover); }
 
     <!-- CAMPAIGNS SECTION -->
     <div id="section-campaigns" style="display:none">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:32px">
-        <div><h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Campagnes</h1><p style="color:var(--text2);font-size:14px;margin-top:4px">Historique de toutes vos generations</p></div>
-        <button class="btn btn-primary" onclick="showDashSection('generate', document.querySelector('.sidebar-item'))">+ Nouvelle campagne</button>
-      </div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 28px;border-bottom:1px solid var(--border)">
-          <h2 style="font-size:16px;font-weight:700">Toutes les campagnes</h2>
-          <span id="camp-count" style="font-size:13px;color:var(--text3)">0 campagnes</span>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px">
+        <div>
+          <h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Campagnes</h1>
+          <p style="color:var(--text2);font-size:14px;margin-top:4px">Historique de toutes vos générations</p>
         </div>
-        <table id="camp-table" style="width:100%;border-collapse:collapse">
-          <thead><tr>
-            <th style="padding:12px 20px;text-align:left;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);background:var(--bg3);border-bottom:1px solid var(--border)">Nom</th>
-            <th style="padding:12px 20px;text-align:left;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);background:var(--bg3);border-bottom:1px solid var(--border)">Date</th>
-            <th style="padding:12px 20px;text-align:left;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);background:var(--bg3);border-bottom:1px solid var(--border)">PDFs</th>
-            <th style="padding:12px 20px;text-align:left;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);background:var(--bg3);border-bottom:1px solid var(--border)">Taux clic</th>
-            <th style="padding:12px 20px;text-align:left;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);background:var(--bg3);border-bottom:1px solid var(--border)">Statut</th>
-            <th style="padding:12px 20px;text-align:left;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);background:var(--bg3);border-bottom:1px solid var(--border)">Actions</th>
-          </tr></thead>
-          <tbody></tbody>
-        </table>
+        <div style="display:flex;gap:10px;align-items:center">
+          <span id="camp-count" style="font-size:13px;color:var(--text3);padding:6px 14px;background:var(--bg3);border-radius:100px;border:1px solid var(--border)">0 campagnes</span>
+          <button class="btn btn-primary" onclick="showDashSection('generate', document.querySelector('.sidebar-item'))">+ Nouvelle campagne</button>
+        </div>
+      </div>
+
+      <!-- Mini stats rapides -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px" id="camp-quick-stats">
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;font-size:16px">✅</div>
+          <div><div style="font-size:20px;font-weight:800" id="qs-done">—</div><div style="font-size:11px;color:var(--text3)">Terminées</div></div>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(233,30,140,0.1);display:flex;align-items:center;justify-content:center;font-size:16px">⚡</div>
+          <div><div style="font-size:20px;font-weight:800" id="qs-pdfs">—</div><div style="font-size:11px;color:var(--text3)">PDFs générés</div></div>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(91,128,255,0.1);display:flex;align-items:center;justify-content:center;font-size:16px">📩</div>
+          <div><div style="font-size:20px;font-weight:800" id="qs-mails">—</div><div style="font-size:11px;color:var(--text3)">Mails générés</div></div>
+        </div>
+      </div>
+
+      <!-- Liste des campagnes -->
+      <div class="camp-grid" id="camp-grid">
+        <!-- Injecté par JS -->
       </div>
     </div>
 
@@ -4729,87 +4998,27 @@ function handleDrop(e) {
 let selectedCsvFile = null;
 let csvHeaders      = [];
 let csvPreviewRows  = [];
-let csvParsedText   = null;  // texte CSV déjà décodé correctement
 let currentMapping  = {};  // { leadsField: csvColumn }
 
 // ── Champs LeadPage avec aliases et metadata ──────────────────
 const LP_FIELDS = [
   // ── OBLIGATOIRES ──
-  { key: 'Prénom', label: 'Prénom', required: true, group: 'required', aliases: [
-    'prénom','prenom','firstname','first_name','first name','given_name','forename','nombre',
-    'prenom du contact','contact prénom','givenname',
-  ]},
-  { key: 'Entreprise', label: 'Entreprise', required: true, group: 'required', aliases: [
-    'entreprise','company','company_name','companyname','company name','organisation','organization',
-    'société','societe','nom_entreprise','nom entreprise',"nom d'entreprise",'account','account name',
-    'employeur','nom de la société','nom de lentreprise','nom societe',
-  ]},
+  { key: 'Prénom',                    label: 'Prénom',                    required: true,  group: 'required',  aliases: ['prénom','prenom','firstname','first_name','given_name','forename','nombre'] },
+  { key: 'Entreprise',                label: 'Entreprise',                required: true,  group: 'required',  aliases: ['entreprise','company','company_name','companyname','organisation','organization','société','societe','nom_entreprise','nom entreprise',"nom d'entreprise",'account'] },
   // ── IMPORTANTS ──
-  { key: 'Nom', label: 'Nom', required: false, group: 'important', aliases: [
-    'nom','lastname','last_name','last name','surname','family_name','apellido',
-    'nom du contact','contact nom','familyname',
-  ]},
-  { key: 'Titre', label: 'Titre / Poste', required: false, group: 'important', aliases: [
-    'titre','poste','title','job_title','job title','jobtitle','fonction','position','role',
-    'métier','metier','intitule','headline du profil','headline','intitulé du poste',
-    'poste actuel','current title','occupation','designation','job function','intitule poste',
-  ]},
-  { key: "Secteurs d'activité", label: "Secteur d'activité", required: false, group: 'important', aliases: [
-    "secteurs d'activité","secteurs d'activite","secteur d'activité","secteur d'activite",
-    'secteur','secteurs','industry','sector','industrie','domaine','vertical','industries',
-    'secteur activite','business sector','industry sector',
-  ]},
-  { key: "Taille de l'entreprise", label: "Taille entreprise", required: false, group: 'important', aliases: [
-    "taille de l'entreprise","taille de l entreprise","taille de lentreprise",
-    'taille','effectif','employees','headcount','company_size','companysize','company size',
-    'nb_employes','employés','nb salaries','nombre employes','company headcount',
-    'number of employees','staff count','workforce','taille entreprise',
-  ]},
-  { key: 'Lieu', label: 'Lieu / Ville', required: false, group: 'important', aliases: [
-    'lieu','ville','city','location','region','pays','country','localisation','géographie',
-    'adresse du siège social','adresse siege social','headquarters','hq location',
-    'location name','geo','zone geographique','province','état','state','adresse',
-  ]},
+  { key: 'Nom',                       label: 'Nom',                       required: false, group: 'important', aliases: ['nom','lastname','last_name','surname','family_name','apellido'] },
+  { key: 'Titre',                     label: 'Titre / Poste',             required: false, group: 'important', aliases: ['titre','poste','title','job_title','jobtitle','fonction','position','role','métier','metier','intitule','headline du profil','headline'] },
+  { key: "Secteurs d'activité",       label: "Secteur d'activité",        required: false, group: 'important', aliases: ["secteurs d'activité","secteurs d'activite",'secteur','secteurs','industry','sector','industrie','domaine','vertical'] },
+  { key: "Taille de l'entreprise",    label: "Taille entreprise",         required: false, group: 'important', aliases: ["taille de l'entreprise","taille de l entreprise",'taille','effectif','employees','headcount','company_size','companysize','nb_employes','employés','nb salaries'] },
+  { key: 'Lieu',                      label: 'Lieu / Ville',              required: false, group: 'important', aliases: ['lieu','ville','city','location','region','pays','country','localisation','géographie'] },
   // ── BONUS ──
-  { key: "Résumé du profil", label: 'Résumé du profil', required: false, group: 'bonus', aliases: [
-    "résumé du profil","resume du profil",'résumé','resume','summary','profil','bio','about',
-    'description_profil','linkedin_summary','profile summary','about me',
-    "description sur l'emploi","description sur l emploi",
-    'note','notes','commentaire','commentaires','profil linkedin',
-  ]},
-  { key: "Description de l'entreprise", label: "Description entreprise", required: false, group: 'bonus', aliases: [
-    "description de l'entreprise","description de l entreprise","description de lentreprise",
-    'description entreprise','company_description','companydescription','company description',
-    'about_company','about company','activite','activité','company overview','company bio',
-    'company summary','description societe',
-  ]},
-  { key: 'Email', label: 'Email', required: false, group: 'bonus', aliases: [
-    'email','e-mail','mail','courriel','email_address','emailaddress','email address',
-    'adresse email','adresse mail','professional email','work email','email pro',
-    'email professionnel','contact email',
-  ]},
-  { key: 'LinkedIn', label: 'LinkedIn URL', required: false, group: 'bonus', aliases: [
-    'url linkedin (profil utilisateur)','url linkedin profil utilisateur',
-    'url linkedin (profil)','url linkedin profil',
-    'url linkedin','linkedin','linkedin_url','linkedin url','linkedin_profile','linkedin profile',
-    'profil_linkedin','profil linkedin','lien linkedin','linkedin link',
-    'salesnavigator url','sales navigator url','li url','linkedin public url',
-  ]},
-  { key: 'Site web entreprise', label: 'Site web entreprise', required: false, group: 'bonus', aliases: [
-    'site web entreprise',"site web de l'entreprise",'site web','website','site_web',
-    'web','site','homepage','company_website','companywebsite','company website',
-    'domain','company domain','url site','lien site','website entreprise',
-  ]},
-  { key: 'Téléphone', label: 'Téléphone', required: false, group: 'bonus', aliases: [
-    'téléphone','telephone','numéro de téléphone','numero de telephone',
-    'phone','tel','mobile','phone_number','phone number','direct phone',
-    'direct dial','mobile phone','work phone','office phone','numero','gsm',
-  ]},
-  { key: 'A commencé le', label: 'En poste depuis', required: false, group: 'bonus', aliases: [
-    'a commencé le','a commence le','début','debut','start_date','start date',
-    'depuis','poste_depuis','date_debut','date debut','in role since',
-    'tenure start','date prise de poste','position start date',
-  ]},
+  { key: "Résumé du profil",          label: 'Résumé du profil',          required: false, group: 'bonus',     aliases: ["résumé du profil","resume du profil",'résumé','resume','summary','profil','bio','about','description_profil','linkedin_summary','description sur l\'emploi',"description sur l'emploi"] },
+  { key: "Description de l'entreprise", label: "Description entreprise", required: false, group: 'bonus',     aliases: ["description de l'entreprise","description de l entreprise",'description entreprise','company_description','companydescription','about_company','activite','activité'] },
+  { key: 'Email',                     label: 'Email',                     required: false, group: 'bonus',     aliases: ['email','e-mail','mail','courriel','email_address','emailaddress'] },
+  { key: 'LinkedIn',                  label: 'LinkedIn URL',              required: false, group: 'bonus',     aliases: ['url linkedin (profil utilisateur)','url linkedin','linkedin','linkedin_url','linkedin_profile','profil_linkedin','lien linkedin'] },
+  { key: 'Site web entreprise',       label: 'Site web entreprise',       required: false, group: 'bonus',     aliases: ['site web entreprise','site web','website','site_web','web','url','site','homepage','company_website','companywebsite','domain','url linkedin (entreprise)'] },
+  { key: 'Téléphone',                 label: 'Téléphone',                 required: false, group: 'bonus',     aliases: ['téléphone','telephone','numéro de téléphone','numero de telephone','phone','tel','mobile','phone_number'] },
+  { key: 'A commencé le',             label: 'En poste depuis',           required: false, group: 'bonus',     aliases: ['a commencé le','a commence le','début','debut','start_date','depuis','poste_depuis','date_debut'] },
 ];
 
 // ── Normalisation pour comparaison ───────────────────────────
@@ -4821,105 +5030,49 @@ function normalize(s) {
 
 // ── Détection automatique du mapping ─────────────────────────
 function autoDetectMapping(headers) {
-  // currentMapping = { lpKey: csvCol }
   const mapping = {};
-  const usedLp  = new Set();
+  const used    = new Set();
 
-  for (const h of headers) {
-    const nh = normalize(h);
-    let bestField = null;
-    let bestScore = 0;
-
-    for (const field of LP_FIELDS) {
-      if (usedLp.has(field.key)) continue;
-      for (const alias of field.aliases) {
-        const na = normalize(alias);
-        // Score 3 : correspondance exacte
-        if (nh === na) { bestField = field; bestScore = 3; break; }
-        // Score 2 : header commence par alias ou alias = header complet
-        if (bestScore < 2 && (nh.startsWith(na) || na.startsWith(nh)) && na.length > 3) {
-          bestField = field; bestScore = 2;
-        }
+  // Passe 1 : correspondance exacte uniquement
+  for (const field of LP_FIELDS) {
+    const norm_aliases = field.aliases.map(normalize);
+    for (const h of headers) {
+      const nh = normalize(h);
+      if (norm_aliases.includes(nh) && !used.has(h)) {
+        mapping[field.key] = h;
+        used.add(h);
+        break;
       }
-      if (bestScore === 3) break;
-    }
-
-    if (bestField && bestScore >= 2) {
-      mapping[bestField.key] = h;
-      usedLp.add(bestField.key);
     }
   }
   return mapping;
 }
 
-// ── Vrai parseur CSV (gère les cellules avec virgules et guillemets) ──
-function parseCSVLine(line, delim) {
-  const result = [];
-  let cell = '', inQuotes = false;
-  for (let i = 0; i < line.length; i++) {
-    const c = line[i];
-    if (c === '"') {
-      if (inQuotes && line[i+1] === '"') { cell += '"'; i++; }
-      else inQuotes = !inQuotes;
-    } else if (c === delim && !inQuotes) {
-      result.push(cell.trim());
-      cell = '';
-    } else {
-      cell += c;
-    }
-  }
-  result.push(cell.trim());
-  return result;
-}
-
+// ── Lire les headers du CSV ───────────────────────────────────
 async function parseCsvHeaders(file) {
-  const encodings = ['utf-8', 'iso-8859-1', 'windows-1252'];
-  let text = null;
-
-  for (const enc of encodings) {
-    try {
-      const t = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload  = e => resolve(e.target.result);
-        reader.onerror = reject;
-        reader.readAsText(file, enc);
-      });
-      // Préférer l'encodage qui produit des accents valides
-      if (!text || (t.includes('é') || t.includes('è') || t.includes('ê'))) {
-        text = t;
-        if (t.includes('é')) break; // UTF-8 OK, on s'arrête
-      }
-    } catch(e) { continue; }
-  }
-
-  if (!text) throw new Error('Impossible de lire le fichier');
-  text = text.replace(/^\uFEFF/, ''); // retirer BOM
-
-  // Détecter le délimiteur sur la première ligne
-  const firstLine = text.split(/\r?\n/)[0];
-  const delim = (firstLine.match(/;/g)||[]).length > (firstLine.match(/,/g)||[]).length ? ';' : ',';
-
-  // Parser toutes les lignes avec le vrai parseur
-  const rawLines = text.split(/\r?\n/).filter(l => l.trim());
-  if (!rawLines.length) throw new Error('CSV vide');
-
-  const headers = parseCSVLine(rawLines[0], delim);
-  const preview = rawLines.slice(1, 4).map(l => parseCSVLine(l, delim));
-  const total   = rawLines.length - 1;
-
-  return { headers, preview, total, delim, text };
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text  = e.target.result;
+      const lines = text.split(/\r?\n/).filter(l => l.trim());
+      if (!lines.length) return reject('CSV vide');
+      const delim = (lines[0].match(/;/g) || []).length > (lines[0].match(/,/g) || []).length ? ';' : ',';
+      const headers = lines[0].split(delim).map(h => h.trim().replace(/^["']|["']$/g, ''));
+      // Garder 3 premières lignes pour aperçu
+      const preview = lines.slice(1, 4).map(l => l.split(delim).map(c => c.trim().replace(/^["']|["']$/g, '')));
+      resolve({ headers, preview, total: lines.length - 1, delim });
+    };
+    reader.onerror = reject;
+    reader.readAsText(file, 'utf-8');
+  });
 }
 
 // ── Ouvrir la modale de mapping ───────────────────────────────
 async function openMappingModal(file) {
-  // Réinitialiser le bouton Générer jusqu'à confirmation du mapping
-  const genBtn = document.getElementById('btn-generate');
-  if (genBtn) { genBtn.disabled = true; genBtn.style.opacity = '0.4'; genBtn.style.cursor = 'not-allowed'; }
   try {
-    const { headers, preview, total, text } = await parseCsvHeaders(file);
+    const { headers, preview, total } = await parseCsvHeaders(file);
     csvHeaders     = headers;
     csvPreviewRows = preview;
-    csvParsedText  = text;  // stocker pour l'envoi
     currentMapping = autoDetectMapping(headers);
 
     // Sauvegarder le mapping précédent si existant
@@ -4942,43 +5095,38 @@ function closeMappingModal() {
 }
 
 // ── Rendu des lignes de mapping ───────────────────────────────
-// Logique : colonne CSV (gauche, fixe) → champ LeadPage (droite, sélectionnable)
 function renderMappingRows(headers, total) {
   const container = document.getElementById('mapping-rows');
 
-  // Construire le mapping inverse : csvCol → lpField
-  const colToField = {};
-  for (const [lpKey, csvCol] of Object.entries(currentMapping)) {
-    colToField[csvCol] = lpKey;
-  }
+  const GROUPS = {
+    required:  { label: '🔴 Obligatoires',  color: '#EF4444' },
+    important: { label: '🟡 Importants',    color: '#F59E0B' },
+    bonus:     { label: '🟢 Bonus',         color: '#22C55E' },
+  };
 
-  // Options champs LeadPage pour le select
-  const lpOptions = ['— Ignorer —', ...LP_FIELDS.map(f => f.key)];
-  const lpLabels  = { '— Ignorer —': '— Ignorer —' };
-  for (const f of LP_FIELDS) lpLabels[f.key] = f.label + (f.required ? ' *' : '') + (f.group === 'important' ? ' 🟡' : f.group === 'bonus' ? ' 🟢' : ' 🔴');
+  let html = '';
+  let lastGroup = null;
 
-  let html = `
-    <div style="display:grid;grid-template-columns:1fr 1fr 150px;gap:8px;padding:6px 12px;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em">
-      <div>Colonne de votre fichier</div>
-      <div>Champ LeadPage</div>
-      <div>Aperçu</div>
-    </div>`;
+  for (const field of LP_FIELDS) {
+    if (field.group !== lastGroup) {
+      const g = GROUPS[field.group];
+      html += `<div style="font-size:11px;font-weight:700;color:${g.color};letter-spacing:0.08em;text-transform:uppercase;margin-top:${lastGroup ? '14px' : '0'};margin-bottom:4px">${g.label}</div>`;
+      lastGroup = field.group;
+    }
 
-  for (const h of headers) {
-    const mappedLp  = colToField[h] || '— Ignorer —';
-    const preview   = getPreviewValue(h);
-    const isReq     = mappedLp !== '— Ignorer —' && LP_FIELDS.find(f => f.key === mappedLp)?.required;
-    const safeH     = h.replace(/[^a-z0-9]/gi, '_');
+    const mapped  = currentMapping[field.key] || '';
+    const preview = mapped ? getPreviewValue(mapped) : '';
+    const missing = field.required && !mapped;
 
     html += `
-      <div style="display:grid;grid-template-columns:1fr 1fr 150px;gap:8px;align-items:center;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px">
-        <div style="font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${h}">${h}</div>
-        <select class="form-input" style="margin:0;font-size:12px" onchange="updateMappingFromCsv('${h.replace(/'/g,"\\'")}', this.value)">
-          ${lpOptions.map(lp =>
-            `<option value="${lp}" ${lp === mappedLp ? 'selected' : ''}>${lpLabels[lp]}</option>`
+      <div style="display:grid;grid-template-columns:160px 1fr 150px;gap:8px;align-items:center;padding:8px 12px;background:${missing ? 'rgba(239,68,68,0.06)' : 'var(--bg3)'};border:1px solid ${missing ? '#EF4444' : 'var(--border)'};border-radius:8px">
+        <div style="font-size:12px;font-weight:600;color:var(--text)">${field.label}${field.required ? ' <span style="color:#EF4444">*</span>' : ''}</div>
+        <select class="form-input" style="margin:0;font-size:12px" onchange="updateMapping('${field.key.replace(/'/g,"\\'")}', this.value, this)">
+          ${['— Non mappé —', ...headers].map(h =>
+            `<option value="${h}" ${h === (mapped || '— Non mappé —') ? 'selected' : ''}>${h}</option>`
           ).join('')}
         </select>
-        <div style="font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${preview}">
+        <div id="mp-preview-${field.key.replace(/[^a-z]/gi,'_')}" style="font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${preview}">
           ${preview ? `<span style="color:#22C55E">✓</span> ${preview}` : '<span style="color:var(--text3)">—</span>'}
         </div>
       </div>`;
@@ -4991,18 +5139,6 @@ function renderMappingRows(headers, total) {
   if (meta) meta.textContent = `${total} contact${total>1?'s':''} · ${headers.length} colonnes détectées`;
 }
 
-function updateMappingFromCsv(csvCol, lpKey) {
-  // Retirer l'ancien mapping pour ce champ LP si déjà utilisé
-  for (const [k, v] of Object.entries(currentMapping)) {
-    if (v === csvCol) delete currentMapping[k];
-    if (k === lpKey)  delete currentMapping[k];
-  }
-  if (lpKey !== '— Ignorer —') {
-    currentMapping[lpKey] = csvCol;
-  }
-  updateMappingStatus();
-}
-
 function getPreviewValue(col) {
   if (!csvPreviewRows.length) return '';
   const idx = csvHeaders.indexOf(col);
@@ -5010,60 +5146,50 @@ function getPreviewValue(col) {
   return csvPreviewRows[0]?.[idx] || '';
 }
 
+function updateMapping(fieldKey, colValue, sel) {
+  if (colValue === '— Non mappé —') {
+    delete currentMapping[fieldKey];
+  } else {
+    currentMapping[fieldKey] = colValue;
+  }
+  // Mettre à jour l'aperçu
+  const safeKey = fieldKey.replace(/[^a-z]/gi,'_');
+  const preview = colValue !== '— Non mappé —' ? getPreviewValue(colValue) : '';
+  const prevEl  = document.getElementById('mp-preview-' + safeKey);
+  if (prevEl) prevEl.innerHTML = preview ? `<span style="color:#22C55E">✓</span> ${preview}` : '<span style="color:var(--text3)">—</span>';
+
+  // Mettre à jour style de la ligne
+  const row = sel.closest('div[style*="grid-template"]');
+  const field = LP_FIELDS.find(f => f.key === fieldKey);
+  if (row && field?.required) {
+    const missing = !currentMapping[fieldKey];
+    row.style.background = missing ? 'rgba(239,68,68,0.06)' : 'var(--bg3)';
+    row.style.borderColor = missing ? '#EF4444' : 'var(--border)';
+  }
+  updateMappingStatus();
+}
 
 function updateMappingStatus() {
-  const missingRequired = LP_FIELDS.filter(f => f.required && !currentMapping[f.key]);
-  const mapped   = new Set(Object.values(currentMapping));
-  const unmapped = csvHeaders.filter(h => !mapped.has(h));
-  const unmapEl  = document.getElementById('mapping-unmapped');
+  const mapped    = new Set(Object.values(currentMapping));
+  const unmapped  = csvHeaders.filter(h => !mapped.has(h));
+  const unmapEl   = document.getElementById('mapping-unmapped');
   if (unmapEl) unmapEl.textContent = unmapped.length ? unmapped.join(', ') : 'aucune';
 
+  const missingRequired = LP_FIELDS.filter(f => f.required && !currentMapping[f.key]);
   const btn = document.getElementById('mapping-confirm-btn');
   if (btn) {
-    btn.disabled     = missingRequired.length > 0;
+    btn.disabled = missingRequired.length > 0;
     btn.style.opacity = missingRequired.length > 0 ? '0.5' : '1';
-    btn.textContent  = missingRequired.length > 0
-      ? `⚠️ Champs requis manquants : ${missingRequired.map(f=>f.label).join(', ')}`
+    btn.textContent = missingRequired.length > 0
+      ? `⚠️ Champs requis manquants (${missingRequired.length})`
       : '✅ Confirmer le mapping';
   }
 }
 
-function updateGenOptions() {
-  const pdf   = document.getElementById('opt-pdf')?.checked;
-  const mail1 = document.getElementById('opt-mail1')?.checked;
-  const warn  = document.getElementById('opt-warning');
-  const btn   = document.getElementById('btn-generate');
-  const none  = !pdf && !mail1;
-  if (warn) warn.style.display = none ? 'block' : 'none';
-  if (btn)  { btn.disabled = none; btn.style.opacity = none ? '0.5' : '1'; }
-  // Bordure active sur les options cochées
-  if (document.getElementById('opt-pdf-box'))
-    document.getElementById('opt-pdf-box').style.borderColor = pdf ? 'var(--pink)' : 'var(--border)';
-  if (document.getElementById('opt-mail1-box'))
-    document.getElementById('opt-mail1-box').style.borderColor = mail1 ? 'var(--pink)' : 'var(--border)';
-}
-
-function getGenOptions() {
-  return {
-    pdf:   document.getElementById('opt-pdf')?.checked   ?? true,
-    mail1: document.getElementById('opt-mail1')?.checked ?? false,
-  };
-}
-
-
 function confirmMapping() {
   try { localStorage.setItem('lp_mapping', JSON.stringify(currentMapping)); } catch(e) {}
   closeMappingModal();
-  // Activer le bouton Générer
-  const btn = document.getElementById('btn-generate');
-  if (btn) {
-    btn.disabled = false;
-    btn.style.opacity = '1';
-    btn.style.cursor = 'pointer';
-    btn.style.animation = 'pulse 1s ease 2';
-    btn.textContent = '⚡ Générer les PDFs';
-  }
-  showToast('Mapping confirmé ✅ — cliquez sur ⚡ Générer les PDFs', '#22C55E');
+  showToast('Mapping confirmé — cliquez sur ⚡ Générer les PDFs', '#22C55E');
 }
 
 function handleFileSelect(input) {
@@ -5086,9 +5212,8 @@ function resetFile() {
   document.getElementById('fileInfo').style.display = 'none';
   document.getElementById('csvInput').value = '';
   selectedCsvFile = null;
-  csvHeaders      = [];
-  csvParsedText   = null;
-  currentMapping  = {};
+  csvHeaders = [];
+  currentMapping = {};
 }
 
 // -- GENERATION ---------------------------
@@ -5110,7 +5235,7 @@ async function startGeneration() {
   if (typeof freeCredits !== 'undefined' && freeCredits <= 0) { showUpgradeModal(); return; }
   if (!selectedCsvFile) { showToast('Selectionnez un fichier CSV dabord', '#EF4444'); return; }
 
-  const btn = document.getElementById('btn-generate');
+  const btn = document.querySelector('[onclick="startGeneration()"]');
   if (btn && btn.dataset.loading) return;
 
   const campaignName = (document.getElementById('campaign-name').value.trim()) || ('Campagne ' + new Date().toLocaleDateString('fr-FR'));
@@ -5126,14 +5251,36 @@ async function startGeneration() {
   document.getElementById('statusBadge').innerHTML = '<div class="status-dot"></div> En cours...';
   pc.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  function addLog(msg, type) {
+  function addLog(msg, type, contact) {
     const line = document.createElement('div');
     line.className = 'log-line';
     const now = new Date();
     const t = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
-    line.innerHTML = '<span class="log-time">'+t+'</span><span class="log-'+type+'">'+(type==='ok'?'v':'>')+'</span><span class="log-msg">'+msg+'</span>';
+    const icon = type==='ok' ? '✓' : type==='err' ? '✕' : '›';
+    const contactHtml = contact ? '<span class="log-contact"> '+contact+'</span>' : '';
+    line.innerHTML = '<span class="log-time">'+t+'</span><span class="log-'+type+'">'+icon+'</span><span class="log-msg">'+msg+'</span>'+contactHtml;
     document.getElementById('progressLog').appendChild(line);
     document.getElementById('progressLog').scrollTop = 9999;
+  }
+
+  function updateWorkers(active) {
+    for (let i=1;i<=5;i++) {
+      const w = document.getElementById('w'+i);
+      if (w) w.className = 'worker-dot' + (i<=active ? ' active' : '');
+    }
+  }
+
+  function updateCurrentContact(name, company, step) {
+    const strip = document.getElementById('currentContactStrip');
+    if (!strip) return;
+    if (name) {
+      strip.style.display = 'flex';
+      document.getElementById('currentContactName').textContent = name;
+      document.getElementById('currentContactCompany').textContent = company || '';
+      document.getElementById('currentContactStep').textContent = step || 'Génération IA...';
+    } else {
+      strip.style.display = 'none';
+    }
   }
 
   if (btn) setLoading(btn, true);
@@ -5143,28 +5290,28 @@ async function startGeneration() {
     const formData = new FormData();
     // Appliquer le mapping : re-créer le CSV avec les bonnes colonnes LeadPage
     let fileToSend = selectedCsvFile;
-    if (Object.keys(currentMapping).length > 0 && csvParsedText) {
+    if (Object.keys(currentMapping).length > 0) {
       try {
-        const text = csvParsedText;  // déjà décodé avec le bon encodage
+        const text = await selectedCsvFile.text();
         const lines = text.split(/\r?\n/).filter(l => l.trim());
         const delim = (lines[0].match(/;/g)||[]).length > (lines[0].match(/,/g)||[]).length ? ';' : ',';
-        const origHeaders = parseCSVLine(lines[0], delim);
+        const origHeaders = lines[0].split(delim).map(h => h.trim().replace(/^["']|["']$/g,''));
 
         // Construire le CSV remappé
         const newHeaders = LP_FIELDS.map(f => f.key);
         const csvLines   = [newHeaders.join(',')];
         for (let i = 1; i < lines.length; i++) {
           if (!lines[i].trim()) continue;
-          const vals = parseCSVLine(lines[i], delim);
+          const vals = lines[i].split(delim).map(v => v.trim().replace(/^["']|["']$/g,''));
           const row  = newHeaders.map(lp => {
             const srcCol = currentMapping[lp];
-            if (!srcCol) return '""';
+            if (!srcCol) return '';
             const idx = origHeaders.indexOf(srcCol);
-            return idx !== -1 ? ('"' + (vals[idx]||'').replace(/"/g,'""') + '"') : '""';
+            return idx !== -1 ? ('"' + (vals[idx]||'').replace(/"/g,'""') + '"') : '';
           });
           csvLines.push(row.join(','));
         }
-        const blob = new Blob(['\uFEFF' + csvLines.join('\n')], { type: 'text/csv;charset=utf-8' });
+        const blob = new Blob([csvLines.join('\n')], { type: 'text/csv' });
         fileToSend = new File([blob], selectedCsvFile.name, { type: 'text/csv' });
       } catch(e) {
         console.warn('Mapping CSV échoué, envoi original:', e);
@@ -5173,10 +5320,7 @@ async function startGeneration() {
 
     formData.append('file', fileToSend);
     formData.append('name', campaignName);
-    // Options de génération
-    const genOpts = getGenOptions();
-    formData.append('generate_pdf',   genOpts.pdf   ? '1' : '0');
-    formData.append('generate_mail1', genOpts.mail1 ? '1' : '0');
+    // Pas de charte_id : le backend utilise automatiquement la charte active
 
     const res = await fetch(API_URL + '/api/campaigns/', {
       method: 'POST',
@@ -5216,8 +5360,21 @@ async function startGeneration() {
           }, 700);
         }
 
+        // Mettre à jour le subtitle
+        const sub = document.getElementById('progressSubtitle');
+        if (sub) sub.textContent = prog.processed + ' / ' + prog.total + ' contacts traités · ' + (prog.active_workers || 1) + ' workers actifs';
+
+        // Workers indicator
+        updateWorkers(prog.active_workers || 1);
+
+        // Contact actif
+        if (prog.current_name) {
+          updateCurrentContact(prog.current_name, prog.current_company || '', 'Génération IA...');
+        }
+
+        // Log enrichi avec nouveau contact
         if (prog.current_name && prog.processed > lastProcessed) {
-          addLog('[' + prog.processed + '/' + prog.total + '] ' + prog.current_name, 'processing');
+          addLog('Contact traité · ', 'ok', prog.current_name + (prog.current_company ? ' @ '+prog.current_company : ''));
           lastProcessed = prog.processed;
         }
 
@@ -5400,31 +5557,86 @@ async function loadProfile() {
 }
 
 // ---- CHARGER CAMPAGNES ------------------
-async function loadCampaigns() {
+async async function loadCampaigns() {
   if (!authToken) return;
   const campCount = document.getElementById('camp-count');
+  const grid = document.getElementById('camp-grid');
   if (campCount) { campCount.textContent = 'Chargement...'; campCount.style.opacity = '0.5'; }
+  if (grid) grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Chargement...</div>';
   try {
     const campaigns = await apiCall('GET', '/api/campaigns/', null, true);
-    if (campCount) campCount.style.opacity = '1';
-    const countEl = document.getElementById('camp-count');
-    if (countEl) countEl.textContent = campaigns.length + ' campagne' + (campaigns.length > 1 ? 's' : '');
+    if (campCount) { campCount.style.opacity = '1'; campCount.textContent = campaigns.length + ' campagne' + (campaigns.length > 1 ? 's' : ''); }
 
-    const tbody = document.querySelector('#camp-table tbody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
+    if (!grid) return;
+
+    // Quick stats
+    const done  = campaigns.filter(c => c.status === 'done').length;
+    const pdfs  = campaigns.reduce((a,c) => a + (c.total_rows || 0), 0);
+    const mails = campaigns.reduce((a,c) => a + (c.mail1_count || 0), 0);
+    const qsDone  = document.getElementById('qs-done');
+    const qsPdfs  = document.getElementById('qs-pdfs');
+    const qsMails = document.getElementById('qs-mails');
+    if (qsDone)  qsDone.textContent  = done;
+    if (qsPdfs)  qsPdfs.textContent  = pdfs || '—';
+    if (qsMails) qsMails.textContent = mails || '—';
 
     if (campaigns.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="6" style="padding:32px;text-align:center;color:var(--text3)">Aucune campagne pour l\'instant - generez votre premier CSV !</td></tr>';
+      grid.innerHTML = \`<div class="empty-state">
+        <div class="empty-state-icon">📁</div>
+        <h3>Aucune campagne pour l'instant</h3>
+        <p>Importez votre premier fichier CSV et lancez une génération pour voir vos campagnes apparaître ici.</p>
+        <button class="btn btn-primary" onclick="showDashSection('generate', document.querySelector('.sidebar-item'))">⚡ Lancer ma première campagne</button>
+      </div>\`;
       return;
     }
 
+    grid.innerHTML = '';
     campaigns.forEach(camp => {
       const date = new Date(camp.created_at).toLocaleDateString('fr-FR', {day:'2-digit', month:'short', year:'numeric'});
-      const statusColor = camp.status === 'done' ? '#22C55E' : camp.status === 'error' ? '#EF4444' : 'var(--pink)';
-      const statusLabel = camp.status === 'done' ? 'Termine' : camp.status === 'processing' ? 'En cours' : camp.status === 'error' ? 'Erreur' : 'En attente';
-      const tr = document.createElement('tr');
-      tr.style.borderBottom = '1px solid var(--border)';
+      const statusMap = {
+        done:       { label: 'Terminé',   cls: 'done',       icon: '✓' },
+        processing: { label: 'En cours',  cls: 'processing', icon: '●' },
+        error:      { label: 'Erreur',    cls: 'error',      icon: '✕' },
+      };
+      const st = statusMap[camp.status] || { label: 'En attente', cls: 'pending', icon: '○' };
+      const total = camp.total_rows || 0;
+      const done_c = camp.done_rows || 0;
+      const pct = total > 0 ? Math.round(done_c / total * 100) : 0;
+      const hasMail = camp.generate_mail1 || false;
+      const hasPdf  = camp.generate_pdf !== false;
+
+      const dlBtn = camp.status === 'done'
+        ? \`<button class="btn btn-primary" style="font-size:12px;padding:6px 14px" onclick="downloadCampaign('\${camp.id}')">⬇ CSV</button>\`
+        : camp.status === 'processing'
+        ? \`<button class="btn btn-ghost" style="font-size:12px;padding:6px 14px" onclick="showDashSection('generate',null)" >👁 Voir</button>\`
+        : '';
+
+      const card = document.createElement('div');
+      card.className = \`camp-card status-\${st.cls}\`;
+      card.innerHTML = \`
+        <div>
+          <div class="camp-card-title">
+            \${camp.name || 'Campagne sans nom'}
+            <span class="camp-badge camp-badge-\${st.cls}">
+              <span class="camp-badge-dot"></span>
+              \${st.label}
+            </span>
+            \${hasPdf  ? '<span style="font-size:10px;padding:2px 7px;border-radius:100px;background:var(--bg4);color:var(--text3)">📄 PDF</span>' : ''}
+            \${hasMail ? '<span style="font-size:10px;padding:2px 7px;border-radius:100px;background:var(--bg4);color:var(--text3)">✉ Mail</span>' : ''}
+          </div>
+          <div class="camp-card-meta">
+            <div class="camp-meta-item">📅 <strong>\${date}</strong></div>
+            <div class="camp-meta-item">👥 <strong>\${total}</strong> contacts</div>
+            \${camp.status === 'processing' ? \`<div class="camp-meta-item">⚡ <strong>\${done_c}/\${total}</strong> traités (\${pct}%)</div>\` : ''}
+            \${camp.status === 'done' ? \`<div class="camp-meta-item">✅ <strong>\${done_c}</strong> générés</div>\` : ''}
+            \${camp.error_rows > 0 ? \`<div class="camp-meta-item" style="color:#EF4444">⚠ <strong>\${camp.error_rows}</strong> erreurs</div>\` : ''}
+          </div>
+          \${camp.status === 'processing' ? \`<div style="margin-top:10px;height:3px;background:var(--bg4);border-radius:3px;overflow:hidden"><div style="height:100%;width:\${pct}%;background:linear-gradient(90deg,var(--blue-light),var(--pink));transition:width 0.5s"></div></div>\` : ''}
+        </div>
+        <div class="camp-actions">\${dlBtn}</div>
+      \`;
+      grid.appendChild(card);
+    });
       const dlCell = camp.status === 'done'
         ? '<button class="btn btn-ghost" style="font-size:12px;padding:5px 12px" onclick="downloadCampaignCsv(\'' + camp.id + '\')">Telecharger CSV</button>'
         : '—';
@@ -5434,16 +5646,6 @@ async function loadCampaigns() {
         + '<td style="padding:14px 20px;font-size:13px;color:var(--text2)">—</td>'
         + '<td style="padding:14px 20px"><span style="padding:3px 10px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:'+statusColor+';border-radius:100px;font-size:11px;font-weight:600">'+statusLabel+'</span></td>'
         + '<td style="padding:14px 20px">'+dlCell+'</td>';
-      tbody.appendChild(tr);
-    });
-
-    // Stats depuis les campagnes
-    const totalPdfs = campaigns.reduce((s, c) => s + (c.processed || 0), 0);
-    const totalCamps = campaigns.length;
-    const el = document.getElementById('stat-pdfs');
-    if (el) el.textContent = totalPdfs;
-    const subEl = document.getElementById('stat-pdfs-sub');
-    if (subEl) subEl.textContent = 'sur ' + totalCamps + ' campagne' + (totalCamps > 1 ? 's' : '');
   } catch(e) { console.error('loadCampaigns:', e); }
 }
 
@@ -5590,7 +5792,7 @@ async function loadDashboardData() {
   if (!authToken) return;
 
   // Afficher skeletons pendant le chargement
-  ['kpi-pdfs','kpi-campaigns','kpi-credits','kpi-clicks',
+  ['kpi-pdfs','kpi-mails','kpi-campaigns','kpi-credits',
    'abo-credits-left','abo-credits-used','stat-pdfs'].forEach(id => {
     const e = document.getElementById(id);
     if (e) { e.textContent = '...'; e.style.opacity = '0.5'; }
@@ -5611,10 +5813,18 @@ async function loadDashboardData() {
     // KPIs dashboard
     const set = (id, val) => { const e = document.getElementById(id); if (e) { e.textContent = val; e.style.opacity = '1'; } };
     set('kpi-credits', creditsLeft);
+    set('kpi-credits-sub', 'sur ' + user.credits + ' au total');
     set('kpi-campaigns', campaigns.length);
-    const totalPdfs = campaigns.reduce((s, c) => s + (c.processed || 0), 0);
-    set('kpi-pdfs', totalPdfs);
-    set('kpi-clicks', '—');
+    const totalPdfs  = campaigns.reduce((s, c) => s + (c.processed || 0), 0);
+    const totalMails = campaigns.reduce((s, c) => s + (c.mail1_count || 0), 0);
+    set('kpi-pdfs', totalPdfs || '0');
+    set('kpi-mails', totalMails || '—');
+
+    // Quick stats campagnes
+    const done = campaigns.filter(c => c.status === 'done').length;
+    if (document.getElementById('qs-done'))  document.getElementById('qs-done').textContent  = done;
+    if (document.getElementById('qs-pdfs'))  document.getElementById('qs-pdfs').textContent  = totalPdfs || '—';
+    if (document.getElementById('qs-mails')) document.getElementById('qs-mails').textContent = totalMails || '—';
 
     // Abonnement
     set('abo-credits-left', creditsLeft);
