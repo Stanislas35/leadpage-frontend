@@ -5039,18 +5039,18 @@ const LP_FIELDS = [
   { key: 'Entreprise',                label: 'Entreprise',                required: true,  group: 'required',  aliases: ['entreprise','company','company_name','companyname','organisation','organization','société','societe','nom_entreprise','nom entreprise',"nom d'entreprise",'account'] },
   // ── IMPORTANTS ──
   { key: 'Nom',                       label: 'Nom',                       required: false, group: 'important', aliases: ['nom','lastname','last_name','surname','family_name','apellido'] },
-  { key: 'Titre',                     label: 'Titre / Poste',             required: false, group: 'important', aliases: ['titre','poste','title','job_title','jobtitle','fonction','position','role','métier','metier','intitule','headline du profil','headline'] },
-  { key: "Secteurs d'activité",       label: "Secteur d'activité",        required: false, group: 'important', aliases: ["secteurs d'activité","secteurs d'activite",'secteur','secteurs','industry','sector','industrie','domaine','vertical'] },
-  { key: "Taille de l'entreprise",    label: "Taille entreprise",         required: false, group: 'important', aliases: ["taille de l'entreprise","taille de l entreprise",'taille','effectif','employees','headcount','company_size','companysize','nb_employes','employés','nb salaries'] },
+  { key: 'Titre',                     label: 'Titre / Poste',             required: false, group: 'important', aliases: ['titre','poste','title','job_title','jobtitle','fonction','position','role','métier','metier','intitule','poste actuel'] },
+  { key: "Secteurs d'activité",       label: "Secteur d'activité",        required: false, group: 'important', aliases: ["secteurs d'activité","secteurs d'activite","secteurs d\'activite",'secteur','secteurs','industry','sector','industrie','domaine','vertical','linkedin industry','linkedin_industry','linkedin specialities','linkedin_specialities','specialities','specialties'] },
+  { key: "Taille de l'entreprise",    label: "Taille entreprise",         required: false, group: 'important', aliases: ["taille de l'entreprise","taille de l entreprise","taille de l\'entreprise",'taille','effectif','employees','headcount','company_size','companysize','nb_employes','employés','nb salaries','linkedin employees','linkedin_employees','linkedin company employee count','linkedin_company_employee_count','employee count','nb employees'] },
   { key: 'Lieu',                      label: 'Lieu / Ville',              required: false, group: 'important', aliases: ['lieu','ville','city','location','region','pays','country','localisation','géographie'] },
   // ── BONUS ──
-  { key: "Résumé du profil",          label: 'Résumé du profil',          required: false, group: 'bonus',     aliases: ["résumé du profil","resume du profil",'résumé','resume','summary','profil','bio','about','description_profil','linkedin_summary','description sur l\'emploi',"description sur l'emploi"] },
-  { key: "Description de l'entreprise", label: "Description entreprise", required: false, group: 'bonus',     aliases: ["description de l'entreprise","description de l entreprise",'description entreprise','company_description','companydescription','about_company','activite','activité'] },
+  { key: "Résumé du profil",          label: 'Résumé du profil',          required: false, group: 'bonus',     aliases: ["résumé du profil","resume du profil",'résumé','resume','summary','profil','bio','about','description_profil','linkedin_summary','description sur l\'emploi',"description sur l'emploi",'profil summary','linkedin summary','headline du profil'] },
+  { key: "Description de l'entreprise", label: "Description entreprise", required: false, group: 'bonus',     aliases: ["description de l'entreprise","description de l entreprise",'description entreprise','company_description','companydescription','about_company','activite','activité','linkedin description','linkedin_description','company description',"description de l\'entreprise"] },
   { key: 'Email',                     label: 'Email',                     required: false, group: 'bonus',     aliases: ['email','e-mail','mail','courriel','email_address','emailaddress'] },
-  { key: 'LinkedIn',                  label: 'LinkedIn URL',              required: false, group: 'bonus',     aliases: ['url linkedin (profil utilisateur)','url linkedin','linkedin','linkedin_url','linkedin_profile','profil_linkedin','lien linkedin'] },
-  { key: 'Site web entreprise',       label: 'Site web entreprise',       required: false, group: 'bonus',     aliases: ['site web entreprise','site web','website','site_web','web','url','site','homepage','company_website','companywebsite','domain','url linkedin (entreprise)'] },
+  { key: 'LinkedIn',                  label: 'LinkedIn URL',              required: false, group: 'bonus',     aliases: ['url linkedin (profil utilisateur)','url linkedin','linkedin','linkedin_url','linkedin_profile','profil_linkedin','lien linkedin','linkedin url'] },
+  { key: 'Site web entreprise',       label: 'Site web entreprise',       required: false, group: 'bonus',     aliases: ['site web entreprise','site web','website','site_web','homepage','company_website','companywebsite','domain','corporate website','corporate_website','corporatewebsite'] },
   { key: 'Téléphone',                 label: 'Téléphone',                 required: false, group: 'bonus',     aliases: ['téléphone','telephone','numéro de téléphone','numero de telephone','phone','tel','mobile','phone_number'] },
-  { key: 'A commencé le',             label: 'En poste depuis',           required: false, group: 'bonus',     aliases: ['a commencé le','a commence le','début','debut','start_date','depuis','poste_depuis','date_debut'] },
+  { key: 'A commencé le',             label: 'En poste depuis',           required: false, group: 'bonus',     aliases: ['a commencé le','a commence le','début','debut','start_date','depuis','poste_depuis','date_debut','job started on','job_started_on','started on','date de debut'] },
 ];
 
 // ── Normalisation pour comparaison ───────────────────────────
@@ -5081,17 +5081,43 @@ function autoDetectMapping(headers) {
 }
 
 // ── Lire les headers du CSV ───────────────────────────────────
-async function parseCsvHeaders(file) {
+async function parseCsvRow(line, delim) {
+  // Parser CSV robuste : gère les champs entre guillemets contenant des délimiteurs et \n
+  const result = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') {
+      if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+      else inQ = !inQ;
+    } else if (c === delim && !inQ) {
+      result.push(cur.trim());
+      cur = '';
+    } else {
+      cur += c;
+    }
+  }
+  result.push(cur.trim());
+  return result;
+}
+
+function parseCsvHeaders(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
-      const text  = e.target.result;
-      const lines = text.split(String.fromCharCode(10)).filter(l => l.trim());
+      let text = e.target.result;
+      // Supprimer le BOM UTF-8 si présent
+      if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+      // Normaliser les fins de ligne CRLF et CR seuls
+      text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+      const lines = text.split('\n').filter(l => l.trim());
       if (!lines.length) return reject('CSV vide');
+      // Détection délimiteur sur la première ligne
       const delim = (lines[0].match(/;/g) || []).length > (lines[0].match(/,/g) || []).length ? ';' : ',';
-      const headers = lines[0].split(delim).map(h => h.trim().replace(/^["']|["']$/g, ''));
+      // Parser avec le parser robuste (gère les guillemets)
+      const headers = parseCsvRow(lines[0], delim).map(h => h.replace(/^["']|["']$/g, '').trim());
       // Garder 3 premières lignes pour aperçu
-      const preview = lines.slice(1, 4).map(l => l.split(delim).map(c => c.trim().replace(/^["']|["']$/g, '')));
+      const preview = lines.slice(1, 4).map(l => parseCsvRow(l, delim).map(c => c.replace(/^["']|["']$/g, '').trim()));
       resolve({ headers, preview, total: lines.length - 1, delim });
     };
     reader.onerror = reject;
