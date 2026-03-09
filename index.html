@@ -3867,6 +3867,40 @@ tr:hover td { background: var(--card-hover); }
           </div>
         </div>
 
+        <!-- APERÇU PREMIER CONTACT -->
+        <div id="previewBeforeGen" style="display:none;background:var(--bg2);border:1px solid var(--border-active);border-radius:16px;padding:20px 24px;margin-bottom:20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <h3 style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;margin:0">
+              👁 Aperçu · 1er contact détecté
+              <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:rgba(233,30,140,0.12);color:var(--pink);font-weight:700">AVANT ENVOI</span>
+            </h3>
+            <button onclick="document.getElementById('previewBeforeGen').style.display='none'" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;line-height:1">✕</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+            <div style="background:var(--bg3);border-radius:10px;padding:10px 14px">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Prénom / Nom</div>
+              <div style="font-size:13px;font-weight:600;color:var(--text)" id="prev-name">—</div>
+            </div>
+            <div style="background:var(--bg3);border-radius:10px;padding:10px 14px">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Entreprise</div>
+              <div style="font-size:13px;font-weight:600;color:var(--text)" id="prev-company">—</div>
+            </div>
+            <div style="background:var(--bg3);border-radius:10px;padding:10px 14px">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Titre / Poste</div>
+              <div style="font-size:13px;font-weight:600;color:var(--text)" id="prev-title">—</div>
+            </div>
+            <div style="background:var(--bg3);border-radius:10px;padding:10px 14px">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Email</div>
+              <div style="font-size:13px;font-weight:600;color:var(--text)" id="prev-email">—</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px">
+            <span>📊</span>
+            <span id="prev-total">0 contacts détectés</span>
+            <span style="margin-left:auto" id="prev-charte"></span>
+          </div>
+        </div>
+
         <!-- OPTIONS -->
         <div class="generate-options">
           <div class="gen-option" id="opt-pdf" style="border:2px solid var(--border-active);position:relative">
@@ -5052,7 +5086,7 @@ async function parseCsvHeaders(file) {
     const reader = new FileReader();
     reader.onload = (e) => {
       const text  = e.target.result;
-      const lines = text.split(/\r?\n/).filter(l => l.trim());
+      const lines = text.split(String.fromCharCode(10)).filter(l => l.trim());
       if (!lines.length) return reject('CSV vide');
       const delim = (lines[0].match(/;/g) || []).length > (lines[0].match(/,/g) || []).length ? ';' : ',';
       const headers = lines[0].split(delim).map(h => h.trim().replace(/^["']|["']$/g, ''));
@@ -5202,10 +5236,25 @@ function showFileInfo(file) {
   document.getElementById('dropZone').style.display = 'none';
   document.getElementById('fileInfo').style.display = 'flex';
   document.getElementById('fileName').textContent = file.name;
+  // Lire le CSV pour aperçu 1er contact + nb contacts
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    let text = e.target.result;
+    if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+    const lines = text.split('\n').map(function(l){ return l.replace(/\r$/,''); }).filter(function(l){ return l.trim(); });
+    const nb = Math.max(0, lines.length - 1);
+    const delim = ((lines[0]||'').match(/;/g)||[]).length > ((lines[0]||'').match(/,/g)||[]).length ? ';' : ',';
+    const nbCols = lines[0] ? lines[0].split(delim).length : 0;
+    const meta = document.getElementById('fileMeta');
+    if (meta) meta.textContent = nb + ' contact' + (nb>1?'s':'') + ' · ' + nbCols + ' colonnes détectées';
+    showPreviewBeforeGen(text, file.name);
+  };
+  reader.readAsText(file, 'UTF-8');
   document.getElementById('fileMeta').textContent = 'Analyse en cours...';
 }
 
 function resetFile() {
+  var pb = document.getElementById('previewBeforeGen'); if (pb) pb.style.display='none';
   document.getElementById('dropZone').style.display = 'block';
   document.getElementById('fileInfo').style.display = 'none';
   document.getElementById('csvInput').value = '';
@@ -5291,7 +5340,7 @@ async function startGeneration() {
     if (Object.keys(currentMapping).length > 0) {
       try {
         const text = await selectedCsvFile.text();
-        const lines = text.split(/\r?\n/).filter(l => l.trim());
+        const lines = text.split(String.fromCharCode(10)).filter(l => l.trim());
         const delim = (lines[0].match(/;/g)||[]).length > (lines[0].match(/,/g)||[]).length ? ';' : ',';
         const origHeaders = lines[0].split(delim).map(h => h.trim().replace(/^["']|["']$/g,''));
 
@@ -5572,7 +5621,7 @@ async function loadCampaigns() {
 
     // Quick stats
     const done  = campaigns.filter(c => c.status === 'done').length;
-    const pdfs  = campaigns.reduce((a,c) => a + (c.total_rows || 0), 0);
+    const pdfs  = campaigns.reduce((a,c) => a + (c.total || 0), 0);
     const mails = campaigns.reduce((a,c) => a + (c.mail1_count || 0), 0);
     const qsDone  = document.getElementById('qs-done');
     const qsPdfs  = document.getElementById('qs-pdfs');
@@ -5600,8 +5649,8 @@ async function loadCampaigns() {
         error:      { label: 'Erreur',    cls: 'error' }
       };
       var st = statusMap[camp.status] || { label: 'En attente', cls: 'pending' };
-      var total  = camp.total_rows || 0;
-      var done_c = camp.done_rows  || 0;
+      var total  = camp.total || 0;
+      var done_c = camp.processed || 0;
       var pct    = total > 0 ? Math.round(done_c / total * 100) : 0;
       var hasMail = camp.generate_mail1 || false;
       var hasPdf  = camp.generate_pdf !== false;
@@ -6550,6 +6599,50 @@ function validateGenOptions() {
   const err   = document.getElementById('gen-opt-error');
   const btn   = document.querySelector('[onclick="startGeneration()"]');
   const valid = (pdf && pdf.checked) || (mail && mail.checked);
+  if (err) err.style.display = valid ? 'none' : 'block';
+  if (btn) btn.disabled = !valid;
+}
+
+function showPreviewBeforeGen(csvText, filename) {
+  try {
+    var lines = csvText.split(String.fromCharCode(10)).filter(function(l){ return l.trim(); });
+    if (lines.length < 2) return;
+    var delim = (lines[0].match(/;/g)||[]).length > (lines[0].match(/,/g)||[]).length ? ';' : ',';
+    var headers = lines[0].split(delim).map(function(h){ return h.trim().replace(/^["']|["']$/g,'').toLowerCase(); });
+    var vals    = lines[1].split(delim).map(function(v){ return v.trim().replace(/^["']|["']$/g,''); });
+    function get() {
+      for (var i=0; i<arguments.length; i++) {
+        var k = arguments[i];
+        var idx = headers.findIndex(function(h){ return h.includes(k); });
+        if (idx !== -1 && vals[idx]) return vals[idx];
+      }
+      return '—';
+    }
+    var prenom  = get('prénom','prenom','firstname','first_name');
+    var nom     = get('nom','lastname','last_name');
+    var company = get('entreprise','company','société');
+    var titre   = get('titre','title','poste','headline');
+    var email   = get('email','mail');
+    var total   = lines.length - 1;
+    var el;
+    el = document.getElementById('prev-name');    if (el) el.textContent = prenom + (nom !== '—' ? ' '+nom : '');
+    el = document.getElementById('prev-company'); if (el) el.textContent = company;
+    el = document.getElementById('prev-title');   if (el) el.textContent = titre.length > 40 ? titre.substring(0,40)+'…' : titre;
+    el = document.getElementById('prev-email');   if (el) el.textContent = email;
+    el = document.getElementById('prev-total');   if (el) el.textContent = total + ' contact' + (total>1?'s':'') + ' détecté' + (total>1?'s':'');
+    var sel = document.getElementById('charte-selector');
+    el = document.getElementById('prev-charte');
+    if (el && sel) { var opt = sel.options[sel.selectedIndex]; el.textContent = opt ? '🎨 '+opt.text.replace('🎨 ','') : ''; }
+    document.getElementById('previewBeforeGen').style.display = 'block';
+  } catch(e) { console.warn('Preview CSV:', e); }
+}
+
+function validateGenOptions() {
+  var pdf  = document.getElementById('chk-pdf');
+  var mail = document.getElementById('chk-mail');
+  var err  = document.getElementById('gen-opt-error');
+  var btn  = document.querySelector('[onclick="startGeneration()"]');
+  var valid = (pdf && pdf.checked) || (mail && mail.checked);
   if (err) err.style.display = valid ? 'none' : 'block';
   if (btn) btn.disabled = !valid;
 }
