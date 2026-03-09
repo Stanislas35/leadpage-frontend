@@ -5397,7 +5397,11 @@ async function startGeneration() {
     const doMail1 = document.getElementById('chk-mail')  ? (document.getElementById('chk-mail').checked  ? '1' : '0') : '0';
     formData.append('generate_pdf',   doPdf);
     formData.append('generate_mail1', doMail1);
-    // Pas de charte_id : le backend utilise automatiquement la charte active
+    // Envoyer la charte sélectionnée si une est choisie
+    const charteSel = document.getElementById('charte-selector');
+    if (charteSel && charteSel.value && charteSel.value !== 'default') {
+      formData.append('charte_id', charteSel.value);
+    }
 
     const res = await fetch(API_URL + '/api/campaigns/', {
       method: 'POST',
@@ -5424,7 +5428,10 @@ async function startGeneration() {
         const isDone = prog.status === 'done' || prog.status === 'error';
         const pct = isDone ? 100 : Math.max(10, Math.min(95, prog.percent));
         document.getElementById('progressBar').style.width = pct + '%'; document.getElementById('progressPct').textContent = pct + '%';
-        document.getElementById('progressText').textContent = prog.processed + ' / ' + prog.total + ' PDFs générés';
+        (function(){
+          const genLabel = (document.getElementById('chk-pdf') && document.getElementById('chk-pdf').checked) ? 'PDFs' : 'Mails';
+          document.getElementById('progressText').textContent = prog.processed + ' / ' + prog.total + ' ' + genLabel + ' générés';
+        })();
 
         // Micro-animation : avance légèrement vers le prochain palier entre deux polls
         if (!isDone && pct < 95) {
@@ -5469,7 +5476,10 @@ async function startGeneration() {
 
           document.getElementById('progressBar').style.width = '100%';
           document.getElementById('progressPct').textContent = '100%';
-          document.getElementById('progressText').textContent = prog.total + ' / ' + prog.total + ' PDFs traités';
+          (function(){
+            const genLabel2 = (document.getElementById('chk-pdf') && document.getElementById('chk-pdf').checked) ? 'PDFs' : 'Mails';
+            document.getElementById('progressText').textContent = prog.total + ' / ' + prog.total + ' ' + genLabel2 + ' traités';
+          })();
           document.getElementById('progressTime').textContent = 'Terminé en ' + elapsed + 's';
 
           // Charger les résultats pour compter les vrais succès
@@ -5485,10 +5495,25 @@ async function startGeneration() {
                 results.forEach(r => {
                   const ok = r.status === 'ok';
                   const tr = document.createElement('tr');
+                  const mailId = 'mail_'+r.token;
+                  const hasMail = ok && r.mail1_corps && r.mail1_corps.trim();
                   tr.innerHTML = '<td>'+r.first_name+' '+r.last_name+'</td>'
                     +'<td>'+r.company+'</td>'
                     +'<td>'+(ok ? '<a class="pdf-link" href="'+r.tracking_url+'" target="_blank">🔗 Voir le PDF</a>' : '<span style="color:#EF4444;font-size:12px">'+r.status+'</span>')+'</td>'
-                    +'<td>'+(ok ? '<span class="badge-ok">✓ Généré</span>' : '<span style="color:#EF4444;font-size:12px;font-weight:600">✗ Erreur</span>')+'</td>';
+                    +'<td style="white-space:nowrap">'+(ok ? '<span class="badge-ok">✓ Généré</span>' : '<span style="color:#EF4444;font-size:12px;font-weight:600">✗ Erreur</span>')
+                    +(hasMail ? ' <button onclick="toggleMail(\''+mailId+'\')" style="margin-left:6px;padding:2px 8px;font-size:10px;border:1px solid var(--border-active);border-radius:6px;background:none;color:var(--pink);cursor:pointer">✉ Voir</button>' : '')+'</td>';
+                  tbody.appendChild(tr);
+                  if (hasMail) {
+                    const mailRow = document.createElement('tr');
+                    mailRow.id = mailId;
+                    mailRow.style.display = 'none';
+                    const mailContent = document.createElement('td');
+                    mailContent.setAttribute('colspan','4');
+                    mailContent.style.cssText = 'background:var(--bg2);padding:16px;font-size:12px;white-space:pre-wrap;border-left:3px solid var(--pink);line-height:1.6';
+                    mailContent.textContent = r.mail1_corps || '';
+                    mailRow.appendChild(mailContent);
+                    tbody.appendChild(mailRow);
+                  }
                   tbody.appendChild(tr);
                 });
               }
@@ -5749,12 +5774,26 @@ let authToken = localStorage.getItem('lp_token') || null;
 let currentUser = JSON.parse(localStorage.getItem('lp_user') || 'null');
 
 // ---- HELPERS ----------------------------
+function toggleMail(id) {
+  const row = document.getElementById(id);
+  if (row) row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+}
+
 async function apiCall(method, path, body = null, auth = false) {
   const headers = { 'Content-Type': 'application/json' };
   if (auth && authToken) headers['Authorization'] = 'Bearer ' + authToken;
   const opts = { method, headers };
   if (body) opts.body = JSON.stringify(body);
   const res = await fetch(API_URL + path, opts);
+  // 401 = token expiré → déconnexion propre
+  if (res.status === 401) {
+    authToken = null; currentUser = null;
+    localStorage.removeItem('lp_token');
+    localStorage.removeItem('lp_user');
+    showToast('Session expirée, reconnectez-vous', '#EF4444');
+    showScreen('auth');
+    throw new Error('Session expirée');
+  }
   const data = await res.json();
   if (!res.ok) throw new Error(data.detail || 'Erreur serveur');
   return data;
@@ -6631,27 +6670,52 @@ function validateGenOptions() {
 
 function showPreviewBeforeGen(csvText, filename) {
   try {
-    var lines = csvText.split(String.fromCharCode(10)).filter(function(l){ return l.trim(); });
+    // Parser robuste — même logique que parseCsvRow
+    function parseRow(line, delim) {
+      var result = [], cur = '', inQ = false;
+      for (var i = 0; i < line.length; i++) {
+        var c = line[i];
+        if (c === '"') {
+          if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+          else inQ = !inQ;
+        } else if (c === delim && !inQ) { result.push(cur.trim()); cur = ''; }
+        else cur += c;
+      }
+      result.push(cur.trim());
+      return result;
+    }
+    var text2 = csvText;
+    if (text2.charCodeAt(0) === 0xFEFF) text2 = text2.slice(1);
+    text2 = text2.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    var lines = text2.split('\n').filter(function(l){ return l.trim(); });
     if (lines.length < 2) return;
     var delim = (lines[0].match(/;/g)||[]).length > (lines[0].match(/,/g)||[]).length ? ';' : ',';
-    var headers = lines[0].split(delim).map(function(h){ return h.trim().replace(/^["']|["']$/g,'').toLowerCase(); });
-    var vals    = lines[1].split(delim).map(function(v){ return v.trim().replace(/^["']|["']$/g,''); });
+    var headers = parseRow(lines[0], delim).map(function(h){ return h.replace(/^["']|["']$/g,'').toLowerCase().trim(); });
+    var vals    = parseRow(lines[1], delim).map(function(v){ return v.replace(/^["']|["']$/g,'').trim(); });
+
+    // Match exact normalisé — pas de includes() pour éviter "prénom".includes("nom")
+    function norm(s) {
+      return (s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    }
     function get() {
-      for (var i=0; i<arguments.length; i++) {
-        var k = arguments[i];
-        var idx = headers.findIndex(function(h){ return h.includes(k); });
+      for (var i = 0; i < arguments.length; i++) {
+        var kn = norm(arguments[i]);
+        var idx = -1;
+        for (var j = 0; j < headers.length; j++) {
+          if (norm(headers[j]) === kn) { idx = j; break; }
+        }
         if (idx !== -1 && vals[idx]) return vals[idx];
       }
       return '—';
     }
-    var prenom  = get('prénom','prenom','firstname','first_name');
-    var nom     = get('nom','lastname','last_name');
+    var prenom  = get('prénom','prenom','firstname','first name','first_name');
+    var nom     = get('nom','lastname','last name','last_name','surname');
     var company = get('entreprise','company','société');
-    var titre   = get('titre','title','poste','headline');
-    var email   = get('email','mail');
+    var titre   = get('titre','title','poste','job title','job_title','headline');
+    var email   = get('email','mail','e-mail');
     var total   = lines.length - 1;
     var el;
-    el = document.getElementById('prev-name');    if (el) el.textContent = prenom + (nom !== '—' ? ' '+nom : '');
+    el = document.getElementById('prev-name');    if (el) el.textContent = (prenom !== '—' ? prenom : '') + (nom !== '—' ? ' '+nom : '');
     el = document.getElementById('prev-company'); if (el) el.textContent = company;
     el = document.getElementById('prev-title');   if (el) el.textContent = titre.length > 40 ? titre.substring(0,40)+'…' : titre;
     el = document.getElementById('prev-email');   if (el) el.textContent = email;
