@@ -4953,8 +4953,18 @@ function showScreen(id, pushState) {
     if (pc) pc.classList.remove('visible');
     if (rc) rc.classList.remove('visible');
     selectedCsvFile = null;
+    // Reset drop zone propre — sans casser les event listeners
     const dropZone = document.getElementById('dropZone');
-    if (dropZone) dropZone.innerHTML = dropZone.innerHTML; // reset visuel
+    if (dropZone) {
+      const csvInput = document.getElementById('csvInput');
+      if (csvInput) csvInput.value = '';
+      const dropIcon = dropZone.querySelector('.drop-icon');
+      const dropH3   = dropZone.querySelector('h3');
+      const dropP    = dropZone.querySelector('p');
+      if (dropIcon) dropIcon.textContent = '📂';
+      if (dropH3)   dropH3.textContent   = 'Glissez votre fichier CSV ici';
+      if (dropP)    dropP.textContent    = '';
+    }
   }
 
   if (pushState) {
@@ -5765,13 +5775,24 @@ async function loadCampaigns() {
 
 async function downloadCampaignCsv(campaignId) {
   try {
-    const r = await fetch(API_URL + '/api/campaigns/' + campaignId + '/download', { headers: { 'Authorization': 'Bearer ' + authToken } });
+    const r = await fetch(API_URL + '/api/campaigns/' + campaignId + '/download',
+      { headers: { 'Authorization': 'Bearer ' + authToken } });
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}));
+      const msg = err.detail || ('Erreur ' + r.status);
+      showToast('⚠ ' + msg, '#EF4444');
+      return;
+    }
     const blob = await r.blob();
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url; a.download = 'leadpage-' + campaignId.slice(0,8) + '.csv';
-    a.click(); URL.revokeObjectURL(url);
-  } catch(e) { showToast('Erreur telechargement', '#EF4444'); }
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('✅ CSV téléchargé', '#22C55E');
+  } catch(e) { showToast('Erreur téléchargement', '#EF4444'); }
 }
 
 // -- FREEMIUM -----------------------------
