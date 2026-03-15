@@ -5441,7 +5441,7 @@ async function startGeneration() {
     const startTime = Date.now();
 
     while (!done) {
-      await new Promise(r => setTimeout(r, 1500));
+      await new Promise(r => setTimeout(r, 3000));
       try {
         const prog = await apiCall('GET', '/api/campaigns/' + campaignId + '/progress', null, true);
         const isDone = prog.status === 'done' || prog.status === 'error';
@@ -5516,8 +5516,8 @@ async function startGeneration() {
                   const tr = document.createElement('tr');
                   const mailId = 'mail_'+r.token;
                   const hasMail = ok && r.mail1_corps && r.mail1_corps.trim();
-                  tr.innerHTML = '<td>'+r.first_name+' '+r.last_name+'</td>'
-                    +'<td>'+r.company+'</td>'
+                  tr.innerHTML = '<td>'+escHtml(r.first_name)+' '+escHtml(r.last_name)+'</td>'
+                    +'<td>'+escHtml(r.company)+'</td>'
                     +'<td>'+(ok ? '<a class="pdf-link" href="'+r.tracking_url+'" target="_blank">🔗 Voir le PDF</a>' : '<span style="color:#EF4444;font-size:12px">'+r.status+'</span>')+'</td>'
                     +'<td style="white-space:nowrap">'+(ok ? '<span class="badge-ok">✓ Généré</span>' : '<span style="color:#EF4444;font-size:12px;font-weight:600">✗ Erreur</span>')
                     +(hasMail ? ' <button onclick="toggleMail(\''+mailId+'\')" style="margin-left:6px;padding:2px 8px;font-size:10px;border:1px solid var(--border-active);border-radius:6px;background:none;color:var(--pink);cursor:pointer">✉ Voir</button>' : '')+'</td>';
@@ -5759,7 +5759,7 @@ async function loadCampaigns() {
       card.innerHTML =
         '<div>'
         + '<div class="camp-card-title">'
-        + (camp.name || 'Campagne sans nom')
+        + (escHtml(camp.name) || 'Campagne sans nom')
         + ' <span class="camp-badge camp-badge-' + st.cls + '"><span class="camp-badge-dot"></span>' + st.label + '</span>'
         + ' ' + tagHtml
         + '</div>'
@@ -5796,7 +5796,7 @@ async function downloadCampaignCsv(campaignId) {
 }
 
 // -- FREEMIUM -----------------------------
-let freeCredits = 3; // simulation : 3 restants sur 5
+let freeCredits = null; // chargé depuis le backend via /api/auth/me
 
 // ---- CONFIG API -------------------------
 const API_URL = 'https://leadpage-backend.onrender.com';
@@ -5804,6 +5804,12 @@ let authToken = localStorage.getItem('lp_token') || null;
 let currentUser = JSON.parse(localStorage.getItem('lp_user') || 'null');
 
 // ---- HELPERS ----------------------------
+function escHtml(s) {
+  return (s || '').toString()
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 function toggleMail(id) {
   const row = document.getElementById(id);
   if (row) row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
@@ -5997,7 +6003,7 @@ async function loadDashboardData() {
         const pct = Math.round(((camp.processed || 0) / maxPdfs) * 100);
         return '<div style="margin-bottom:16px">'
           + '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">'
-          + '<span style="font-weight:600">' + camp.name + '</span>'
+          + '<span style="font-weight:600">' + escHtml(camp.name) + '</span>'
           + '<span style="color:var(--pink);font-weight:700">' + (camp.processed || 0) + ' PDFs</span>'
           + '</div>'
           + '<div style="height:8px;background:var(--bg3);border-radius:4px;overflow:hidden">'
