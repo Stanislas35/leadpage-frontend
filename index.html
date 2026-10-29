@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="LeadPage génère un PDF personnalisé avec le logo de chaque prospect, une accroche IA sur-mesure et un mail d'accompagnement, depuis votre CSV.">
-<meta name="theme-color" content="#0C1020">
+<meta name="theme-color" content="#1B2455">
 <meta name="color-scheme" content="dark">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://stanislas35.github.io/leadpage-frontend/icon-512.png">
@@ -3458,6 +3458,28 @@ table td, table th { border-color: var(--border) !important; }
 .lp-cta-final { background: #3F54D1 !important; }
 .lp-cta-final .lp-section-sub, .lp-cta-final-sub, .lp-cta-final-sub a { color: #FFFFFF !important; opacity: 1 !important; }
 .lp-cta-final .lp-cta-final-sub a { text-decoration: underline; font-weight: 600; }
+
+/* ── Palette allégée : sombre mais plus clair, plus aérien ── */
+:root, [data-theme="dark"], [data-theme="light"] {
+  --bg: #1B2455; --bg2: #232E6A; --bg3: #2B3880; --bg4: #364594;
+  --border: #4558A8; --text: #FFFFFF; --text2: #CFD8FF; --text3: #9FAEE6;
+  --card: #232E6A; --card-hover: #2B3880;
+  --shadow: 0 2px 4px rgba(10,16,50,.25), 0 16px 40px rgba(10,16,50,.35);
+  --accent: #B3C1FF; --indigo: #8097FF; --sun: #FFD36E; --coral: #FF9580; --mint: #66E8B0; --sky: #7DD6FF;
+  --ink: #1B2455;
+}
+body { background: var(--bg); }
+nav { background: rgba(27,36,85,.9) !important; }
+.lp-section-alt::before { background: var(--bg2) !important; }
+.lp-section-alt .lp-result-card { background: var(--bg3) !important; }
+.lp-cta-final { background: #4A60DB !important; }
+.lp-footer { background: #151D48; }
+.lp-badge { background: rgba(255,211,110,.14) !important; border-color: rgba(255,211,110,.4) !important; }
+.lp-h1 .w:nth-child(5)::after, .lp-h1 .w:nth-child(6)::after { background: rgba(128,151,255,.6); }
+.form-input, input[type="text"], input[type="email"], input[type="password"], select, textarea { background: var(--bg) !important; }
+.auth-card { background: var(--bg2) !important; }
+.sidebar { background: var(--bg2) !important; }
+.pro-doc { box-shadow: 0 18px 50px rgba(8,12,40,.4); }
 </style>
 </head>
 <body>
