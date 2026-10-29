@@ -3194,6 +3194,16 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
   .pro-compare { grid-template-columns: 1fr; }
   .pro-dl > div { grid-template-columns: 1fr; gap: 6px; }
 }
+
+/* Sections alternées pleine largeur, contenu aligné à gauche */
+.lp-section-alt { background: transparent !important; position: relative; text-align: left; isolation: isolate; }
+.lp-section-alt::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); background: var(--bg3); z-index: -1; }
+.lp-section, .lp-section-alt { text-align: left; }
+.lp-section .lp-h2, .lp-section .lp-section-sub, .lp-section .lp-section-label { margin-left: 0; margin-right: 0; text-align: left; }
+.lp-section .lp-results-grid { margin-left: 0; margin-right: 0; max-width: none; }
+.lp-h1 { font-size: clamp(34px, 4.4vw, 54px); }
+.lp-cta-final { text-align: center; }
+.lp-cta-final .lp-h2, .lp-cta-final .lp-section-sub { margin-left: auto; margin-right: auto; text-align: center; }
 </style>
 </head>
 <body>
