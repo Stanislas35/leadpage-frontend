@@ -3230,7 +3230,7 @@ nav.is-scrolled { box-shadow: 0 1px 0 var(--border), 0 8px 24px rgba(18,24,38,.0
 
 @keyframes proRise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
 @keyframes wordUp { from { opacity: 0; transform: translateY(.55em); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
-@keyframes docIn { 0% { opacity: 0; transform: translateY(14px) rotate(-1.5deg); } 100% { opacity: 1; transform: none; } }
+@keyframes docIn { 0% { opacity: .35; transform: translateY(10px) scale(.985); } 100% { opacity: 1; transform: none; } }
 @keyframes floaty { 0%,100% { translate: 0 0; } 50% { translate: 0 -7px; } }
 @keyframes pop { 0% { transform: scale(.4); opacity: 0; } 70% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }
 
@@ -5285,9 +5285,13 @@ function startDemoAnimation() {
 }
 
 // ── Document d'aperçu du hero ──
+let lastHeroDoc = 0;
 function updateHeroDoc(contact) {
   const doc = document.getElementById('proDoc');
   if (!doc) return;
+  const now = Date.now();
+  if (now - lastHeroDoc < 1800) return;   // un changement toutes les ~2 s, sans clignotement
+  lastHeroDoc = now;
   const first = contact.name.split(' ')[0];
   const company = contact.name.split(' · ')[1] || '';
   document.getElementById('proDocHead').style.background = contact.color;
