@@ -10,7 +10,7 @@
 <meta property="og:description" content="Un PDF personnalisé par prospect, généré depuis votre CSV en quelques minutes.">
 <title>LeadPage · Prospection personnalisée à l'échelle</title>
 <link rel="icon" href="https://www.google.com/s2/favicons?sz=64&domain=devoleads.fr" type="image/png">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet">
 <style>
 :root {
   --blue: #1B2D6B;
@@ -2966,6 +2966,117 @@ tr:hover td { background: var(--card-hover); }
   animation: pulse-dot 0.8s ease-in-out infinite;
 }
 
+
+/* ══════════════════════════════════════════════════════════════
+   THÈME PRO — surcharge visuelle (sobre, une seule couleur d'accent)
+   Marque : bleu marine Devoleads. Plus de dégradés, halos ni grilles.
+══════════════════════════════════════════════════════════════ */
+:root {
+  --accent: #1B2D6B;
+  --blue: var(--accent); --blue-mid: var(--accent); --blue-light: var(--accent);
+  --pink: var(--accent); --pink-light: var(--accent);
+  --pink-glow: transparent; --blue-glow: transparent;
+  --ok: #1E7A4F;
+  --font-ui: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --r: 6px;
+}
+[data-theme="light"] {
+  --bg: #FFFFFF; --bg2: #FFFFFF; --bg3: #F5F6F8; --bg4: #E9ECF0;
+  --border: #D8DCE3; --border-active: #1B2D6B;
+  --text: #121826; --text2: #475060; --text3: #6B7482;
+  --card: #FFFFFF; --card-hover: #F5F6F8;
+  --shadow: 0 1px 2px rgba(18,24,38,.06), 0 8px 24px rgba(18,24,38,.06);
+}
+[data-theme="dark"] {
+  --accent: #6E8BE8;
+  --bg: #0E1217; --bg2: #141A21; --bg3: #1A212A; --bg4: #232B36;
+  --border: #2A333F; --border-active: #6E8BE8;
+  --text: #E7EAEF; --text2: #A4ACB8; --text3: #7A8493;
+  --card: #141A21; --card-hover: #1A212A;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+}
+body { font-family: var(--font-ui); font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body::before, .hero-grid, .hero-glow, .lp-hero-bg, .lp-orb, .lp-orb1, .lp-orb2,
+.lp-grid-overlay, .lp-cta-final-orb { display: none !important; }
+
+/* Typographie : serif pour les titres, sans pour l'interface */
+h1, h2, h3, .lp-h1, .lp-h2, .hero h1, .section h2 {
+  font-family: var(--font-display); font-weight: 600; letter-spacing: -0.015em; line-height: 1.12;
+}
+h4, button, input, select, textarea, .btn { font-family: var(--font-ui); }
+.lp-h1 { font-size: clamp(36px, 5vw, 56px); }
+.lp-h2 { font-size: clamp(26px, 3.2vw, 38px); }
+.lp-gradient, .lp-h2 em, .section h2 em, .hero h1 .gradient {
+  background: none !important; -webkit-text-fill-color: currentColor !important; color: inherit !important; font-style: normal;
+}
+/* Textes en dégradé → couleur unie */
+.nav-logo span, .stat-num, .kpi-value, .lp-stat-n,
+[style*="-webkit-text-fill-color:transparent"] {
+  background: none !important; -webkit-text-fill-color: var(--text) !important; color: var(--text) !important;
+}
+.nav-logo span { color: var(--accent) !important; -webkit-text-fill-color: var(--accent) !important; }
+.nav-logo { font-family: var(--font-display); font-weight: 600; font-size: 22px; letter-spacing: -0.01em; }
+.nav-logo .dot, .auth-logo .dot { display: none; }
+.auth-logo { font-family: var(--font-display); font-weight: 600; }
+
+/* Étiquettes : phrase normale, pas de capitales espacées */
+.section-label, .lp-section-label, .hero-badge, .lp-badge, .stat-label, .lp-stat-l, .lp-logos-label {
+  text-transform: none !important; letter-spacing: 0 !important; font-weight: 500;
+}
+.section-label, .lp-section-label { color: var(--text2) !important; font-size: 14px; }
+.hero-badge, .lp-badge { border-radius: var(--r) !important; background: var(--bg3) !important; color: var(--text2) !important; border-color: var(--border) !important; }
+.lp-badge-dot { display: none; }
+
+/* Navigation */
+nav { background: var(--bg) !important; backdrop-filter: none !important; border-bottom: 1px solid var(--border); }
+.theme-toggle { border-radius: var(--r); }
+.theme-toggle::after { background: var(--accent) !important; border-radius: 3px; }
+
+/* Boutons : aplats, pas de lueur, pas de déplacement */
+.btn, .btn-lg { border-radius: var(--r) !important; font-weight: 500; }
+.btn-primary, .lp-btn-primary, .lp-price-btn-primary, .lp-sim-gen-btn, .lp-sim-dl-btn {
+  background: var(--accent) !important; color: #fff !important; box-shadow: none !important; border-radius: var(--r) !important; border: 1px solid var(--accent);
+}
+[data-theme="dark"] .btn-primary, [data-theme="dark"] .lp-btn-primary, [data-theme="dark"] .lp-price-btn-primary { color: #0E1217 !important; }
+.btn-primary:hover, .lp-btn-primary:hover, .lp-price-btn-primary:hover { transform: none !important; box-shadow: none !important; filter: brightness(1.12); }
+.btn-ghost, .lp-btn-ghost { border-radius: var(--r) !important; background: transparent; color: var(--text) !important; border: 1px solid var(--border); }
+.btn-ghost:hover, .lp-btn-ghost:hover { border-color: var(--accent); background: var(--bg3); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Surfaces : bordure fine, peu d'ombre, rayon réduit */
+.lp-demo-card, .lp-price-card, .lp-result-card, .lp-step, .price-card, .plan-option, .camp-card,
+.csv-drop-zone, .lp-faq-item, .kpi, .card, .lp-sim, .lp-sim-card {
+  border-radius: 8px !important; box-shadow: none !important; backdrop-filter: none !important;
+}
+.lp-demo-card { box-shadow: var(--shadow) !important; background: var(--bg2); }
+.lp-price-card:hover { transform: none !important; box-shadow: none !important; }
+.lp-price-featured, .price-card.featured, .plan-option.selected {
+  background: var(--bg3) !important; border: 2px solid var(--accent) !important; box-shadow: none !important;
+}
+.hero-stats, .lp-stats-row { border-radius: 8px; backdrop-filter: none !important; background: transparent; }
+.lp-stat-n { font-family: var(--font-display); font-weight: 600; }
+.step-num, .upload-icon, .lp-testi-avatar, .lp-step-connector, .pdf-link, .pdf-link:hover {
+  background: var(--bg3) !important; color: var(--text) !important;
+}
+.lp-step-connector { background: var(--border) !important; }
+.sidebar-item.active { background: var(--bg3) !important; color: var(--accent) !important; box-shadow: inset 3px 0 0 var(--accent); }
+.csv-drop-zone:hover, .csv-drop-zone.dragover { background: var(--bg3) !important; border-color: var(--accent) !important; }
+.lp-section-alt { background: var(--bg3) !important; }
+.lp-logo-pill { border-radius: var(--r); background: transparent; border: 1px solid var(--border); color: var(--text2); }
+
+/* Mouvements décoratifs désactivés */
+.lp-badge-dot, .camp-card.status-processing::before, [class*="pulse"] { animation: none !important; box-shadow: none !important; }
+.lp-reveal { transition-duration: .25s !important; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+/* Barres de progression et pastilles en dégradé inline → aplat */
+.lp-demo-progress-bar, #demoBar { background: var(--accent) !important; }
+[style*="linear-gradient(90deg,var(--blue-light),var(--pink))"],
+[style*="linear-gradient(90deg,#5B80FF,#E91E8C)"] { background: var(--accent) !important; }
+[style*="linear-gradient(135deg,rgba(27,45,107,0.3),rgba(233,30,140,0.1))"] { background: var(--bg3) !important; }
+[style*="linear-gradient(135deg,#2A44A0,#E91E8C)"] { background: var(--accent) !important; }
+/* Aperçu de la charte du client : on garde ses couleurs réelles (pas touché) */
 </style>
 </head>
 <body>
@@ -3004,14 +3115,13 @@ tr:hover td { background: var(--card-hover); }
 
         <h1 class="lp-h1">
           Vos prospects sont<br>
-          <span class="lp-gradient">sur-sollicités.<br>Démarquez-vous.</span>
+          sur-sollicités.<br>Démarquez-vous.
         </h1>
 
         <p class="lp-sub">
           LeadPage génère un PDF 2 pages <strong>avec le logo de chaque prospect</strong>,
           une accroche IA sur-mesure et un mail d'accompagnement —
           le tout depuis votre CSV, en moins de 2 minutes pour 100 contacts.
-          Résultat&nbsp;: <strong>3× plus de clics, de réponses et de RDV</strong>.
         </p>
 
         <div class="lp-cta-row">
@@ -3025,11 +3135,9 @@ tr:hover td { background: var(--card-hover); }
         </div>
 
         <div class="lp-stats-row">
-          <div class="lp-stat"><span class="lp-stat-n" data-target="3">0</span><span class="lp-stat-u">×</span><span class="lp-stat-l">plus de RDV obtenus</span></div>
+          <div class="lp-stat"><span class="lp-stat-n" data-target="100">0</span><span class="lp-stat-u"> contacts</span><span class="lp-stat-l">en quelques minutes</span></div>
           <div class="lp-stat-sep"></div>
-          <div class="lp-stat"><span class="lp-stat-n" data-target="100">0</span><span class="lp-stat-u"> contacts</span><span class="lp-stat-l">en 2 minutes</span></div>
-          <div class="lp-stat-sep"></div>
-          <div class="lp-stat"><span class="lp-stat-n" data-target="0">0</span><span class="lp-stat-u">€</span><span class="lp-stat-l">pour démarrer</span></div>
+          <div class="lp-stat"><span class="lp-stat-n" data-target="5">0</span><span class="lp-stat-u"> PDFs</span><span class="lp-stat-l">offerts pour tester</span></div>
         </div>
       </div>
 
@@ -3044,7 +3152,7 @@ tr:hover td { background: var(--card-hover); }
 
             <!-- CSV input -->
             <div class="lp-demo-row lp-demo-csv" id="demoCSV">
-              <div class="lp-demo-icon">📋</div>
+              <div class="lp-demo-icon">CSV</div>
               <div class="lp-demo-info">
                 <div class="lp-demo-name">prospects_mars_2025.csv</div>
                 <div class="lp-demo-meta">247 contacts · Vayne.io export</div>
@@ -3061,7 +3169,7 @@ tr:hover td { background: var(--card-hover); }
               <div class="lp-demo-progress-track">
                 <div class="lp-demo-progress-bar" id="demoBar"></div>
               </div>
-              <div class="lp-demo-current" id="demoCurrent">⚡ Initialisation...</div>
+              <div class="lp-demo-current" id="demoCurrent">Initialisation...</div>
             </div>
 
             <!-- PDF cards animées -->
@@ -3071,12 +3179,12 @@ tr:hover td { background: var(--card-hover); }
 
             <!-- CSV output -->
             <div class="lp-demo-output" id="demoOutput" style="opacity:0">
-              <div class="lp-demo-icon">✅</div>
+              <div class="lp-demo-icon">PDF</div>
               <div class="lp-demo-info">
                 <div class="lp-demo-name">247 PDFs générés</div>
                 <div class="lp-demo-meta">CSV enrichi prêt pour Snov.io</div>
               </div>
-              <button class="lp-demo-dl">Télécharger →</button>
+              <button class="lp-demo-dl">Télécharger</button>
             </div>
           </div>
         </div>
@@ -3112,7 +3220,7 @@ tr:hover td { background: var(--card-hover); }
   <!-- ░░ COMMENT ÇA MARCHE — ANIMATION ░░ -->
   <div class="lp-section" id="lp-how">
     <div class="lp-section-label">Comment ça marche</div>
-    <h2 class="lp-h2">De votre CSV à 100 prospects personnalisés<br><em>en moins de 2 minutes</em></h2>
+    <h2 class="lp-h2">De votre CSV à 100 PDF personnalisés en quelques minutes</h2>
     <p class="lp-section-sub">Pas de template générique. Chaque PDF est rédigé par l'IA avec le nom, le secteur et le profil LinkedIn du prospect.</p>
 
     <div class="lp-steps">
@@ -3172,7 +3280,7 @@ tr:hover td { background: var(--card-hover); }
   <!-- ░░ SECTION DÉMO ANIMÉE ░░ -->
   <div class="lp-section lp-demo-section" id="lp-demo">
     <div class="lp-section-label">Démo live</div>
-    <h2 class="lp-h2">Regardez LeadPage<br><em>en action</em></h2>
+    <h2 class="lp-h2">Un exemple en direct</h2>
     <p class="lp-section-sub">Du CSV brut au PDF personnalisé avec le logo du prospect, en temps réel.</p>
 
     <!-- Fausse fenêtre navigateur -->
@@ -3324,42 +3432,21 @@ tr:hover td { background: var(--card-hover); }
     </div>
   </div>
 
-  <!-- ░░ PREUVES SOCIALES ░░ -->
+  <!-- ░░ CE QUE VOUS OBTENEZ ░░ -->
   <div class="lp-section lp-section-alt">
-    <div class="lp-section-label">Résultats</div>
-    <h2 class="lp-h2">Ce que nos clients observent<br><em>en 30 jours</em></h2>
+    <h2 class="lp-h2">Ce que contient chaque livrable</h2>
     <div class="lp-results-grid">
       <div class="lp-result-card lp-reveal">
-        <div class="lp-result-num">+340%</div>
-        <div class="lp-result-label">de clics, réponses et RDV pris</div>
-        <div class="lp-result-source">Sur les campagnes avec PDF personnalisé vs email texte seul</div>
+        <div class="lp-result-label"><strong>Un PDF de 2 pages par prospect</strong></div>
+        <div class="lp-result-source">Logo, nom, poste et entreprise du prospect, avec votre charte graphique.</div>
       </div>
       <div class="lp-result-card lp-reveal">
-        <div class="lp-result-num">4 min</div>
-        <div class="lp-result-label">pour générer 500 PDFs personnalisés</div>
-        <div class="lp-result-source">PDF + mail d'accroche générés simultanément</div>
+        <div class="lp-result-label"><strong>Une accroche rédigée pour chaque contact</strong></div>
+        <div class="lp-result-source">Basée sur les informations de votre CSV. Vous relisez avant d'envoyer.</div>
       </div>
       <div class="lp-result-card lp-reveal">
-        <div class="lp-result-num">0€</div>
-        <div class="lp-result-label">de setup, en ligne en 2 minutes</div>
-        <div class="lp-result-source">Sans carte bancaire pour démarrer</div>
-      </div>
-    </div>
-
-    <div class="lp-testimonials">
-      <div class="lp-testi lp-reveal">
-        <div class="lp-testi-quote">"On tournait à 2 000 cold emails par semaine avec un taux de réponse de 1,8%. Depuis qu'on a intégré LeadPage dans notre séquence, on est à 5,4%. Le prospect reçoit son logo, ses chiffres secteur — il croit qu'on a préparé ça pour lui. Parce que c'est le cas."</div>
-        <div class="lp-testi-author">
-          <div class="lp-testi-avatar">JL</div>
-          <div><div class="lp-testi-name">Jean-Luc M.</div><div class="lp-testi-role">Fondateur · Agence de prospection BtoB</div></div>
-        </div>
-      </div>
-      <div class="lp-testi lp-reveal">
-        <div class="lp-testi-quote">"Avant, préparer 50 PDFs personnalisés prenait 2 jours à notre équipe. Maintenant c'est 4 minutes. On a réinvesti ce temps en suivi prospect — nos RDV ont triplé en 6 semaines."</div>
-        <div class="lp-testi-author">
-          <div class="lp-testi-avatar">SC</div>
-          <div><div class="lp-testi-name">Sarah C.</div><div class="lp-testi-role">Head of Sales · SaaS B2B Scale-up</div></div>
-        </div>
+        <div class="lp-result-label"><strong>Un CSV prêt pour votre outil d'envoi</strong></div>
+        <div class="lp-result-source">Vos colonnes d'origine, plus le lien du PDF et le mail d'accompagnement.</div>
       </div>
     </div>
   </div>
@@ -3367,7 +3454,7 @@ tr:hover td { background: var(--card-hover); }
   <!-- ░░ PRICING ░░ -->
   <div class="lp-section" id="lp-pricing">
     <div class="lp-section-label">Tarifs</div>
-    <h2 class="lp-h2">Tout inclus. PDF + mail d'accroche. Sans engagement.<br><em>Sans engagement</em></h2>
+    <h2 class="lp-h2">Tarifs : PDF et mail d'accompagnement inclus</h2>
     <p class="lp-section-sub">Pas de frais cachés. Pas d'engagement annuel. Résiliez en 1 clic.</p>
 
     <div class="lp-pricing-grid">
@@ -3429,7 +3516,7 @@ tr:hover td { background: var(--card-hover); }
   <!-- ░░ FAQ ░░ -->
   <div class="lp-section lp-section-alt" id="lp-faq">
     <div class="lp-section-label">FAQ</div>
-    <h2 class="lp-h2">Les questions<br><em>qu'on nous pose toujours</em></h2>
+    <h2 class="lp-h2">Questions fréquentes</h2>
 
     <div class="lp-faq-grid">
       <div class="lp-faq-item lp-reveal" onclick="toggleFaq(this)">
@@ -3471,7 +3558,7 @@ tr:hover td { background: var(--card-hover); }
   <div class="lp-cta-final">
     <div class="lp-cta-final-orb"></div>
     <div class="lp-section-label">Prêt ?</div>
-    <h2 class="lp-h2">Générez vos premiers PDFs<br><em>en moins de 5 minutes</em></h2>
+    <h2 class="lp-h2">Testez avec 5 PDFs gratuits</h2>
     <p class="lp-section-sub">5 PDFs gratuits. Sans carte bancaire. Sans installation.</p>
     <button class="lp-btn-primary lp-btn-xl" onclick="goToDashboardOrAuth()">
       Générer mes 5 premiers PDFs — c'est gratuit
@@ -4504,7 +4591,7 @@ tr:hover td { background: var(--card-hover); }
       </div>
       <div onclick="selectUpgradePlan(this,'79')" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:linear-gradient(135deg,rgba(27,45,107,0.3),rgba(233,30,140,0.1));border:1px solid var(--border-active);border-radius:12px;cursor:pointer;transition:all 0.2s">
         <div style="flex:1">
-          <div style="font-size:14px;font-weight:600">Growth ⚡ <span style="font-size:11px;background:linear-gradient(135deg,#2A44A0,#E91E8C);color:white;padding:2px 8px;border-radius:100px;font-weight:700">Populaire</span></div>
+          <div style="font-size:14px;font-weight:600">Growth <span style="font-size:11px;background:linear-gradient(135deg,#2A44A0,#E91E8C);color:white;padding:2px 8px;border-radius:100px;font-weight:700">Populaire</span></div>
           <div style="font-size:12px;color:var(--text3)">2 000 PDFs + mails · ~8 campagnes/mois</div>
         </div>
         <div style="font-size:18px;font-weight:800;color:var(--pink)">79€<span style="font-size:12px;font-weight:400;color:var(--text3)">/mois</span></div>
@@ -4882,7 +4969,7 @@ function startDemoAnimation() {
         pdfs.innerHTML = '';
         output.style.opacity = '0';
         bar.style.width = '0%';
-        current.textContent = '⚡ Initialisation...';
+        current.textContent = 'Initialisation...';
         count.textContent = '0 / ' + total;
         pct.textContent = '0%';
         demoRunning = false;
