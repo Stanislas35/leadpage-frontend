@@ -6,10 +6,13 @@
 <meta name="description" content="LeadPage génère un PDF personnalisé avec le logo de chaque prospect, une accroche IA sur-mesure et un mail d'accompagnement, depuis votre CSV.">
 <meta name="theme-color" content="#1B2D6B">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://stanislas35.github.io/leadpage-frontend/icon-512.png">
 <meta property="og:title" content="LeadPage · Prospection personnalisée à l'échelle">
 <meta property="og:description" content="Un PDF personnalisé par prospect, généré depuis votre CSV en quelques minutes.">
 <title>LeadPage · Prospection personnalisée à l'échelle</title>
-<link rel="icon" href="https://www.google.com/s2/favicons?sz=64&domain=devoleads.fr" type="image/png">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -3206,14 +3209,97 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
 .lp-cta-final .lp-h2, .lp-cta-final .lp-section-sub { margin-left: auto; margin-right: auto; text-align: center; }
 .pro-note, .pro-facts { margin-left: 0 !important; margin-right: 0 !important; }
 .pro-note { margin-top: 24px !important; }
+
+/* ══ IDENTITÉ : logo ══ */
+:root { --mk1: #1B2D6B; --mk2: #A9BBF7; --mk3: #4A6BE0; }
+[data-theme="dark"] { --mk1: #6E8BE8; --mk2: #DCE5FF; --mk3: #1B2D6B; }
+.brand-mark { width: 28px; height: 28px; flex: none; display: block; transition: transform .5s cubic-bezier(.3,1.5,.5,1); }
+.nav-logo { display: flex; align-items: center; gap: 9px; }
+.nav-logo:hover .brand-mark, .lp-footer-logo:hover .brand-mark { transform: rotate(-8deg) scale(1.08); }
+.auth-logo { display: flex !important; align-items: center; justify-content: center; gap: 10px; }
+.auth-logo .brand-mark { width: 34px; height: 34px; }
+.lp-footer-logo { display: inline-flex; align-items: center; gap: 8px; }
+.lp-footer-logo .brand-mark { width: 22px; height: 22px; }
+.lp-sim-logo { display: flex; align-items: center; gap: 6px; }
+.lp-sim-logo .brand-mark { width: 16px; height: 16px; }
+
+/* ══ MOUVEMENT ══ */
+#proProgress { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: 0 50%; z-index: 200; }
+nav { transition: box-shadow .25s, background .3s; }
+nav.is-scrolled { box-shadow: 0 1px 0 var(--border), 0 8px 24px rgba(18,24,38,.05); }
+
+@keyframes proRise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes wordUp { from { opacity: 0; transform: translateY(.55em); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes docIn { 0% { opacity: 0; transform: translateY(14px) rotate(-1.5deg); } 100% { opacity: 1; transform: none; } }
+@keyframes floaty { 0%,100% { translate: 0 0; } 50% { translate: 0 -7px; } }
+@keyframes pop { 0% { transform: scale(.4); opacity: 0; } 70% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }
+
+.lp-hero-left > .lp-badge { animation: proRise .7s cubic-bezier(.2,.7,.2,1) .05s both; }
+.lp-h1 .w { display: inline-block; animation: wordUp .8s cubic-bezier(.2,.7,.2,1) calc(.15s + var(--i) * .06s) both; }
+.lp-hero-left > .lp-sub { animation: proRise .8s cubic-bezier(.2,.7,.2,1) .85s both; }
+.lp-hero-left > .lp-cta-row { animation: proRise .8s cubic-bezier(.2,.7,.2,1) 1s both; }
+.lp-hero-left > .pro-facts { animation: proRise .8s cubic-bezier(.2,.7,.2,1) 1.15s both; }
+.lp-hero-right { position: relative; animation: proRise 1s cubic-bezier(.2,.7,.2,1) .5s both; }
+.lp-demo-card { transition: transform .5s cubic-bezier(.2,.7,.2,1); will-change: transform; }
+
+.pro-doc-wrap { position: absolute; right: -28px; bottom: -44px; width: 230px; z-index: 3; transform: translate(calc(var(--px, 0) * 16px), calc(var(--py, 0) * 12px)); transition: transform .5s cubic-bezier(.2,.7,.2,1); }
+.pro-doc { background: #fff; color: #121826; border: 1px solid #D8DCE3; border-radius: 6px; overflow: hidden; box-shadow: 0 18px 50px rgba(18,24,38,.22); rotate: 2.5deg; animation: floaty 6s ease-in-out infinite; }
+.pro-doc.swap { animation: docIn .55s cubic-bezier(.2,.7,.2,1), floaty 6s ease-in-out infinite; }
+.pro-doc-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; color: #fff; background: #1B2D6B; transition: background .4s; }
+.pro-doc-chip { width: 26px; height: 26px; border-radius: 5px; background: rgba(255,255,255,.95); color: #121826; font-size: 10px; font-weight: 600; display: grid; place-items: center; }
+.pro-doc-head b { display: block; font-size: 12px; font-weight: 600; }
+.pro-doc-head small { font-size: 9.5px; opacity: .85; }
+.pro-doc-body { padding: 14px; display: grid; gap: 7px; }
+.pro-doc-greet { font-size: 11px; font-weight: 600; margin-bottom: 2px; }
+.pro-doc-body i { display: block; height: 6px; border-radius: 3px; background: #E3E7ED; }
+.pro-doc-blocks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 4px 0; }
+.pro-doc-blocks span { font-size: 8.5px; text-align: center; padding: 8px 2px; border: 1px solid #D8DCE3; border-radius: 4px; color: #475060; }
+.pro-doc-cta { margin-top: 6px; text-align: center; font-size: 10px; font-weight: 600; color: #fff; padding: 8px; border-radius: 4px; background: #1B2D6B; transition: background .4s; }
+@media (max-width: 1000px) { .pro-doc-wrap { display: none; } }
+
+/* Révélation au défilement : plus ample, courbe plus douce */
+.lp-reveal { transform: translateY(30px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
+.lp-step-connector { position: relative; overflow: hidden; }
+.lp-step-connector::after { content: ''; position: absolute; inset: 0; background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform 1.2s cubic-bezier(.2,.7,.2,1) .35s; }
+.lp-step.visible .lp-step-connector::after { transform: scaleY(1); }
+.lp-step.visible .lp-step-num { animation: pop .55s cubic-bezier(.3,1.4,.5,1) .15s both; }
+
+/* Interactions */
+.lp-result-card, .lp-price-card, .pro-compare-col, .lp-faq-item, .lp-step, .camp-card, .kpi, .upload-option { transition: transform .3s cubic-bezier(.2,.7,.2,1), border-color .3s, box-shadow .3s, background .3s; }
+.lp-result-card:hover, .lp-price-card:hover, .pro-compare-col:hover, .camp-card:hover { transform: translateY(-4px) !important; border-color: var(--accent); box-shadow: 0 14px 36px rgba(18,24,38,.10) !important; }
+.lp-faq-item:hover { border-color: var(--accent); }
+.lp-btn-primary svg, .btn-primary svg { transition: transform .25s; }
+.lp-btn-primary:hover svg { transform: translateX(4px); }
+.lp-btn-primary:active, .btn:active, .lp-btn-ghost:active { transform: scale(.98) !important; }
+.lp-logo-pill { transition: color .2s, border-color .2s; }
+.lp-logo-pill:hover { color: var(--text); border-color: var(--accent); }
+.lp-faq-item.open .lp-faq-a { max-height: 320px; }
+
+/* Plateforme */
+@keyframes proFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.dash-main > * { animation: proFade .45s cubic-bezier(.2,.7,.2,1) both; }
+.sidebar-item { transition: background .2s, color .2s, box-shadow .2s, transform .2s; }
+.sidebar-item:hover { background: var(--bg3); transform: translateX(2px); }
+.kpi-row > *, .camp-card { animation: proFade .5s cubic-bezier(.2,.7,.2,1) both; }
+.kpi-row > :nth-child(2) { animation-delay: .06s; } .kpi-row > :nth-child(3) { animation-delay: .12s; } .kpi-row > :nth-child(4) { animation-delay: .18s; }
+.progress-fill, .credits-fill, #creditsFill { transition: width .8s cubic-bezier(.2,.7,.2,1); }
+.empty-state { animation: proFade .5s both; }
+.empty-state-icon { animation: floaty 5s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .pro-doc, .empty-state-icon { animation: none !important; } .lp-h1 .w { opacity: 1 !important; filter: none !important; } #proProgress { transition: none; } }
+
+.nav-logo .brand-word, .nav-logo .brand-word { color: var(--text) !important; -webkit-text-fill-color: var(--text) !important; background: none !important; }
+.nav-logo .brand-word span { color: var(--accent) !important; -webkit-text-fill-color: var(--accent) !important; }
+.lp-footer-logo > span, .lp-sim-logo > span, .auth-logo > span { color: var(--text); }
+.lp-footer-logo > span > span, .lp-sim-logo > span > span { color: var(--accent); }
 </style>
 </head>
 <body>
 
 <!-- ── NAVBAR ── -->
+<div id="proProgress" aria-hidden="true"></div>
 <nav>
   <div class="nav-logo" onclick="showScreen('landing')">
-    Lead<span>Page</span><div class="dot"></div>
+    <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" style="fill:var(--mk1)"/><path d="M9.5 5.5h8.8l6.2 6.2V25.5a1.5 1.5 0 0 1-1.5 1.5H9.5A1.5 1.5 0 0 1 8 25.5v-18A1.5 1.5 0 0 1 9.5 5.5z" fill="#fff"/><path d="M18.3 5.5v4.7a1.5 1.5 0 0 0 1.5 1.5h4.7z" style="fill:var(--mk2)"/><rect x="11.4" y="13" width="2.7" height="10.2" rx=".7" style="fill:var(--mk1)"/><rect x="11.4" y="20.5" width="8.4" height="2.7" rx=".7" style="fill:var(--mk1)"/><circle cx="19.2" cy="16.6" r="1.8" style="fill:var(--mk3)"/></svg><span class="brand-word">Lead<span>Page</span></span>
   </div>
   <div class="nav-right">
     <button class="theme-toggle" onclick="toggleTheme()" title="Changer le thème"></button>
@@ -3306,6 +3392,18 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
                 <div class="lp-demo-meta">CSV enrichi prêt pour Snov.io</div>
               </div>
               <button class="lp-demo-dl">Télécharger</button>
+            </div>
+          </div>
+        </div>
+        <div class="pro-doc-wrap" id="proDocWrap" aria-hidden="true">
+          <div class="pro-doc" id="proDoc">
+            <div class="pro-doc-head" id="proDocHead"><span class="pro-doc-chip" id="proDocChip">SF</span><div><b id="proDocCo">Salesforce</b><small>Proposition personnalisée</small></div></div>
+            <div class="pro-doc-body">
+              <div class="pro-doc-greet" id="proDocGreet">Bonjour Marie,</div>
+              <i style="width:92%"></i><i style="width:78%"></i><i style="width:86%"></i>
+              <div class="pro-doc-blocks"><span>Contexte</span><span>Diagnostic</span><span>90 jours</span></div>
+              <i style="width:70%"></i><i style="width:54%"></i>
+              <div class="pro-doc-cta" id="proDocCta">Planifier un échange</div>
             </div>
           </div>
         </div>
@@ -3449,7 +3547,7 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
 
         <!-- Sidebar simulée -->
         <div class="lp-sim-sidebar">
-          <div class="lp-sim-logo">Lead<span>Page</span></div>
+          <div class="lp-sim-logo"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" style="fill:var(--mk1)"/><path d="M9.5 5.5h8.8l6.2 6.2V25.5a1.5 1.5 0 0 1-1.5 1.5H9.5A1.5 1.5 0 0 1 8 25.5v-18A1.5 1.5 0 0 1 9.5 5.5z" fill="#fff"/><path d="M18.3 5.5v4.7a1.5 1.5 0 0 0 1.5 1.5h4.7z" style="fill:var(--mk2)"/><rect x="11.4" y="13" width="2.7" height="10.2" rx=".7" style="fill:var(--mk1)"/><rect x="11.4" y="20.5" width="8.4" height="2.7" rx=".7" style="fill:var(--mk1)"/><circle cx="19.2" cy="16.6" r="1.8" style="fill:var(--mk3)"/></svg><span>Lead<span>Page</span></span></div>
           <div class="lp-sim-nav-item lp-sim-active">Générer</div>
           <div class="lp-sim-nav-item">Campagnes</div>
           <div class="lp-sim-nav-item">Stats</div>
@@ -3754,7 +3852,7 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
   <!-- ░░ FOOTER ░░ -->
   <footer class="lp-footer">
     <div class="lp-footer-inner">
-      <div class="lp-footer-logo">Lead<span>Page</span></div>
+      <div class="lp-footer-logo"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" style="fill:var(--mk1)"/><path d="M9.5 5.5h8.8l6.2 6.2V25.5a1.5 1.5 0 0 1-1.5 1.5H9.5A1.5 1.5 0 0 1 8 25.5v-18A1.5 1.5 0 0 1 9.5 5.5z" fill="#fff"/><path d="M18.3 5.5v4.7a1.5 1.5 0 0 0 1.5 1.5h4.7z" style="fill:var(--mk2)"/><rect x="11.4" y="13" width="2.7" height="10.2" rx=".7" style="fill:var(--mk1)"/><rect x="11.4" y="20.5" width="8.4" height="2.7" rx=".7" style="fill:var(--mk1)"/><circle cx="19.2" cy="16.6" r="1.8" style="fill:var(--mk3)"/></svg><span>Lead<span>Page</span></span></div>
       <div class="lp-footer-links">
         <a href="#lp-how" onclick="document.getElementById('lp-how').scrollIntoView({behavior:'smooth'});return false">Comment ça marche</a>
         <a href="#lp-pricing" onclick="document.getElementById('lp-pricing').scrollIntoView({behavior:'smooth'});return false">Tarifs</a>
@@ -3771,7 +3869,7 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
 ══════════════════════════════════════════ -->
 <div id="auth" class="screen">
   <div class="auth-card fade-up">
-    <div class="auth-logo">Lead<span style="color:var(--accent)">Page</span></div>
+    <div class="auth-logo"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" style="fill:var(--mk1)"/><path d="M9.5 5.5h8.8l6.2 6.2V25.5a1.5 1.5 0 0 1-1.5 1.5H9.5A1.5 1.5 0 0 1 8 25.5v-18A1.5 1.5 0 0 1 9.5 5.5z" fill="#fff"/><path d="M18.3 5.5v4.7a1.5 1.5 0 0 0 1.5 1.5h4.7z" style="fill:var(--mk2)"/><rect x="11.4" y="13" width="2.7" height="10.2" rx=".7" style="fill:var(--mk1)"/><rect x="11.4" y="20.5" width="8.4" height="2.7" rx=".7" style="fill:var(--mk1)"/><circle cx="19.2" cy="16.6" r="1.8" style="fill:var(--mk3)"/></svg><span>Lead<span style="color:var(--accent)">Page</span></span></div>
     <div class="auth-subtitle">La prospection personnalisée à l'échelle</div>
 
     <div class="auth-tabs">
@@ -5177,12 +5275,71 @@ function startDemoAnimation() {
     pdfs.appendChild(item);
 
     current.textContent = '' + contact.name.split(' · ')[0] + '...';
+    updateHeroDoc(contact);
 
     const delay = 400 + Math.random() * 300;
     setTimeout(tick, delay);
   };
 
   setTimeout(tick, 600);
+}
+
+// ── Document d'aperçu du hero ──
+function updateHeroDoc(contact) {
+  const doc = document.getElementById('proDoc');
+  if (!doc) return;
+  const first = contact.name.split(' ')[0];
+  const company = contact.name.split(' · ')[1] || '';
+  document.getElementById('proDocHead').style.background = contact.color;
+  document.getElementById('proDocChip').textContent = contact.initials;
+  document.getElementById('proDocCo').textContent = company;
+  document.getElementById('proDocGreet').textContent = 'Bonjour ' + first + ',';
+  document.getElementById('proDocCta').style.background = contact.color;
+  doc.classList.remove('swap'); void doc.offsetWidth; doc.classList.add('swap');
+}
+
+// ── Titre : apparition mot par mot (un seul moment orchestré) ──
+function splitHeroTitle() {
+  const h = document.querySelector('.lp-h1');
+  if (!h || h.dataset.split) return;
+  h.dataset.split = '1';
+  const text = h.textContent.trim();
+  h.setAttribute('aria-label', text);
+  h.innerHTML = text.split(/\s+/).map(function(w, i) {
+    return '<span class="w" aria-hidden="true" style="--i:' + i + '">' + w + '</span>';
+  }).join(' ');
+}
+
+// ── Mouvement lié au défilement et au pointeur ──
+function initMotion() {
+  const bar = document.getElementById('proProgress');
+  const navEl = document.querySelector('nav');
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      if (bar) bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, window.scrollY / max) : 0) + ')';
+      if (navEl) navEl.classList.toggle('is-scrolled', window.scrollY > 8);
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  const hero = document.querySelector('.lp-hero');
+  const wrap = document.getElementById('proDocWrap');
+  const card = document.querySelector('.lp-demo-card');
+  if (hero && wrap && window.matchMedia('(pointer:fine)').matches) {
+    hero.addEventListener('mousemove', function(e) {
+      const r = hero.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      wrap.style.setProperty('--px', x.toFixed(3));
+      wrap.style.setProperty('--py', y.toFixed(3));
+      if (card) card.style.transform = 'translate(' + (x * -8).toFixed(1) + 'px,' + (y * -6).toFixed(1) + 'px)';
+    });
+  }
 }
 
 // ── FAQ toggle ──
@@ -5196,6 +5353,8 @@ function toggleFaq(el) {
 
 // ── Init landing ──
 function initLanding() {
+  splitHeroTitle();
+  initMotion();
   initReveal();
   animateCounters();
   // Démarrer l'animation démo après 800ms
