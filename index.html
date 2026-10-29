@@ -4334,7 +4334,7 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
           <div style="font-size:12px;color:var(--text3)">sur les liens PDF</div>
         </div>
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">PDFs ouverts</div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">PDFs consultés</div>
           <div id="stat-opened" style="font-size:32px;font-weight:800;background:linear-gradient(135deg,#5B80FF,#E91E8C);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:6px">—</div>
           <div style="font-size:12px;color:var(--text3)">prospects engages</div>
         </div>
@@ -5916,6 +5916,7 @@ function showDashSection(section, el, pushState) {
     const target = document.getElementById('section-' + section);
     if (target) target.style.display = 'block';
     if (section === 'campaigns' || section === 'stats') loadCampaigns();
+    if (section === 'stats') loadDashboardData();
     if (section === 'profile') loadProfile();
     if (section === 'abonnement') loadDashboardData();
     if (section === 'parametres') loadSettings();
@@ -5971,10 +5972,20 @@ async function loadProfile() {
       const el = document.getElementById(id);
       if (el && val) el.value = val;
     }
-  } catch(e) { console.error('loadProfile:', e); }
+  } catch(e) {
+    console.error('loadProfile:', e);
+    ['prof-name','prof-company','prof-email','prof-website'].forEach(id => { const el = document.getElementById(id); if (el) el.placeholder = ''; });
+    showToast('Profil indisponible : ' + e.message, '#EF4444');
+  }
 }
 
 // ---- CHARGER CAMPAGNES ------------------
+function renderLoadError(container, message, retryFn) {
+  if (!container) return;
+  container.innerHTML = '<div class="empty-state"><h3>Chargement impossible</h3><p>' + escHtml(message || 'Une erreur est survenue.') + '</p>'
+    + '<button class="btn btn-primary" onclick="' + retryFn + '()">Réessayer</button></div>';
+}
+
 async function loadCampaigns() {
   if (!authToken) return;
   const campCount = document.getElementById('camp-count');
@@ -6067,7 +6078,11 @@ async function loadCampaigns() {
       grid.appendChild(card);
     });
 
-  } catch(e) { console.error('loadCampaigns:', e); }
+  } catch(e) {
+    console.error('loadCampaigns:', e);
+    if (campCount) { campCount.style.opacity = '1'; campCount.textContent = 'Indisponible'; }
+    renderLoadError(grid, e.message, 'loadCampaigns');
+  }
 }
 
 async function downloadCampaignCsv(campaignId) {
@@ -6112,24 +6127,66 @@ function toggleMail(id) {
   if (row) row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
 }
 
+const apiSleep = ms => new Promise(r => setTimeout(r, ms));
+
+function showServerWaking(on) {
+  let el = document.getElementById('serverWaking');
+  if (!on) { if (el) el.remove(); return; }
+  if (el) return;
+  el = document.createElement('div');
+  el.id = 'serverWaking';
+  el.setAttribute('role', 'status');
+  el.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--bg2);color:var(--text);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:6px;padding:12px 18px;font-size:13px;z-index:600;box-shadow:var(--shadow);max-width:90vw';
+  el.textContent = 'Le serveur démarre, cela peut prendre jusqu\'à une minute. Nouvelle tentative en cours…';
+  document.body.appendChild(el);
+}
+
 async function apiCall(method, path, body = null, auth = false) {
   const headers = { 'Content-Type': 'application/json' };
   if (auth && authToken) headers['Authorization'] = 'Bearer ' + authToken;
   const opts = { method, headers };
   if (body) opts.body = JSON.stringify(body);
-  const res = await fetch(API_URL + path, opts);
-  // 401 = token expiré → déconnexion propre
-  if (res.status === 401) {
-    authToken = null; currentUser = null;
-    localStorage.removeItem('lp_token');
-    localStorage.removeItem('lp_user');
-    showToast('Session expirée, reconnectez-vous', '#EF4444');
-    showScreen('auth');
-    throw new Error('Session expirée');
+  // Les lectures sont rejouées automatiquement (le serveur gratuit peut mettre ~1 min à se réveiller)
+  const maxTry = method === 'GET' ? 4 : 1;
+  let lastErr;
+  for (let attempt = 0; attempt < maxTry; attempt++) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 45000);
+    try {
+      if (attempt > 0) showServerWaking(true);
+      const res = await fetch(API_URL + path, Object.assign({ signal: ctrl.signal }, opts));
+      clearTimeout(timer);
+      // 401 = token expiré -> déconnexion propre
+      if (res.status === 401 && auth) {
+        authToken = null; currentUser = null;
+        localStorage.removeItem('lp_token');
+        localStorage.removeItem('lp_user');
+        showServerWaking(false);
+        showToast('Session expirée, reconnectez-vous', '#EF4444');
+        showScreen('auth');
+        throw new Error('Session expirée');
+      }
+      if ([502, 503, 504].includes(res.status) && attempt < maxTry - 1) {
+        await apiSleep(2500 * (attempt + 1));
+        continue;
+      }
+      let data = null;
+      try { data = await res.json(); } catch (e) { data = null; }
+      showServerWaking(false);
+      if (!res.ok) throw new Error((data && data.detail) || ('Erreur serveur (' + res.status + ')'));
+      return data === null ? {} : data;
+    } catch (e) {
+      clearTimeout(timer);
+      lastErr = e;
+      const network = e.name === 'AbortError' || e instanceof TypeError;
+      if (network && attempt < maxTry - 1) { await apiSleep(2500 * (attempt + 1)); continue; }
+      showServerWaking(false);
+      if (network) throw new Error('Le serveur ne répond pas. Réessayez dans quelques instants.');
+      throw e;
+    }
   }
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.detail || 'Erreur serveur');
-  return data;
+  showServerWaking(false);
+  throw lastErr;
 }
 
 function showToast(msg, color = '#22C55E') {
@@ -6312,10 +6369,35 @@ async function loadDashboardData() {
     // Stat-pdfs
     set('stat-pdfs', totalPdfs);
     set('stat-pdfs-sub', 'sur ' + campaigns.length + ' campagne' + (campaigns.length > 1 ? 's' : ''));
+    loadTrackingStats(campaigns).catch(function(err) { console.error('loadTrackingStats:', err); });
 
   } catch(e) {
     console.error('Erreur chargement dashboard:', e);
+    ['kpi-pdfs','kpi-mails','kpi-campaigns','kpi-credits','abo-credits-left','abo-credits-used','abo-campaigns','stat-pdfs'].forEach(id => {
+      const el = document.getElementById(id); if (el) { el.textContent = '—'; el.style.opacity = '1'; }
+    });
+    showToast('Données indisponibles : ' + e.message, '#EF4444');
   }
+}
+
+// Statistiques de suivi (clics sur les liens PDF), agrégées sur les dernières campagnes
+async function loadTrackingStats(campaigns) {
+  const setT = (id, v) => { const el = document.getElementById(id); if (el) { el.textContent = v; el.style.opacity = '1'; } };
+  const recent = (campaigns || []).filter(c => (c.processed || 0) > 0).slice(0, 10);
+  if (!recent.length) { setT('stat-clicks', '—'); setT('stat-opened', '0'); setT('stat-best-camp', '—'); setT('stat-best-pct', 'aucune donnée'); return; }
+  const settled = await Promise.allSettled(recent.map(c => apiCall('GET', '/v/stats/' + c.id, null, true).then(st => ({ c: c, st: st }))));
+  let sent = 0, unique = 0, best = null;
+  settled.forEach(r => {
+    if (r.status !== 'fulfilled') return;
+    const st = r.value.st, c = r.value.c;
+    sent += st.total_sent || 0;
+    unique += st.unique_clicks || 0;
+    if ((st.total_sent || 0) > 0 && (!best || st.click_rate > best.rate)) best = { name: c.name, rate: st.click_rate };
+  });
+  setT('stat-clicks', sent ? (Math.round(unique / sent * 1000) / 10) + ' %' : '—');
+  setT('stat-opened', unique);
+  setT('stat-best-camp', best ? (best.name || 'Campagne') : '—');
+  setT('stat-best-pct', best ? best.rate + ' % de clics' : 'aucune donnée');
 }
 
 // ---- SAVE SETTINGS ---------------------
@@ -6356,7 +6438,7 @@ async function loadSettings() {
     const user = await apiCall('GET', '/api/auth/me', null, true);
     const el = document.getElementById('param-email');
     if (el && user.email) el.value = user.email;
-  } catch(e) { console.error('loadSettings:', e); }
+  } catch(e) { console.error('loadSettings:', e); showToast('Paramètres indisponibles : ' + e.message, '#EF4444'); }
 }
 
 // ---- FINISH ONBOARDING -----------------
@@ -6771,10 +6853,8 @@ async function loadChartes() {
     renderCartesGrid(chartes);
     updateCharteSelector(chartes);
   } catch(e) {
-    grid.innerHTML = '<div style="color:var(--text3);font-size:13px;padding:20px">Aucune charte. Créez la première !</div>';
-    // Ajouter quand même le bouton +
-    const addBtn = createAddCharteCard();
-    grid.appendChild(addBtn);
+    console.error('loadChartes:', e);
+    renderLoadError(grid, e.message, 'loadChartes');
   }
 }
 
