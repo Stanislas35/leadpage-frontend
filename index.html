@@ -5120,27 +5120,53 @@ async function parseCsvRow(line, delim) {
   return result;
 }
 
+// ── Parseur CSV complet : guillemets, virgules et retours à la ligne dans les champs, BOM, CRLF ──
+function parseCsvText(text) {
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+  const firstLine = text.split(/\r\n|\n|\r/, 1)[0] || '';
+  const delim = (firstLine.match(/;/g) || []).length > (firstLine.match(/,/g) || []).length ? ';' : ',';
+  const rows = [];
+  let row = [], cur = '', inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQ) {
+      if (c === '"') {
+        if (text[i+1] === '"') { cur += '"'; i++; } else inQ = false;
+      } else cur += c;
+    } else if (c === '"') {
+      inQ = true;
+    } else if (c === delim) {
+      row.push(cur); cur = '';
+    } else if (c === '\n' || c === '\r') {
+      if (c === '\r' && text[i+1] === '\n') i++;
+      row.push(cur); cur = '';
+      if (row.some(v => v.trim() !== '')) rows.push(row);
+      row = [];
+    } else cur += c;
+  }
+  row.push(cur);
+  if (row.some(v => v.trim() !== '')) rows.push(row);
+  return { delim, rows: rows.map(r => r.map(v => v.trim())) };
+}
+
+// Lecture UTF-8 avec repli Windows-1252 (exports Excel français)
+async function readCsvText(file) {
+  const buf = await file.arrayBuffer();
+  try { return new TextDecoder('utf-8', { fatal: true }).decode(buf); }
+  catch (e) { return new TextDecoder('windows-1252').decode(buf); }
+}
+
+function escAttr(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 function parseCsvHeaders(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      let text = e.target.result;
-      // Supprimer le BOM UTF-8 si présent
-      if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
-      // Normaliser les fins de ligne CRLF et CR seuls
-      text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-      const lines = text.split('\n').filter(l => l.trim());
-      if (!lines.length) return reject('CSV vide');
-      // Détection délimiteur sur la première ligne
-      const delim = (lines[0].match(/;/g) || []).length > (lines[0].match(/,/g) || []).length ? ';' : ',';
-      // Parser avec le parser robuste (gère les guillemets)
-      const headers = parseCsvRow(lines[0], delim).map(h => h.replace(/^["']|["']$/g, '').trim());
-      // Garder 3 premières lignes pour aperçu
-      const preview = lines.slice(1, 4).map(l => parseCsvRow(l, delim).map(c => c.replace(/^["']|["']$/g, '').trim()));
-      resolve({ headers, preview, total: lines.length - 1, delim });
-    };
-    reader.onerror = reject;
-    reader.readAsText(file, 'utf-8');
+  return readCsvText(file).then(text => {
+    const { rows, delim } = parseCsvText(text);
+    if (!rows.length) throw 'CSV vide';
+    const headers = rows[0];
+    const preview = rows.slice(1, 4);
+    return { headers, preview, total: rows.length - 1, delim };
   });
 }
 
@@ -5200,11 +5226,11 @@ function renderMappingRows(headers, total) {
         <div style="font-size:12px;font-weight:600;color:var(--text)">${field.label}${field.required ? ' <span style="color:#EF4444">*</span>' : ''}</div>
         <select class="form-input" style="margin:0;font-size:12px" onchange="updateMapping('${field.key.replace(/[^a-zA-Z0-9_]/g,'_')}', this.value, this)">
           ${['— Non mappé —', ...headers].map(h =>
-            `<option value="${h}" ${h === (mapped || '— Non mappé —') ? 'selected' : ''}>${h}</option>`
+            `<option value="${escAttr(h)}" ${h === (mapped || '— Non mappé —') ? 'selected' : ''}>${escAttr(h)}</option>`
           ).join('')}
         </select>
-        <div id="mp-preview-${field.key.replace(/[^a-z]/gi,'_')}" style="font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${preview}">
-          ${preview ? `<span style="color:#22C55E">✓</span> ${preview}` : '<span style="color:var(--text3)">—</span>'}
+        <div id="mp-preview-${field.key.replace(/[^a-z]/gi,'_')}" style="font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escAttr(preview)}">
+          ${preview ? `<span style="color:#22C55E">✓</span> ${escAttr(preview)}` : '<span style="color:var(--text3)">—</span>'}
         </div>
       </div>`;
   }
@@ -5233,7 +5259,7 @@ function updateMapping(fieldKey, colValue, sel) {
   const safeKey = fieldKey.replace(/[^a-z]/gi,'_');
   const preview = colValue !== '— Non mappé —' ? getPreviewValue(colValue) : '';
   const prevEl  = document.getElementById('mp-preview-' + safeKey);
-  if (prevEl) prevEl.innerHTML = preview ? `<span style="color:#22C55E">✓</span> ${preview}` : '<span style="color:var(--text3)">—</span>';
+  if (prevEl) prevEl.innerHTML = preview ? `<span style="color:#22C55E">✓</span> ${escAttr(preview)}` : '<span style="color:var(--text3)">—</span>';
 
   // Mettre à jour style de la ligne
   const row = sel.closest('div[style*="grid-template"]');
@@ -5250,7 +5276,7 @@ function updateMappingStatus() {
   const mapped    = new Set(Object.values(currentMapping));
   const unmapped  = csvHeaders.filter(h => !mapped.has(h));
   const unmapEl   = document.getElementById('mapping-unmapped');
-  if (unmapEl) unmapEl.textContent = unmapped.length ? unmapped.join(', ') : 'aucune';
+  if (unmapEl) unmapEl.textContent = unmapped.length ? unmapped.join(', ') : 'aucune';  // textContent : pas d'injection HTML
 
   const missingRequired = LP_FIELDS.filter(f => f.required && !currentMapping[f.key]);
   const btn = document.getElementById('mapping-confirm-btn');
@@ -5380,33 +5406,34 @@ async function startGeneration() {
     // 1. Upload CSV vers l'API
     addLog('Envoi du fichier CSV...', 'processing');
     const formData = new FormData();
-    // Appliquer le mapping : re-créer le CSV avec les bonnes colonnes LeadPage
+    // Appliquer le mapping : re-créer le CSV avec les colonnes LeadPage.
+    // Les colonnes non mappées (icebreakers, etc.) sont conservées à la suite pour le CSV final.
     let fileToSend = selectedCsvFile;
     if (Object.keys(currentMapping).length > 0) {
       try {
-        const text = await selectedCsvFile.text();
-        const lines = text.split(String.fromCharCode(10)).filter(l => l.trim());
-        const delim = (lines[0].match(/;/g)||[]).length > (lines[0].match(/,/g)||[]).length ? ';' : ',';
-        const origHeaders = lines[0].split(delim).map(h => h.trim().replace(/^["']|["']$/g,''));
+        const text = await readCsvText(selectedCsvFile);
+        const { rows } = parseCsvText(text);
+        const origHeaders = rows[0];
+        const lpHeaders   = LP_FIELDS.map(f => f.key);
+        const mappedCols  = new Set(Object.values(currentMapping));
+        const extraIdx    = origHeaders.map((h, i) => (mappedCols.has(h) || lpHeaders.includes(h)) ? -1 : i).filter(i => i !== -1);
+        const q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
 
-        // Construire le CSV remappé
-        const newHeaders = LP_FIELDS.map(f => f.key);
-        const csvLines   = [newHeaders.join(',')];
-        for (let i = 1; i < lines.length; i++) {
-          if (!lines[i].trim()) continue;
-          const vals = lines[i].split(delim).map(v => v.trim().replace(/^["']|["']$/g,''));
-          const row  = newHeaders.map(lp => {
+        const out = [lpHeaders.concat(extraIdx.map(i => origHeaders[i])).map(q).join(',')];
+        for (let r = 1; r < rows.length; r++) {
+          const vals = rows[r];
+          const mappedVals = lpHeaders.map(lp => {
             const srcCol = currentMapping[lp];
-            if (!srcCol) return '';
-            const idx = origHeaders.indexOf(srcCol);
-            return idx !== -1 ? ('"' + (vals[idx]||'').replace(/"/g,'""') + '"') : '';
+            const idx = srcCol ? origHeaders.indexOf(srcCol) : -1;
+            return idx !== -1 ? vals[idx] : '';
           });
-          csvLines.push(row.join(','));
+          out.push(mappedVals.concat(extraIdx.map(i => vals[i])).map(q).join(','));
         }
-        const blob = new Blob([csvLines.join('\n')], { type: 'text/csv' });
+        const blob = new Blob(['\ufeff' + out.join('\n')], { type: 'text/csv;charset=utf-8' });
         fileToSend = new File([blob], selectedCsvFile.name, { type: 'text/csv' });
       } catch(e) {
         console.warn('Mapping CSV échoué, envoi original:', e);
+        showToast('Mapping non appliqué : le fichier original est envoyé', '#F59E0B');
       }
     }
 
