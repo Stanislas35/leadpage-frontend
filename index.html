@@ -2,10 +2,15 @@
 <html lang="fr" data-theme="light">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="LeadPage génère un PDF personnalisé avec le logo de chaque prospect, une accroche IA sur-mesure et un mail d'accompagnement, depuis votre CSV.">
+<meta name="theme-color" content="#1B2D6B">
+<meta property="og:type" content="website">
+<meta property="og:title" content="LeadPage · Prospection personnalisée à l'échelle">
+<meta property="og:description" content="Un PDF personnalisé par prospect, généré depuis votre CSV en quelques minutes.">
 <title>LeadPage · Prospection personnalisée à l'échelle</title>
 <link rel="icon" href="https://www.google.com/s2/favicons?sz=64&domain=devoleads.fr" type="image/png">
-<link href="https://fonts.googleapis.com/css2?DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
 <style>
 :root {
   --blue: #1B2D6B;
@@ -1434,8 +1439,9 @@ tr:hover td { background: var(--card-hover); }
 @media (max-width: 768px) {
   /* NAV */
   nav { padding: 0 16px; }
-  .nav-links { gap: 8px; }
-  .nav-links .btn { font-size: 12px; padding: 6px 12px; }
+  .nav-right { gap: 8px; }
+  .nav-right .btn { font-size: 12px; padding: 6px 12px; white-space: nowrap; }
+  .nav-logo { font-size: 18px; }
 
   /* LANDING */
   .hero h1 { font-size: 32px; }
@@ -6272,7 +6278,7 @@ function openEditCharte(id, data) {
   // Recharger l'aperçu logo si présent
   if (data.logo_base64) {
     const prev = document.getElementById('cm-logo-preview');
-    if (prev) prev.innerHTML = '<img src="' + data.logo_base64 + '" style="max-height:60px;max-width:120px;object-fit:contain;border-radius:6px">';
+    if (prev) prev.innerHTML = '<img alt="Logo" src="' + data.logo_base64 + '" style="max-height:60px;max-width:120px;object-fit:contain;border-radius:6px">';
   }
   // Recharger style et emojis
   cmLoadStyleEmoji(data);
@@ -6396,7 +6402,7 @@ function cmHandleLogo(input) {
   reader.onload = e => {
     cmLogoBase64 = e.target.result;
     document.getElementById('cm-logo-preview').innerHTML =
-      '<img src="' + cmLogoBase64 + '" style="max-height:70px;max-width:130px;object-fit:contain;border-radius:4px"><div style="font-size:10px;color:var(--text2);margin-top:6px">Cliquez pour changer</div>';
+      '<img alt="Logo" src="' + cmLogoBase64 + '" style="max-height:70px;max-width:130px;object-fit:contain;border-radius:4px"><div style="font-size:10px;color:var(--text2);margin-top:6px">Cliquez pour changer</div>';
     document.getElementById('cm-logo-drop').style.borderStyle = 'solid';
     document.getElementById('cm-logo-drop').style.borderColor = 'var(--border-pink)';
     cmExtractColors(cmLogoBase64);
@@ -6415,7 +6421,7 @@ function cmTryFetchColors(url) {
     const logoUrl = 'https://www.google.com/s2/favicons?sz=64&domain=' + domain;
     cmExtractColors(logoUrl);
     document.getElementById('cm-logo-preview').innerHTML =
-      '<img src="' + logoUrl + '" style="max-height:70px;max-width:130px;object-fit:contain;border-radius:4px" ><div style="font-size:10px;color:var(--text2);margin-top:6px">Logo via ' + domain + '</div>';
+      '<img alt="Logo" src="' + logoUrl + '" style="max-height:70px;max-width:130px;object-fit:contain;border-radius:4px" ><div style="font-size:10px;color:var(--text2);margin-top:6px">Logo via ' + domain + '</div>';
   }, 800);
 }
 
@@ -6521,7 +6527,7 @@ function renderCartesGrid(chartes) {
     card.onmouseout  = () => { card.style.transform = ''; card.style.boxShadow = ''; };
 
     const logoHtml = ch.logo_base64
-      ? '<img src="' + ch.logo_base64 + '" style="height:32px;max-width:80px;object-fit:contain;border-radius:4px;margin-bottom:10px;display:block">'
+      ? '<img alt="Logo" src="' + ch.logo_base64 + '" style="height:32px;max-width:80px;object-fit:contain;border-radius:4px;margin-bottom:10px;display:block">'
       : '<div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,' + (ch.color_primary||'#1B2D6B') + ',' + (ch.color_accent||'#E91E8C') + ');display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:800;margin-bottom:10px">' + (ch.name||'?').slice(0,2).toUpperCase() + '</div>';
 
     const stylePill = ch.writing_style ? '<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:100px;background:var(--bg3);border:1px solid var(--border);color:var(--text3);margin-right:4px">' + ch.writing_style + '</span>' : '';
