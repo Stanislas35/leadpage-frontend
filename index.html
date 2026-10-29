@@ -4312,7 +4312,7 @@ nav { background: rgba(27,36,85,.9) !important; }
           <span class="sidebar-icon">⚙️</span> Paramètres
         </div>
         <div class="sidebar-item" onclick="handleLogout()" style="margin-top:auto;color:var(--text3)">
-          <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></span> Deconnexion
+          <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></span> Déconnexion
         </div>
       </div>
 
@@ -4613,7 +4613,7 @@ nav { background: rgba(27,36,85,.9) !important; }
       <div style="margin-bottom:32px"><h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Statistiques</h1><p style="color:var(--text2);font-size:14px;margin-top:4px">Performance de vos campagnes</p></div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">PDFs generes</div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">PDFs générés</div>
           <div style="font-size:32px;font-weight:800;background:linear-gradient(135deg,#5B80FF,#E91E8C);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:6px" id="stat-pdfs">—</div>
           <div id="stat-pdfs-sub" style="font-size:12px;color:var(--text3)">sur 0 campagnes</div>
         </div>
@@ -4630,7 +4630,7 @@ nav { background: rgba(27,36,85,.9) !important; }
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px">
           <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Meilleure campagne</div>
           <div id="stat-best-camp" style="font-size:18px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:6px">—</div>
-          <div id="stat-best-pct" style="font-size:12px;color:var(--text3)">aucune donnee</div>
+          <div id="stat-best-pct" style="font-size:12px;color:var(--text3)">aucune donnée</div>
         </div>
       </div>
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px">
@@ -4939,12 +4939,12 @@ nav { background: rgba(27,36,85,.9) !important; }
     <!-- PROFIL SECTION -->
     <div id="section-profile" style="display:none">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:32px">
-        <div><h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Mon profil client</h1><p style="color:var(--text2);font-size:14px;margin-top:4px">Informations utilisees dans tous vos PDFs</p></div>
+        <div><h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Mon profil client</h1><p style="color:var(--text2);font-size:14px;margin-top:4px">Informations utilisées dans tous vos PDFs</p></div>
         <button class="btn btn-primary" onclick="saveProfile(this)">Sauvegarder</button>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
         <div style="grid-column:1/-1;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px">
-          <h2 style="font-size:16px;font-weight:700;margin-bottom:20px">Identite</h2>
+          <h2 style="font-size:16px;font-weight:700;margin-bottom:20px">Identité</h2>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
             <div class="form-group"><label class="form-label">Nom complet</label><input class="form-input" id="prof-name" placeholder="Votre nom..." value=""></div>
             <div class="form-group"><label class="form-label">Entreprise</label><input class="form-input" id="prof-company" placeholder="Nom de l'entreprise..." value=""></div>
@@ -4954,9 +4954,11 @@ nav { background: rgba(27,36,85,.9) !important; }
         </div>
       </div>
 
+    </div>
+
     <!-- ABONNEMENT SECTION -->
     <div id="section-abonnement" style="display:none">
-      <div style="margin-bottom:32px"><h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Abonnement</h1><p style="color:var(--text2);font-size:14px;margin-top:4px">Gerez votre plan et vos credits</p></div>
+      <div style="margin-bottom:32px"><h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Abonnement</h1><p style="color:var(--text2);font-size:14px;margin-top:4px">Gérez votre plan et vos crédits</p></div>
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:20px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
           <div><h2 id="abo-plan-label" style="font-size:16px;font-weight:700">Plan actuel : Gratuit</h2></div>
@@ -4964,12 +4966,12 @@ nav { background: rgba(27,36,85,.9) !important; }
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
           <div style="background:var(--bg3);border-radius:12px;padding:20px;text-align:center">
-            <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Credits restants</div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Crédits restants</div>
             <div id="abo-credits-left" style="font-size:28px;font-weight:800;background:linear-gradient(135deg,#5B80FF,#E91E8C);-webkit-background-clip:text;-webkit-text-fill-color:transparent">—</div>
             <div style="font-size:11px;color:var(--text3);margin-top:3px">PDFs disponibles</div>
           </div>
           <div style="background:var(--bg3);border-radius:12px;padding:20px;text-align:center">
-            <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">PDFs utilises</div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">PDFs utilisés</div>
             <div id="abo-credits-used" style="font-size:28px;font-weight:800;background:linear-gradient(135deg,#5B80FF,#E91E8C);-webkit-background-clip:text;-webkit-text-fill-color:transparent">—</div>
             <div style="font-size:11px;color:var(--text3);margin-top:3px">ce mois-ci</div>
           </div>
@@ -5009,7 +5011,7 @@ nav { background: rgba(27,36,85,.9) !important; }
 
     <!-- PARAMETRES SECTION -->
     <div id="section-parametres" style="display:none">
-      <div style="margin-bottom:32px"><h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Parametres</h1><p style="color:var(--text2);font-size:14px;margin-top:4px">Configuration de votre compte</p></div>
+      <div style="margin-bottom:32px"><h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Paramètres</h1><p style="color:var(--text2);font-size:14px;margin-top:4px">Configuration de votre compte</p></div>
       <div style="display:flex;flex-direction:column;gap:16px">
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px">
           <h2 style="font-size:16px;font-weight:700;margin-bottom:20px">Compte</h2>
@@ -5030,7 +5032,7 @@ nav { background: rgba(27,36,85,.9) !important; }
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px">
           <h2 style="font-size:16px;font-weight:700;margin-bottom:18px">Integrations</h2>
           <div style="display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg3);border-radius:10px"><div style="display:flex;align-items:center;gap:10px"><div><div style="font-size:13px;font-weight:600">Stockage des PDFs</div><div style="font-size:11px;color:var(--text3)">Hébergement sécurisé</div></div></div><span style="padding:3px 10px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#22C55E;border-radius:100px;font-size:11px;font-weight:600">Connecte</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg3);border-radius:10px"><div style="display:flex;align-items:center;gap:10px"><div><div style="font-size:13px;font-weight:600">Stockage des PDFs</div><div style="font-size:11px;color:var(--text3)">Hébergement sécurisé</div></div></div><span style="padding:3px 10px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#22C55E;border-radius:100px;font-size:11px;font-weight:600">Connecté</span></div>
             <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg3);border-radius:10px"><div style="display:flex;align-items:center;gap:10px"><div><div style="font-size:13px;font-weight:600">Snov.io / Lemlist</div><div style="font-size:11px;color:var(--text3)">Export CSV</div></div></div><button class="btn btn-ghost" style="font-size:12px;padding:5px 12px">Connecter</button></div>
             <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg3);border-radius:10px"><div style="display:flex;align-items:center;gap:10px"><div><div style="font-size:13px;font-weight:600">Zapier / Make</div><div style="font-size:11px;color:var(--text3)">Automatisations</div></div></div><button class="btn btn-ghost" style="font-size:12px;padding:5px 12px">Connecter</button></div>
           </div>
@@ -6302,7 +6304,7 @@ async function saveProfile(btn) {
   if (!authToken) return;
   btn = btn || event.target;
   const orig = btn.textContent;
-  btn.textContent = 'Sauvegarde...';
+  btn.textContent = 'Sauvegarde…';
   btn.disabled = true;
   try {
     const payload = {};
@@ -6315,7 +6317,7 @@ async function saveProfile(btn) {
       if (el && el.value.trim()) payload[key] = el.value.trim();
     }
     await apiCall('PUT', '/api/auth/profile', payload, true);
-    showToast('Profil sauvegarde !');
+    showToast('Profil sauvegardé !');
   } catch(e) {
     showToast('Erreur: ' + e.message, '#EF4444');
   } finally {
@@ -6794,8 +6796,8 @@ async function upgradePlan(plan) {
   try {
     const res = await apiCall('POST', '/api/billing/upgrade', { plan }, true);
     if (res.checkout_url) window.location.href = res.checkout_url;
-    else showToast('Stripe non configure, contactez le support', '#EF4444');
-  } catch(e) { showToast('Stripe non configure - contactez le support', '#F59E0B'); }
+    else showToast('Paiement bientôt disponible, contactez le support', '#EF4444');
+  } catch(e) { showToast('Paiement bientôt disponible, contactez le support', '#F59E0B'); }
 }
 function upgradeToStarter() { upgradePlan('starter'); }
 function upgradeToGrowth()  { upgradePlan('growth');  }
