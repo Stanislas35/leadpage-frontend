@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="light">
+<html lang="fr" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="LeadPage génère un PDF personnalisé avec le logo de chaque prospect, une accroche IA sur-mesure et un mail d'accompagnement, depuis votre CSV.">
-<meta name="theme-color" content="#1B2D6B">
+<meta name="theme-color" content="#0C1020">
+<meta name="color-scheme" content="dark">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://stanislas35.github.io/leadpage-frontend/icon-512.png">
 <meta property="og:title" content="LeadPage · Prospection personnalisée à l'échelle">
@@ -3291,6 +3292,169 @@ nav.is-scrolled { box-shadow: 0 1px 0 var(--border), 0 8px 24px rgba(18,24,38,.0
 .nav-logo .brand-word span { color: var(--accent) !important; -webkit-text-fill-color: var(--accent) !important; }
 .lp-footer-logo > span, .lp-sim-logo > span, .auth-logo > span { color: var(--text); }
 .lp-footer-logo > span > span, .lp-sim-logo > span > span { color: var(--accent); }
+
+/* ══════════════════════════════════════════════════════════════
+   THÈME SOMBRE UNIQUE — palette vive
+   Fond encre bleu nuit · indigo (marque) · soleil (action) · corail · menthe · ciel
+══════════════════════════════════════════════════════════════ */
+:root, [data-theme="dark"], [data-theme="light"] {
+  --bg: #0C1020; --bg2: #131A36; --bg3: #19224A; --bg4: #232E5E;
+  --border: #2B3770; --border-active: #FFC857;
+  --text: #F4F6FF; --text2: #B4BEE3; --text3: #7F8BBA;
+  --card: #131A36; --card-hover: #19224A;
+  --shadow: 0 2px 4px rgba(0,0,0,.3), 0 18px 48px rgba(3,6,20,.55);
+  --accent: #8FA3FF;
+  --indigo: #6C85FF; --sun: #FFC857; --coral: #FF7A66; --mint: #4ADE9F; --sky: #5CC8FF;
+  --ink: #12162E;
+  --mk1: #5B78FF; --mk2: #C9D3FF; --mk3: #FFC857;
+}
+html { color-scheme: dark; }
+body { background: var(--bg); }
+.lp-section-alt::before { background: var(--bg2) !important; }
+.lp-section-alt { color: var(--text); }
+
+/* Action principale : jaune soleil, texte encre */
+.btn-primary, .lp-btn-primary, .lp-price-btn-primary, .lp-sim-gen-btn, .lp-sim-dl-btn {
+  background: var(--sun) !important; color: var(--ink) !important; border-color: var(--sun) !important; font-weight: 600;
+}
+.btn-primary:hover, .lp-btn-primary:hover, .lp-price-btn-primary:hover { filter: brightness(1.06); box-shadow: 0 8px 24px rgba(255,200,87,.28) !important; }
+[data-theme="dark"] .btn-primary, [data-theme="dark"] .lp-btn-primary, [data-theme="dark"] .lp-price-btn-primary { color: var(--ink) !important; }
+.btn-ghost, .lp-btn-ghost, .lp-price-btn-ghost { color: var(--text) !important; border-color: var(--border); }
+.btn-ghost:hover, .lp-btn-ghost:hover, .lp-price-btn-ghost:hover { border-color: var(--accent); background: var(--bg3); color: #fff !important; }
+:focus-visible { outline-color: var(--sun); }
+::selection { background: var(--sun); color: var(--ink); }
+
+/* Logo */
+.nav-logo .brand-word { color: var(--text) !important; -webkit-text-fill-color: var(--text) !important; }
+.nav-logo .brand-word span, .lp-footer-logo > span > span, .lp-sim-logo > span > span, .auth-logo > span > span { color: var(--sun) !important; -webkit-text-fill-color: var(--sun) !important; }
+.lp-footer-logo > span, .auth-logo > span { color: var(--text); }
+.brand-mark rect:first-child { }
+
+/* Navigation */
+nav { background: rgba(12,16,32,.88) !important; backdrop-filter: blur(10px) !important; }
+#proProgress { background: linear-gradient(90deg, var(--indigo), var(--sun)) !important; }
+
+/* Hero */
+.lp-badge { background: rgba(255,200,87,.12) !important; color: var(--sun) !important; border: 1px solid rgba(255,200,87,.35) !important; }
+.lp-h1 { color: #fff; }
+.lp-h1 .w { position: relative; }
+.lp-h1 .w:nth-child(5)::after, .lp-h1 .w:nth-child(6)::after {
+  content: ''; position: absolute; left: -.04em; right: -.04em; bottom: .06em; height: .3em; z-index: -1;
+  background: rgba(108,133,255,.55); border-radius: 3px; transform: scaleX(0); transform-origin: 0 50%;
+  animation: hl .7s cubic-bezier(.2,.7,.2,1) 1.3s forwards;
+}
+.lp-h1 .w:nth-child(6)::after { animation-delay: 1.5s; }
+@keyframes hl { to { transform: scaleX(1); } }
+.lp-sub strong { color: #fff; }
+.pro-facts li:nth-child(1)::before { background: var(--mint); }
+.pro-facts li:nth-child(2)::before { background: var(--sun); }
+.pro-facts li:nth-child(3)::before { background: var(--coral); }
+.lp-demo-card { background: var(--bg2) !important; border-color: var(--border); }
+.lp-demo-progress-bar, #demoBar { background: linear-gradient(90deg, var(--indigo), var(--sky)) !important; }
+.lp-demo-header { background: var(--bg3); }
+.lp-badge-ok, .lp-demo-badge, .lp-demo-pdf-tag { background: rgba(74,222,159,.14) !important; color: var(--mint) !important; border-color: rgba(74,222,159,.35) !important; }
+.lp-demo-icon { background: rgba(108,133,255,.18) !important; color: var(--accent) !important; }
+
+/* Titres de section : couleur de rubrique */
+.lp-section-label, .section-label { color: var(--sun) !important; font-weight: 600; }
+.lp-section-label::before { content: ''; display: inline-block; width: 18px; height: 3px; border-radius: 2px; background: var(--sun); margin-right: 10px; vertical-align: middle; }
+.lp-section-sub, .lp-faq-a, .pro-dl dd { color: var(--text2); }
+
+/* Cartes colorées par rang */
+.lp-result-card, .pro-compare-col, .lp-price-card, .lp-faq-item, .lp-step { background: var(--bg2) !important; border-color: var(--border) !important; }
+.lp-section-alt .lp-result-card { background: var(--bg3) !important; }
+.lp-results-grid > :nth-child(1) { --c: var(--sun); }
+.lp-results-grid > :nth-child(2) { --c: var(--coral); }
+.lp-results-grid > :nth-child(3) { --c: var(--mint); }
+.lp-result-card { border-top: 3px solid var(--c, var(--indigo)) !important; }
+.lp-result-card:hover { border-color: var(--c, var(--indigo)) !important; box-shadow: 0 16px 40px rgba(0,0,0,.35) !important; }
+.lp-result-label { color: #fff; }
+.lp-result-source { color: var(--text2); }
+.pro-compare-col h3 { color: #fff; }
+.pro-compare-accent { border: 2px solid var(--mint) !important; }
+.pro-compare-accent li::before { background: var(--mint) !important; }
+.pro-compare-col:not(.pro-compare-accent) li::before { background: var(--coral); }
+.pro-compare-accent h3 { color: var(--mint); }
+.pro-dl dt { color: #fff; }
+.pro-dl > div { border-color: var(--border); }
+.pro-dl > div:nth-child(1) dt { border-left: 3px solid var(--sun); padding-left: 12px; }
+.pro-dl > div:nth-child(2) dt { border-left: 3px solid var(--coral); padding-left: 12px; }
+.pro-dl > div:nth-child(3) dt { border-left: 3px solid var(--mint); padding-left: 12px; }
+.pro-dl > div:nth-child(4) dt { border-left: 3px solid var(--sky); padding-left: 12px; }
+.pro-dl > div:nth-child(5) dt { border-left: 3px solid var(--indigo); padding-left: 12px; }
+.pro-note { border-left-color: var(--sun); color: var(--text2); }
+
+/* Étapes */
+.lp-step-icon { background: var(--bg3) !important; color: var(--accent) !important; border-color: var(--border) !important; }
+.lp-step:nth-child(1) .lp-step-num { background: var(--sun) !important; color: var(--ink) !important; }
+.lp-step:nth-child(2) .lp-step-num { background: var(--coral) !important; color: var(--ink) !important; }
+.lp-step:nth-child(3) .lp-step-num { background: var(--mint) !important; color: var(--ink) !important; }
+.lp-step-connector::after { background: linear-gradient(var(--sun), var(--coral)); }
+.lp-step-tag { background: rgba(108,133,255,.16) !important; color: var(--accent) !important; border-color: rgba(108,133,255,.4) !important; }
+.lp-step code, .lp-faq-a code { background: var(--bg4); color: var(--sun); }
+
+/* Tarifs */
+.lp-price-featured { border: 2px solid var(--sun) !important; background: var(--bg3) !important; }
+.lp-price-badge { background: var(--sun) !important; color: var(--ink) !important; font-weight: 600; }
+.lp-price-amount { color: #fff; }
+.lp-price-features li::before { color: var(--mint) !important; }
+.lp-price-card:nth-child(1) .lp-price-name { color: var(--mint); }
+.lp-price-card:nth-child(2) .lp-price-name { color: var(--sky); }
+.lp-price-card:nth-child(3) .lp-price-name { color: var(--sun); }
+.lp-price-card:nth-child(4) .lp-price-name { color: var(--coral); }
+
+/* FAQ, CTA final, pied de page */
+.lp-faq-q { color: #fff; }
+.lp-faq-arrow { color: var(--sun) !important; }
+.lp-faq-item.open { border-color: var(--sun) !important; }
+.lp-cta-final { background: var(--indigo); color: #fff; position: relative; }
+.lp-cta-final .lp-h2 { color: #fff; max-width: 22ch; }
+.lp-cta-final .lp-section-sub { color: #E4E9FF; }
+.lp-cta-final .lp-btn-primary { background: var(--sun) !important; }
+.lp-cta-final-sub, .lp-cta-final-sub a { color: #E4E9FF; }
+.lp-footer { background: var(--bg); }
+.lp-footer-links a { color: var(--text2); }
+.lp-footer-links a:hover { color: var(--sun); }
+.lp-logo-pill { color: var(--text2); border-color: var(--border); background: var(--bg2); }
+.lp-logos-bar { border-color: var(--border); }
+.lp-logos-label { color: var(--text3); }
+
+/* Authentification */
+.auth-card { background: var(--bg2) !important; border: 1px solid var(--border) !important; }
+.auth-tab.active { background: var(--bg4) !important; color: #fff !important; }
+.form-input, input[type="text"], input[type="email"], input[type="password"], select, textarea { background: var(--bg) !important; border-color: var(--border) !important; color: var(--text) !important; }
+.form-input:focus, input:focus, select:focus, textarea:focus { border-color: var(--sun) !important; box-shadow: 0 0 0 3px rgba(255,200,87,.2) !important; }
+
+/* Plateforme */
+.sidebar { background: var(--bg2) !important; border-right: 1px solid var(--border); }
+.sidebar-item.active { background: rgba(108,133,255,.2) !important; color: #fff !important; box-shadow: inset 3px 0 0 var(--sun); }
+.sidebar-item:hover { background: var(--bg3); }
+.sidebar-icon { color: var(--accent); }
+.sidebar-item.active .sidebar-icon { color: var(--sun); }
+.credits-box { background: var(--bg3); border-color: var(--border); }
+.upload-card, .camp-card, .kpi, .results-card, .charte-card, #chartes-grid > * { background: var(--bg2); border-color: var(--border); }
+.kpi-row > :nth-child(1) { border-top: 3px solid var(--sun); }
+.kpi-row > :nth-child(2) { border-top: 3px solid var(--coral); }
+.kpi-row > :nth-child(3) { border-top: 3px solid var(--mint); }
+.kpi-row > :nth-child(4) { border-top: 3px solid var(--sky); }
+.kpi-value, [style*="-webkit-text-fill-color:transparent"] { -webkit-text-fill-color: #fff !important; color: #fff !important; }
+.kpi-row > :nth-child(1) .kpi-value { -webkit-text-fill-color: var(--sun) !important; color: var(--sun) !important; }
+.kpi-row > :nth-child(2) .kpi-value { -webkit-text-fill-color: var(--coral) !important; color: var(--coral) !important; }
+.kpi-row > :nth-child(3) .kpi-value { -webkit-text-fill-color: var(--mint) !important; color: var(--mint) !important; }
+.kpi-row > :nth-child(4) .kpi-value { -webkit-text-fill-color: var(--sky) !important; color: var(--sky) !important; }
+.csv-drop-zone { border-color: var(--border); }
+.csv-drop-zone:hover, .csv-drop-zone.dragover { border-color: var(--sun) !important; background: rgba(255,200,87,.06) !important; }
+.camp-badge-done { background: rgba(74,222,159,.15); color: var(--mint); }
+.camp-badge-processing { background: rgba(255,200,87,.15); color: var(--sun); }
+.camp-badge-error { background: rgba(255,122,102,.16); color: var(--coral); }
+.camp-card.status-done::before { background: var(--mint); }
+.camp-card.status-processing::before { background: var(--sun); }
+.camp-card.status-error::before { background: var(--coral); }
+[style*="linear-gradient(90deg,#5B80FF,#E91E8C)"], [style*="linear-gradient(90deg,var(--blue-light),var(--pink))"] { background: linear-gradient(90deg, var(--indigo), var(--sky)) !important; }
+[style*="background:var(--bg2)"] { border-color: var(--border); }
+table th { color: var(--text3); }
+table td, table th { border-color: var(--border) !important; }
+.pdf-link { background: rgba(108,133,255,.18) !important; color: var(--accent) !important; }
 </style>
 </head>
 <body>
@@ -3302,7 +3466,6 @@ nav.is-scrolled { box-shadow: 0 1px 0 var(--border), 0 8px 24px rgba(18,24,38,.0
     <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" style="fill:var(--mk1)"/><path d="M9.5 5.5h8.8l6.2 6.2V25.5a1.5 1.5 0 0 1-1.5 1.5H9.5A1.5 1.5 0 0 1 8 25.5v-18A1.5 1.5 0 0 1 9.5 5.5z" fill="#fff"/><path d="M18.3 5.5v4.7a1.5 1.5 0 0 0 1.5 1.5h4.7z" style="fill:var(--mk2)"/><rect x="11.4" y="13" width="2.7" height="10.2" rx=".7" style="fill:var(--mk1)"/><rect x="11.4" y="20.5" width="8.4" height="2.7" rx=".7" style="fill:var(--mk1)"/><circle cx="19.2" cy="16.6" r="1.8" style="fill:var(--mk3)"/></svg><span class="brand-word">Lead<span>Page</span></span>
   </div>
   <div class="nav-right">
-    <button class="theme-toggle" onclick="toggleTheme()" title="Changer le thème"></button>
     <button class="btn btn-ghost" onclick="showScreen('auth')" id="nav-login">Connexion</button>
     <button class="btn btn-primary" onclick="goToDashboardOrAuth()" id="nav-signup">Commencer</button>
   </div>
@@ -5406,11 +5569,7 @@ function showScreen(id, pushState) {
 
 
 // -- THEME --------------------------------
-function toggleTheme() {
-  const html = document.documentElement;
-  html.setAttribute('data-theme',
-    html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-}
+function toggleTheme() { /* thème sombre uniquement */ }
 
 // -- AUTH ---------------------------------
 function switchAuthTab(tab, el) {
