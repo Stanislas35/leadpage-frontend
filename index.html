@@ -3166,6 +3166,34 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
 .lp-stats-row { width: 100%; max-width: 480px; }
 .lp-footer-inner { max-width: 1200px; padding-left: 32px; padding-right: 32px; }
 @media (max-width: 768px) { nav { padding-left: 16px !important; padding-right: 16px !important; } }
+
+/* ── Nouveaux blocs de contenu ── */
+.pro-facts { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 28px; padding: 24px 0 0; margin: 0; border-top: 1px solid var(--border); max-width: 520px; }
+.pro-facts li { font-size: 14px; color: var(--text2); position: relative; padding-left: 16px; }
+.pro-facts li::before { content: ''; position: absolute; left: 0; top: .55em; width: 6px; height: 6px; border-radius: 1px; background: var(--accent); }
+.lp-badge { font-size: 13px; padding: 6px 12px; }
+
+.pro-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+.pro-compare-col { border: 1px solid var(--border); border-radius: 8px; padding: 28px; background: var(--bg2); }
+.pro-compare-accent { border: 2px solid var(--accent); }
+.pro-compare-col h3 { font-size: 20px; margin-bottom: 16px; }
+.pro-compare-col ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.pro-compare-col li { font-size: 15px; line-height: 1.55; color: var(--text2); padding-left: 20px; position: relative; }
+.pro-compare-col li::before { content: ''; position: absolute; left: 0; top: .6em; width: 8px; height: 1px; background: var(--text3); }
+.pro-compare-accent li { color: var(--text); }
+.pro-compare-accent li::before { background: var(--accent); height: 2px; }
+
+.pro-dl { margin-top: 40px; border-top: 1px solid var(--border); }
+.pro-dl > div { display: grid; grid-template-columns: minmax(200px, 1fr) 2fr; gap: 32px; padding: 20px 0; border-bottom: 1px solid var(--border); }
+.pro-dl dt { font-family: var(--font-display); font-size: 19px; font-weight: 600; color: var(--text); }
+.pro-dl dd { font-size: 15px; line-height: 1.6; color: var(--text2); max-width: 62ch; }
+.pro-note { margin-top: 24px; font-size: 14px; color: var(--text2); max-width: 70ch; padding-left: 16px; border-left: 2px solid var(--accent); }
+
+.lp-faq-a code, .lp-step code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .88em; }
+@media (max-width: 760px) {
+  .pro-compare { grid-template-columns: 1fr; }
+  .pro-dl > div { grid-template-columns: 1fr; gap: 6px; }
+}
 </style>
 </head>
 <body>
@@ -3197,37 +3225,29 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
 
     <div class="lp-hero-inner">
       <div class="lp-hero-left">
-        <div class="lp-badge">
-          <span class="lp-badge-dot"></span>
-          100 prospects personnalisés en 2 minutes · PDF + Mail inclus
-        </div>
+        <div class="lp-badge">Un outil développé par l'agence Devoleads</div>
 
-        <h1 class="lp-h1">
-          Vos prospects sont<br>
-          sur-sollicités.<br>Démarquez-vous.
-        </h1>
+        <h1 class="lp-h1">Un document préparé pour chaque prospect, depuis votre fichier de contacts.</h1>
 
         <p class="lp-sub">
-          LeadPage génère un PDF 2 pages <strong>avec le logo de chaque prospect</strong>,
-          une accroche IA sur-mesure et un mail d'accompagnement —
-          le tout depuis votre CSV, en moins de 2 minutes pour 100 contacts.
+          LeadPage transforme votre export CSV en un PDF personnalisé par contact, avec le logo du prospect, votre charte graphique et une analyse adaptée à son poste et à son secteur. Le mail d'accompagnement est rédigé en même temps.
         </p>
 
         <div class="lp-cta-row">
           <button class="lp-btn-primary" onclick="goToDashboardOrAuth()">
-            Essayer avec 5 PDFs gratuits
+            Créer un compte gratuit
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
           <button class="lp-btn-ghost" onclick="document.getElementById('lp-how').scrollIntoView({behavior:'smooth'})">
-            Voir comment ça marche
+            Voir le fonctionnement
           </button>
         </div>
 
-        <div class="lp-stats-row">
-          <div class="lp-stat"><span class="lp-stat-n" data-target="100">0</span><span class="lp-stat-u"> contacts</span><span class="lp-stat-l">en quelques minutes</span></div>
-          <div class="lp-stat-sep"></div>
-          <div class="lp-stat"><span class="lp-stat-n" data-target="5">0</span><span class="lp-stat-u"> PDFs</span><span class="lp-stat-l">offerts pour tester</span></div>
-        </div>
+        <ul class="pro-facts">
+          <li>5 PDF offerts à l'inscription</li>
+          <li>Sans carte bancaire</li>
+          <li>Résiliation à tout moment</li>
+        </ul>
       </div>
 
       <!-- ANIMATION PDF GENERATOR -->
@@ -3235,7 +3255,7 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
         <div class="lp-demo-card">
           <div class="lp-demo-header">
             <div class="lp-demo-dots"><span></span><span></span><span></span></div>
-            <div class="lp-demo-title">LeadPage · Génération en cours</div>
+            <div class="lp-demo-title">LeadPage · Génération d'une campagne</div>
           </div>
           <div class="lp-demo-body">
 
@@ -3283,7 +3303,7 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
 
   <!-- ░░ LOGOS CLIENTS ░░ -->
   <div class="lp-logos-bar">
-    <div class="lp-logos-label">Compatible avec</div>
+    <div class="lp-logos-label">Importez les exports CSV de vos outils de sourcing</div>
     <div class="lp-logos-track">
       <div class="lp-logos-inner" id="logosInner">
         <span class="lp-logo-pill">Vayne.io</span>
@@ -3306,11 +3326,38 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
     </div>
   </div>
 
+  <!-- ░░ POURQUOI ░░ -->
+  <div class="lp-section" id="lp-why">
+    <div class="lp-section-label">Pourquoi un document personnalisé</div>
+    <h2 class="lp-h2">Un mail de prospection ressemble à tous les autres. Un document préparé pour le destinataire, non.</h2>
+    <p class="lp-section-sub">Le mail ouvre la conversation. Le PDF montre que vous avez compris l'entreprise, son contexte et son enjeu, avant même le premier échange.</p>
+    <div class="pro-compare lp-reveal">
+      <div class="pro-compare-col">
+        <h3>Une séquence classique</h3>
+        <ul>
+          <li>Un texte identique pour tous les contacts, avec le prénom en variable</li>
+          <li>Aucun élément visuel propre au destinataire</li>
+          <li>Pas de support à relire, à transférer ou à faire circuler en interne</li>
+          <li>Un seul indicateur : la réponse</li>
+        </ul>
+      </div>
+      <div class="pro-compare-col pro-compare-accent">
+        <h3>Avec LeadPage</h3>
+        <ul>
+          <li>Un PDF rédigé à partir du poste, du secteur et de la taille de l'entreprise</li>
+          <li>Le logo du prospect et votre charte sur chaque document</li>
+          <li>Un support que le destinataire peut transmettre à son équipe</li>
+          <li>Un lien unique par contact : vous voyez qui a consulté son document</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
   <!-- ░░ COMMENT ÇA MARCHE — ANIMATION ░░ -->
   <div class="lp-section" id="lp-how">
     <div class="lp-section-label">Comment ça marche</div>
-    <h2 class="lp-h2">De votre CSV à 100 PDF personnalisés en quelques minutes</h2>
-    <p class="lp-section-sub">Pas de template générique. Chaque PDF est rédigé par l'IA avec le nom, le secteur et le profil LinkedIn du prospect.</p>
+    <h2 class="lp-h2">De l'export CSV aux documents prêts à envoyer en trois étapes</h2>
+    <p class="lp-section-sub">Vous gardez la main à chaque étape : le mapping des colonnes, la charte et le ton se règlent avant le lancement.</p>
 
     <div class="lp-steps">
       <div class="lp-step lp-reveal">
@@ -3324,9 +3371,9 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
           <div class="lp-step-connector"></div>
         </div>
         <div class="lp-step-content">
-          <h3>Uploadez votre CSV</h3>
-          <p>Export Vayne, Sales Navigator, Kaspr, Lusha. LeadPage détecte automatiquement les colonnes : prénom, poste, secteur, taille entreprise, LinkedIn.</p>
-          <div class="lp-step-tag">✓ Séparateur auto-détecté &nbsp;·&nbsp; ✓ UTF-8, Latin-1, CP1252</div>
+          <h3>Importez votre fichier</h3>
+          <p>Déposez l'export de votre outil de sourcing. LeadPage reconnaît les colonnes (prénom, poste, entreprise, secteur, LinkedIn) et vous laisse corriger le mapping avant de lancer.</p>
+          <div class="lp-step-tag">Séparateur et encodage détectés automatiquement</div>
         </div>
       </div>
 
@@ -3341,9 +3388,9 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
           <div class="lp-step-connector"></div>
         </div>
         <div class="lp-step-content">
-          <h3>L'IA rédige, personnalise, structure</h3>
-          <p>Notre IA analyse chaque profil et rédige une accroche sur-mesure, offre reformulée selon le secteur et la taille de l'entreprise.</p>
-          <div class="lp-step-tag">✓ Logo prospect auto &nbsp;·&nbsp; ✓ Vos couleurs &nbsp;·&nbsp; ✓ Votre signature</div>
+          <h3>Choisissez votre charte et lancez</h3>
+          <p>Logo, couleurs, signature et ton rédactionnel sont ceux de votre charte. Pour chaque contact, l'IA rédige l'analyse, le plan d'action et le mail à partir des informations du fichier.</p>
+          <div class="lp-step-tag">Logo du prospect récupéré automatiquement</div>
         </div>
       </div>
 
@@ -3357,9 +3404,9 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
           </div>
         </div>
         <div class="lp-step-content">
-          <h3>Récupérez le CSV enrichi</h3>
-          <p>Un CSV prêt pour Snov.io ou Lemlist avec deux colonnes : <code>pdf_url</code> et <code>mail1_corps</code> : lien de tracking unique par prospect. Vous savez qui a ouvert, quand, combien de fois.</p>
-          <div class="lp-step-tag">✓ Tracking ouverture &nbsp;·&nbsp; ✓ Snov.io ready &nbsp;·&nbsp; ✓ Lemlist ready</div>
+          <h3>Récupérez le fichier enrichi</h3>
+          <p>Votre CSV d'origine, avec deux colonnes ajoutées : <code>pdf_url</code> (lien unique par contact) et <code>mail1_corps</code> (texte du mail). Prêt à importer dans Snov.io, Lemlist ou tout outil d'envoi.</p>
+          <div class="lp-step-tag">Suivi des clics par contact</div>
         </div>
       </div>
     </div>
@@ -3368,9 +3415,9 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
 
   <!-- ░░ SECTION DÉMO ANIMÉE ░░ -->
   <div class="lp-section lp-demo-section" id="lp-demo">
-    <div class="lp-section-label">Démo live</div>
-    <h2 class="lp-h2">Un exemple en direct</h2>
-    <p class="lp-section-sub">Du CSV brut au PDF personnalisé avec le logo du prospect, en temps réel.</p>
+    <div class="lp-section-label">Aperçu de l'interface</div>
+    <h2 class="lp-h2">Le résultat sur un fichier de 247 contacts</h2>
+    <p class="lp-section-sub">Simulation avec des données d'exemple : import du CSV, génération, puis aperçu du PDF d'un contact.</p>
 
     <!-- Fausse fenêtre navigateur -->
     <div class="lp-screen-wrap lp-reveal">
@@ -3479,19 +3526,19 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
                 <div class="lp-pdf-line" style="width:85%"></div>
               </div>
               <div class="lp-pdf-kpis-mock">
-                <div class="lp-pdf-kpi" id="simKpi1"><span>+3×</span>Plus de RDV</div>
-                <div class="lp-pdf-kpi" id="simKpi2"><span>4 min</span>Par campagne</div>
-                <div class="lp-pdf-kpi" id="simKpi3"><span>0€</span>Setup</div>
+                <div class="lp-pdf-kpi" id="simKpi1"><span>Contexte</span>Entreprise</div>
+                <div class="lp-pdf-kpi" id="simKpi2"><span>Plan</span>d'action</div>
+                <div class="lp-pdf-kpi" id="simKpi3"><span>90 j</span>Calendrier</div>
               </div>
               <div class="lp-pdf-lines-mock" style="margin-top:10px">
                 <div class="lp-pdf-line" style="width:88%"></div>
                 <div class="lp-pdf-line" style="width:65%"></div>
               </div>
-              <div class="lp-pdf-cta-mock" id="simPdfCta">Découvrir notre offre →</div>
+              <div class="lp-pdf-cta-mock" id="simPdfCta">Planifier un échange →</div>
             </div>
           </div>
           <div class="lp-sim-tracking-pill" id="simTrackingPill" style="opacity:0">
-            Lien de tracking unique généré
+            Lien de suivi unique généré
           </div>
         </div>
 
@@ -3517,25 +3564,61 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
     </div>
 
     <div style="text-align:center;margin-top:20px">
-      <button class="lp-btn-ghost" onclick="restartScreenDemo()" style="font-size:12px;padding:8px 16px">↺ Rejouer la démo</button>
+      <button class="lp-btn-ghost" onclick="restartScreenDemo()" style="font-size:12px;padding:8px 16px">Rejouer la simulation</button>
     </div>
   </div>
 
-  <!-- ░░ CE QUE VOUS OBTENEZ ░░ -->
-  <div class="lp-section lp-section-alt">
-    <h2 class="lp-h2">Ce que contient chaque livrable</h2>
+  <!-- ░░ CONTENU DU PDF ░░ -->
+  <div class="lp-section lp-section-alt" id="lp-content">
+    <div class="lp-section-label">Le livrable</div>
+    <h2 class="lp-h2">Ce que contient chaque PDF</h2>
+    <p class="lp-section-sub">Un document de deux pages au format A4, généré pour un contact précis et aux couleurs de votre entreprise.</p>
+    <dl class="pro-dl lp-reveal">
+      <div><dt>Ce que nous savons de vous</dt><dd>Poste, entreprise, secteur et taille du destinataire, tels qu'ils figurent dans votre fichier.</dd></div>
+      <div><dt>Ce que nous avons identifié</dt><dd>Une accroche rédigée à partir de son contexte, suivie d'une courte analyse de sa situation.</dd></div>
+      <div><dt>Diagnostic</dt><dd>Un point fort, une opportunité et une recommandation, formulés pour son activité.</dd></div>
+      <div><dt>Plan d'action et calendrier</dt><dd>Les étapes proposées par votre offre, reformulées selon le secteur, avec une trajectoire sur 90 jours.</dd></div>
+      <div><dt>Prochaine étape</dt><dd>Un appel à l'action clair vers votre agenda, votre site ou votre adresse email.</dd></div>
+    </dl>
+    <p class="pro-note">Le contenu est généré par une IA à partir des informations de votre fichier. Relisez un échantillon avant chaque envoi : plus le fichier est complet, plus le document est précis.</p>
+  </div>
+
+  <!-- ░░ CAS D'USAGE ░░ -->
+  <div class="lp-section" id="lp-usecases">
+    <div class="lp-section-label">Pour qui</div>
+    <h2 class="lp-h2">Pensé pour les équipes qui prospectent des comptes précis</h2>
     <div class="lp-results-grid">
       <div class="lp-result-card lp-reveal">
-        <div class="lp-result-label"><strong>Un PDF de 2 pages par prospect</strong></div>
-        <div class="lp-result-source">Logo, nom, poste et entreprise du prospect, avec votre charte graphique.</div>
+        <div class="lp-result-label">Agences et prestataires B2B</div>
+        <div class="lp-result-source">Une charte par client, un document par prospect. Vous préparez la campagne d'un client sans retravailler chaque fichier à la main.</div>
       </div>
       <div class="lp-result-card lp-reveal">
-        <div class="lp-result-label"><strong>Une accroche rédigée pour chaque contact</strong></div>
-        <div class="lp-result-source">Basée sur les informations de votre CSV. Vous relisez avant d'envoyer.</div>
+        <div class="lp-result-label">Équipes commerciales</div>
+        <div class="lp-result-source">Vos comptes cibles reçoivent un document qui parle de leur entreprise, avant le premier appel ou le premier rendez-vous.</div>
       </div>
       <div class="lp-result-card lp-reveal">
-        <div class="lp-result-label"><strong>Un CSV prêt pour votre outil d'envoi</strong></div>
-        <div class="lp-result-source">Vos colonnes d'origine, plus le lien du PDF et le mail d'accompagnement.</div>
+        <div class="lp-result-label">Consultants et indépendants</div>
+        <div class="lp-result-source">Une présentation soignée et personnalisée sans passer des heures sur chaque dossier.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ░░ FIABILITÉ ░░ -->
+  <div class="lp-section lp-section-alt" id="lp-trust">
+    <div class="lp-section-label">Fonctionnement et garanties</div>
+    <h2 class="lp-h2">Vous gardez le contrôle de vos envois</h2>
+    <div class="lp-results-grid">
+      <div class="lp-result-card lp-reveal">
+        <div class="lp-result-label">LeadPage n'envoie rien</div>
+        <div class="lp-result-source">Vous importez le fichier enrichi dans votre outil d'emailing habituel. Votre domaine, vos boîtes d'envoi et vos séquences restent les vôtres.</div>
+      </div>
+      <div class="lp-result-card lp-reveal">
+        <div class="lp-result-label">Reprise automatique des erreurs</div>
+        <div class="lp-result-source">Chaque contact est retenté jusqu'à trois fois. En cas d'échec, il est signalé dans le fichier et le crédit correspondant n'est pas débité.</div>
+      </div>
+      <div class="lp-result-card lp-reveal">
+        <div class="lp-result-label">Traitement en arrière-plan</div>
+        <div class="lp-result-source">Vous pouvez fermer la page pendant la génération et retrouver la campagne terminée dans votre tableau de bord.</div>
       </div>
     </div>
   </div>
@@ -3543,21 +3626,21 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
   <!-- ░░ PRICING ░░ -->
   <div class="lp-section" id="lp-pricing">
     <div class="lp-section-label">Tarifs</div>
-    <h2 class="lp-h2">Tarifs : PDF et mail d'accompagnement inclus</h2>
-    <p class="lp-section-sub">Pas de frais cachés. Pas d'engagement annuel. Résiliez en 1 clic.</p>
+    <h2 class="lp-h2">Des tarifs mensuels, sans engagement</h2>
+    <p class=\"lp-section-sub\">Un crédit correspond à un PDF et son mail d'accompagnement. Les contacts en erreur ne sont pas débités.</p>
 
     <div class="lp-pricing-grid">
       <div class="lp-price-card lp-reveal">
         <div class="lp-price-name">Gratuit</div>
         <div class="lp-price-amount">0<sup>€</sup></div>
-        <div class="lp-price-period">pour toujours</div>
+        <div class="lp-price-period">offert à l'inscription</div>
         <ul class="lp-price-features">
-          <li>5 PDFs + mails offerts</li>
+          <li>5 crédits offerts</li>
           <li>1 charte graphique</li>
-          <li>Tracking ouverture</li>
+          <li>Suivi des clics</li>
           <li>Sans carte bancaire</li>
         </ul>
-        <button class="lp-price-btn lp-price-btn-ghost" onclick="goToDashboardOrAuth()">Démarrer gratuitement</button>
+        <button class="lp-price-btn lp-price-btn-ghost" onclick="goToDashboardOrAuth()">Créer un compte</button>
       </div>
 
       <div class="lp-price-card lp-reveal">
@@ -3565,12 +3648,12 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
         <div class="lp-price-amount">29<sup>€</sup></div>
         <div class="lp-price-period">par mois</div>
         <ul class="lp-price-features">
-          <li>500 PDFs + mails · ~2 campagnes/mois</li>
+          <li>500 crédits par mois</li>
           <li>3 chartes graphiques</li>
-          <li>CSV Snov.io ready</li>
+          <li>Export compatible Snov.io et Lemlist</li>
           <li>Support email</li>
         </ul>
-        <button class="lp-price-btn lp-price-btn-ghost" onclick="goToDashboardOrAuth()">Commencer</button>
+        <button class="lp-price-btn lp-price-btn-ghost" onclick="goToDashboardOrAuth()">Choisir Starter</button>
       </div>
 
       <div class="lp-price-card lp-price-featured lp-reveal">
@@ -3579,12 +3662,12 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
         <div class="lp-price-amount">79<sup>€</sup></div>
         <div class="lp-price-period">par mois</div>
         <ul class="lp-price-features">
-          <li>2 000 PDFs + mails · ~8 campagnes/mois</li>
+          <li>2 000 crédits par mois</li>
           <li>Chartes illimitées</li>
-          <li>Multi-comptes clients</li>
+          <li>Une charte par client</li>
           <li>Support prioritaire</li>
         </ul>
-        <button class="lp-price-btn lp-price-btn-primary" onclick="goToDashboardOrAuth()">Essayer Growth</button>
+        <button class="lp-price-btn lp-price-btn-primary" onclick="goToDashboardOrAuth()">Choisir Growth</button>
       </div>
 
       <div class="lp-price-card lp-reveal">
@@ -3592,12 +3675,12 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
         <div class="lp-price-amount">199<sup>€</sup></div>
         <div class="lp-price-period">par mois</div>
         <ul class="lp-price-features">
-          <li>10 000 PDFs + mails · volume agence</li>
-          <li>White-label possible</li>
-          <li>API access</li>
-          <li>Account manager dédié</li>
+          <li>10 000 crédits par mois</li>
+          <li>Chartes illimitées</li>
+          <li>Volumes adaptés aux agences</li>
+          <li>Accompagnement au démarrage sur demande</li>
         </ul>
-        <button class="lp-price-btn lp-price-btn-ghost" onclick="goToDashboardOrAuth()">Contacter</button>
+        <button class="lp-price-btn lp-price-btn-ghost" onclick="goToDashboardOrAuth()">Choisir Agency</button>
       </div>
     </div>
   </div>
@@ -3609,36 +3692,36 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
 
     <div class="lp-faq-grid">
       <div class="lp-faq-item lp-reveal" onclick="toggleFaq(this)">
-        <div class="lp-faq-q">Mes prospects verront-ils que c'est automatisé ? <span class="lp-faq-arrow">+</span></div>
-        <div class="lp-faq-a">Non. Chaque PDF est entièrement personnalisé : logo du prospect, accroche rédigée selon son profil LinkedIn, chiffres adaptés à son secteur. Il ressemble à un document préparé manuellement, parce que l'IA s'adapte vraiment à chaque contact.</div>
+        <div class="lp-faq-q">Le destinataire voit-il que le document est généré automatiquement ? <span class="lp-faq-arrow">+</span></div>
+        <div class="lp-faq-a">Le contenu est rédigé pour chaque contact à partir des informations de votre fichier : poste, entreprise, secteur, taille. Il n'y a pas de mention d'automatisation, mais le niveau de précision dépend de la qualité de vos données. Nous recommandons de relire un échantillon avant l'envoi.</div>
       </div>
       <div class="lp-faq-item lp-reveal" onclick="toggleFaq(this)">
-        <div class="lp-faq-q">Quels outils d'export sont compatibles ? <span class="lp-faq-arrow">+</span></div>
-        <div class="lp-faq-a">Tous les exports CSV fonctionnent : Vayne.io, Sales Navigator, Kaspr, Lusha, PhantomBuster, Waalaxy, Hunter.io, Apollo... LeadPage détecte automatiquement les colonnes et s'adapte au séparateur (virgule ou point-virgule).</div>
+        <div class="lp-faq-q">Quels exports CSV sont acceptés ? <span class="lp-faq-arrow">+</span></div>
+        <div class="lp-faq-a">Tout fichier CSV avec un en-tête : Vayne, Sales Navigator, Kaspr, Lusha, PhantomBuster, Waalaxy, Hunter ou Apollo, par exemple. LeadPage détecte le séparateur (virgule ou point-virgule) et propose un mapping des colonnes que vous pouvez corriger.</div>
       </div>
       <div class="lp-faq-item lp-reveal" onclick="toggleFaq(this)">
-        <div class="lp-faq-q">Combien de temps pour 500 contacts ? <span class="lp-faq-arrow">+</span></div>
-        <div class="lp-faq-a">Environ 4 minutes avec le plan Growth. La génération tourne en arrière-plan. Vous recevez le CSV enrichi avec tous les liens PDF dès que c'est terminé. Vous pouvez fermer le navigateur entre temps.</div>
+        <div class="lp-faq-q">Combien de temps faut-il pour une campagne ? <span class="lp-faq-arrow">+</span></div>
+        <div class="lp-faq-a">Quelques minutes pour une centaine de contacts. La durée varie avec la taille du fichier et la charge du moment. Le traitement continue en arrière-plan : vous pouvez quitter la page et revenir plus tard.</div>
       </div>
       <div class="lp-faq-item lp-reveal" onclick="toggleFaq(this)">
-        <div class="lp-faq-q">Comment s'intègre-t-il avec Snov.io ou Lemlist ? <span class="lp-faq-arrow">+</span></div>
-        <div class="lp-faq-a">LeadPage génère un CSV enrichi avec une colonne <code>pdf_url</code>. Il suffit de l'importer dans Snov.io ou Lemlist et d'utiliser la variable <code>{{pdf_url}}</code> dans votre email. Le prospect clique sur son PDF personnalisé directement depuis l'email.</div>
+        <div class="lp-faq-q">Comment utiliser le fichier dans Snov.io ou Lemlist ? <span class="lp-faq-arrow">+</span></div>
+        <div class="lp-faq-a">Importez le CSV enrichi dans votre outil, puis insérez la variable <code>{{pdf_url}}</code> dans votre mail. La colonne <code>mail1_corps</code> contient le texte d'accompagnement si vous l'avez demandé.</div>
       </div>
       <div class="lp-faq-item lp-reveal" onclick="toggleFaq(this)">
-        <div class="lp-faq-q">Puis-je utiliser mon propre logo et mes couleurs ? <span class="lp-faq-arrow">+</span></div>
-        <div class="lp-faq-a">Oui. Dans "Mes chartes", uploadez votre logo. LeadPage extrait automatiquement vos couleurs dominantes. Vous pouvez créer plusieurs chartes pour différents clients ou projets et choisir laquelle utiliser à chaque campagne.</div>
+        <div class="lp-faq-q">Puis-je utiliser mon logo, mes couleurs et mon ton ? <span class="lp-faq-arrow">+</span></div>
+        <div class="lp-faq-a">Oui. Dans « Mes chartes », vous renseignez logo, couleurs, signature et style rédactionnel. Vous pouvez créer plusieurs chartes, par exemple une par client, et choisir celle à appliquer à chaque campagne.</div>
       </div>
       <div class="lp-faq-item lp-reveal" onclick="toggleFaq(this)">
-        <div class="lp-faq-q">Le tracking fonctionne comment ? <span class="lp-faq-arrow">+</span></div>
-        <div class="lp-faq-a">Chaque PDF a un lien de tracking unique. Quand un prospect clique, vous voyez dans le dashboard : qui a ouvert, à quelle heure, combien de fois. Idéal pour relancer au bon moment.</div>
+        <div class="lp-faq-q">Que mesure le suivi ? <span class="lp-faq-arrow">+</span></div>
+        <div class="lp-faq-a">Chaque PDF a un lien unique. Le tableau de bord indique quels contacts ont cliqué sur leur document, quand, et combien de fois. Il mesure le clic sur le lien, pas l'ouverture du mail.</div>
       </div>
       <div class="lp-faq-item lp-reveal" onclick="toggleFaq(this)">
-        <div class="lp-faq-q">Que se passe-t-il si l'IA rate un contact ? <span class="lp-faq-arrow">+</span></div>
-        <div class="lp-faq-a">LeadPage retente automatiquement 3 fois avec un délai croissant. Si ça échoue toujours, le contact est marqué "error" dans le CSV. Vous pouvez le relancer manuellement. Aucun crédit n'est débité pour les contacts en erreur.</div>
+        <div class="lp-faq-q">Que se passe-t-il si la génération échoue pour un contact ? <span class="lp-faq-arrow">+</span></div>
+        <div class="lp-faq-a">LeadPage retente automatiquement jusqu'à trois fois. Si l'échec persiste, le contact est marqué en erreur dans le fichier et son crédit n'est pas débité.</div>
       </div>
       <div class="lp-faq-item lp-reveal" onclick="toggleFaq(this)">
-        <div class="lp-faq-q">Puis-je annuler mon abonnement à tout moment ? <span class="lp-faq-arrow">+</span></div>
-        <div class="lp-faq-a">Oui, sans condition ni préavis. Vous gardez l'accès jusqu'à la fin de votre période de facturation. Pas de frais de résiliation, pas d'engagement.</div>
+        <div class="lp-faq-q">Puis-je résilier à tout moment ? <span class="lp-faq-arrow">+</span></div>
+        <div class="lp-faq-a">Oui, sans préavis. Vous conservez l'accès jusqu'à la fin de la période déjà payée.</div>
       </div>
     </div>
   </div>
@@ -3646,11 +3729,11 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
   <!-- ░░ CTA FINAL ░░ -->
   <div class="lp-cta-final">
     <div class="lp-cta-final-orb"></div>
-    <div class="lp-section-label">Prêt ?</div>
-    <h2 class="lp-h2">Testez avec 5 PDFs gratuits</h2>
-    <p class="lp-section-sub">5 PDFs gratuits. Sans carte bancaire. Sans installation.</p>
+    
+    <h2 class="lp-h2">Testez LeadPage sur vos propres contacts</h2>
+    <p class="lp-section-sub">Cinq crédits offerts à l'inscription, sans carte bancaire.</p>
     <button class="lp-btn-primary lp-btn-xl" onclick="goToDashboardOrAuth()">
-      Générer mes 5 premiers PDFs — c'est gratuit
+      Créer un compte gratuit
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <div class="lp-cta-final-sub">Déjà un compte ? <a href="#" onclick="showScreen('auth');return false">Se connecter →</a></div>
@@ -3666,7 +3749,7 @@ nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; pad
         <a href="#lp-faq" onclick="document.getElementById('lp-faq').scrollIntoView({behavior:'smooth'});return false">FAQ</a>
         <a href="#" onclick="showScreen('auth');return false">Connexion</a>
       </div>
-      <div class="lp-footer-copy">© 2026 LeadPage · Propulsé par Devoleads</div>
+      <div class="lp-footer-copy">© 2026 LeadPage · Édité par Devoleads, La Rochelle</div>
     </div>
   </footer>
 
