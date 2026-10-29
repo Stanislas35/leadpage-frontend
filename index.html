@@ -3156,6 +3156,16 @@ a { text-underline-offset: 3px; }
 .sidebar-icon svg { width: 17px; height: 17px; }
 .upload-icon svg, .drop-icon svg, .empty-state-icon svg, .upload-option-icon svg, .file-info-icon svg, .lp-sim-upload-icon svg { width: 26px; height: 26px; color: var(--text2); }
 .upload-option-icon, .file-info-icon, .drop-icon, .empty-state-icon, .upload-icon { display: flex; align-items: center; justify-content: center; }
+
+/* Alignement sur une seule grille de 1200px */
+nav { padding-left: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; padding-right: max(32px, calc((100vw - 1200px) / 2 + 32px)) !important; }
+.lp-section { max-width: 1200px; }
+.lp-h2, .lp-h1 { text-wrap: balance; }
+.lp-h2 { max-width: 30ch; }
+.lp-section-sub, .lp-sub { text-wrap: pretty; }
+.lp-stats-row { width: 100%; max-width: 480px; }
+.lp-footer-inner { max-width: 1200px; padding-left: 32px; padding-right: 32px; }
+@media (max-width: 768px) { nav { padding-left: 16px !important; padding-right: 16px !important; } }
 </style>
 </head>
 <body>
