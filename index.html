@@ -4780,16 +4780,25 @@ nav { background: rgba(27,36,85,.9) !important; }
                 <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">Agence Web</div><div style="font-size:10px;color:var(--text2)">Création, refonte</div>
               </div>
               <div class="cm-secteur-btn" data-secteur="audiovisuel" onclick="cmSelectSecteur(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:all 0.2s">
-                <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">Audiovisuel</div><div style="font-size:10px;color:var(--text2)">Vidéo, motion</div>
+                <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">Studio audiovisuel</div><div style="font-size:10px;color:var(--text2)">Vidéo, interview, motion</div>
               </div>
               <div class="cm-secteur-btn active" data-secteur="prospection" onclick="cmSelectSecteur(this)" style="background:rgba(27,45,107,0.07);border:2px solid var(--pink);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:all 0.2s">
-                <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">Prospection</div><div style="font-size:10px;color:var(--text2)">RDV, cold email</div>
+                <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">Prospection BtoB</div><div style="font-size:10px;color:var(--text2)">RDV, email, LinkedIn</div>
               </div>
               <div class="cm-secteur-btn" data-secteur="seo" onclick="cmSelectSecteur(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:all 0.2s">
                 <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">SEO / Marketing</div><div style="font-size:10px;color:var(--text2)">Référencement</div>
               </div>
               <div class="cm-secteur-btn" data-secteur="rh" onclick="cmSelectSecteur(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:all 0.2s">
                 <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">RH / Recrutement</div><div style="font-size:10px;color:var(--text2)">Sourcing, chasse</div>
+              </div>
+              <div class="cm-secteur-btn" data-secteur="conseil" onclick="cmSelectSecteur(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:all 0.2s">
+                <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">Conseil / Formation</div><div style="font-size:10px;color:var(--text2)">Accompagnement, ateliers</div>
+              </div>
+              <div class="cm-secteur-btn" data-secteur="design" onclick="cmSelectSecteur(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:all 0.2s">
+                <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">Branding / Design</div><div style="font-size:10px;color:var(--text2)">Identité, supports</div>
+              </div>
+              <div class="cm-secteur-btn" data-secteur="saas" onclick="cmSelectSecteur(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:all 0.2s">
+                <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">Logiciel / SaaS</div><div style="font-size:10px;color:var(--text2)">Outil, abonnement</div>
               </div>
               <div class="cm-secteur-btn" data-secteur="autre" onclick="cmSelectSecteur(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:all 0.2s">
                 <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">Autre / Custom</div><div style="font-size:10px;color:var(--text2)">Tout personnaliser</div>
@@ -4810,43 +4819,43 @@ nav { background: rgba(27,36,85,.9) !important; }
               </div>
               <div class="cm-bloc active" data-bloc="accroche" onclick="cmToggleBloc(this)" style="background:rgba(27,45,107,0.05);border:1.5px solid var(--pink);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s">
                 <div class="cm-toggle" style="width:20px;height:20px;border-radius:5px;background:var(--pink);border:1.5px solid var(--pink);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;flex-shrink:0">✓</div>
-                <div style="flex:1"><div style="font-size:13px;font-weight:700">Accroche personnalisée</div><div style="font-size:11px;color:var(--text2)">Texte généré selon le profil prospect</div></div>
-                <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(27,45,107,0.12);color:var(--pink);border:1px solid var(--border-pink)">Recommandé</span>
+                <div style="flex:1"><div style="font-size:13px;font-weight:700">Accroche personnalisée</div><div style="font-size:11px;color:var(--text2)">L'enjeu identifié pour ce contact, d'après son profil</div></div>
+                <span class="cm-badge" style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px">Recommandé</span>
               </div>
               <div class="cm-bloc active" data-bloc="roi" onclick="cmToggleBloc(this)" style="background:rgba(27,45,107,0.05);border:1.5px solid var(--pink);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s">
                 <div class="cm-toggle" style="width:20px;height:20px;border-radius:5px;background:var(--pink);border:1.5px solid var(--pink);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;flex-shrink:0">✓</div>
-                <div style="flex:1"><div style="font-size:13px;font-weight:700">Chiffres ROI / Résultats</div><div style="font-size:11px;color:var(--text2)">Vos KPIs clés, preuves sociales</div></div>
-                <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(27,45,107,0.12);color:var(--pink);border:1px solid var(--border-pink)">Recommandé</span>
+                <div style="flex:1"><div style="font-size:13px;font-weight:700">Objectifs chiffrés</div><div style="font-size:11px;color:var(--text2)">4 objectifs indicatifs, jamais présentés comme des résultats passés</div></div>
+                <span class="cm-badge" style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px">Recommandé</span>
               </div>
               <div class="cm-bloc" data-bloc="audit" onclick="cmToggleBloc(this)" style="background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s">
                 <div class="cm-toggle" style="width:20px;height:20px;border-radius:5px;background:var(--bg4);border:1.5px solid var(--border);flex-shrink:0"></div>
-                <div style="flex:1"><div style="font-size:13px;font-weight:700">Audit / Diagnostic prospect</div><div style="font-size:11px;color:var(--text2)">Analyse rapide du site ou compte</div></div>
-                <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:var(--bg4);color:var(--text2);border:1px solid var(--border)">Optionnel</span>
+                <div style="flex:1"><div style="font-size:13px;font-weight:700">Diagnostic du prospect</div><div style="font-size:11px;color:var(--text2)">Atout, marge de progression et première action, d'après son profil</div></div>
+                <span class="cm-badge" style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px">Optionnel</span>
               </div>
               <div class="cm-bloc active" data-bloc="offre" onclick="cmToggleBloc(this)" style="background:rgba(27,45,107,0.05);border:1.5px solid var(--pink);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s">
                 <div class="cm-toggle" style="width:20px;height:20px;border-radius:5px;background:var(--pink);border:1.5px solid var(--pink);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;flex-shrink:0">✓</div>
-                <div style="flex:1"><div style="font-size:13px;font-weight:700">Offre détaillée + process</div><div style="font-size:11px;color:var(--text2)">Ce que vous faites, comment, délai</div></div>
-                <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(27,45,107,0.12);color:var(--pink);border:1px solid var(--border-pink)">Recommandé</span>
+                <div style="flex:1"><div style="font-size:13px;font-weight:700">Plan d'action</div><div style="font-size:11px;color:var(--text2)">Les 4 étapes de votre prestation pour ce prospect</div></div>
+                <span class="cm-badge" style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px">Recommandé</span>
               </div>
               <div class="cm-bloc" data-bloc="portfolio" onclick="cmToggleBloc(this)" style="background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s">
                 <div class="cm-toggle" style="width:20px;height:20px;border-radius:5px;background:var(--bg4);border:1.5px solid var(--border);flex-shrink:0"></div>
-                <div style="flex:1"><div style="font-size:13px;font-weight:700">Portfolio / Références</div><div style="font-size:11px;color:var(--text2)">Cas clients, captures, showreel</div></div>
-                <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:var(--bg4);color:var(--text2);border:1px solid var(--border)">Optionnel</span>
+                <div style="flex:1"><div style="font-size:13px;font-weight:700">Situations comparables</div><div style="font-size:11px;color:var(--text2)">Types de projets ou de structures proches, sans nom de client inventé</div></div>
+                <span class="cm-badge" style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px">Optionnel</span>
               </div>
               <div class="cm-bloc active" data-bloc="temoignage" onclick="cmToggleBloc(this)" style="background:rgba(27,45,107,0.05);border:1.5px solid var(--pink);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s">
                 <div class="cm-toggle" style="width:20px;height:20px;border-radius:5px;background:var(--pink);border:1.5px solid var(--pink);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;flex-shrink:0">✓</div>
-                <div style="flex:1"><div style="font-size:13px;font-weight:700">Témoignage client</div><div style="font-size:11px;color:var(--text2)">Citation + nom + entreprise</div></div>
-                <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:var(--bg4);color:var(--text2);border:1px solid var(--border)">Optionnel</span>
+                <div style="flex:1"><div style="font-size:13px;font-weight:700">Notre engagement</div><div style="font-size:11px;color:var(--text2)">Méthode, transparence et suivi, sans faux témoignage</div></div>
+                <span class="cm-badge" style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px">Optionnel</span>
               </div>
               <div class="cm-bloc" data-bloc="timeline" onclick="cmToggleBloc(this)" style="background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s">
                 <div class="cm-toggle" style="width:20px;height:20px;border-radius:5px;background:var(--bg4);border:1.5px solid var(--border);flex-shrink:0"></div>
-                <div style="flex:1"><div style="font-size:13px;font-weight:700">Timeline / Étapes</div><div style="font-size:11px;color:var(--text2)">Déroulé de votre accompagnement</div></div>
-                <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:var(--bg4);color:var(--text2);border:1px solid var(--border)">Optionnel</span>
+                <div style="flex:1"><div style="font-size:13px;font-weight:700">Calendrier prévisionnel</div><div style="font-size:11px;color:var(--text2)">Déroulé dans le temps, adapté à votre métier</div></div>
+                <span class="cm-badge" style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px">Optionnel</span>
               </div>
               <div class="cm-bloc active" data-bloc="mail" onclick="cmToggleBloc(this)" style="background:rgba(27,45,107,0.05);border:1.5px solid var(--pink);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s">
                 <div class="cm-toggle" style="width:20px;height:20px;border-radius:5px;background:var(--pink);border:1.5px solid var(--pink);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;flex-shrink:0">✓</div>
-                <div style="flex:1"><div style="font-size:13px;font-weight:700">Mail personnalisé</div><div style="font-size:11px;color:var(--text2)">Rédige un mail à leur nom pour leurs prospects</div></div>
-                <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(27,45,107,0.12);color:var(--pink);border:1px solid var(--border-pink)">Recommandé</span>
+                <div style="flex:1"><div style="font-size:13px;font-weight:700">Mail d'exemple</div><div style="font-size:11px;color:var(--text2)">Message type écrit au nom du prospect, pour ses propres clients</div></div>
+                <span class="cm-badge" style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px">Recommandé</span>
               </div>
               <div class="cm-bloc active locked" data-bloc="cta" style="background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px">
                 <div style="flex:1"><div style="font-size:13px;font-weight:700">CTA + Coordonnées</div><div style="font-size:11px;color:var(--text2)">Bouton d'action, email, lien</div></div>
@@ -6935,21 +6944,40 @@ let cmLogoBase64 = null;
 let cmFetchTimer = null;
 
 const CM_SECTEUR_BLOCS = {
-  web:         ['header','accroche','audit','portfolio','offre','cta'],
-  audiovisuel: ['header','accroche','portfolio','temoignage','offre','cta'],
-  prospection: ['header','accroche','roi','offre','temoignage','cta'],
-  seo:         ['header','accroche','audit','roi','offre','cta'],
-  rh:          ['header','accroche','roi','timeline','offre','cta'],
+  prospection: ['header','accroche','roi','offre','mail','temoignage','cta'],
+  web:         ['header','accroche','audit','offre','timeline','portfolio','cta'],
+  audiovisuel: ['header','accroche','roi','offre','timeline','mail','temoignage','cta'],
+  seo:         ['header','accroche','audit','roi','offre','timeline','cta'],
+  rh:          ['header','accroche','audit','offre','timeline','roi','cta'],
+  conseil:     ['header','accroche','audit','offre','timeline','temoignage','cta'],
+  design:      ['header','accroche','audit','offre','timeline','portfolio','cta'],
+  saas:        ['header','accroche','roi','audit','offre','timeline','cta'],
   autre:       ['header','accroche','offre','cta'],
 };
 const CM_SECTEUR_INFO = {
-  web:         'Agence Web : audit site prospect + portfolio recommandés.',
-  audiovisuel: 'Audiovisuel : portfolio et témoignages mis en avant.',
-  prospection: 'Prospection BtoB ROI et chiffres clés au premier plan.',
-  seo:         'SEO/Marketing : audit prospect + résultats chiffrés.',
-  rh:          'RH/Recrutement : timeline de mission + résultats.',
-  autre:       'Tout personnaliser : blocs de base uniquement.',
+  prospection: 'Prospection BtoB : objectifs chiffrés (rendez-vous, réponses) et mail d\'exemple mis en avant.',
+  web:         'Agence web : diagnostic de présence en ligne, calendrier de projet et situations comparables.',
+  audiovisuel: 'Studio audiovisuel : objectifs de production, calendrier de tournage et mail d\'exemple.',
+  seo:         'SEO / Marketing : diagnostic de visibilité, objectifs et feuille de route.',
+  rh:          'RH / Recrutement : diagnostic du besoin, déroulé de mission et objectifs de présentation de profils.',
+  conseil:     'Conseil / Formation : diagnostic, déroulé de l\'accompagnement et engagement de méthode.',
+  design:      'Branding / Design : lecture de l\'identité du prospect, calendrier de création et situations comparables.',
+  saas:        'Logiciel / SaaS : processus à soutenir, objectifs d\'adoption et plan de mise en place.',
+  autre:       'Autre activité : blocs de base uniquement, à compléter selon vos besoins.',
 };
+
+function cmRefreshBadges(secteur) {
+  const recs = CM_SECTEUR_BLOCS[secteur] || [];
+  document.querySelectorAll('#cm-blocs-list .cm-bloc:not(.locked)').forEach(item => {
+    const b = item.querySelector('.cm-badge');
+    if (!b) return;
+    const rec = recs.includes(item.dataset.bloc);
+    b.textContent = rec ? 'Recommandé' : 'Optionnel';
+    b.style.background = rec ? 'rgba(179,193,255,0.18)' : 'var(--bg4)';
+    b.style.color      = rec ? 'var(--accent)' : 'var(--text2)';
+    b.style.border     = rec ? '1px solid var(--accent)' : '1px solid var(--border)';
+  });
+}
 
 // ── Ouvrir / fermer ──
 function openNewCharte() {
@@ -7062,7 +7090,9 @@ function cmSelectSecteur(el) {
   el.style.background  = 'rgba(233,30,140,0.07)';
   cmSecteur = el.dataset.secteur;
   const info = document.getElementById('cm-secteur-info');
-  if (info) info.innerHTML = 'ℹ️ ' + CM_SECTEUR_INFO[cmSecteur];
+  if (info) info.innerHTML = 'ℹ️ ' + (CM_SECTEUR_INFO[cmSecteur] || '');
+  cmRefreshBadges(cmSecteur);
+  if (!cmEditId) cmApplySecteurBlocs(cmSecteur);
 }
 
 function cmApplySecteurBlocs(secteur) {
@@ -7071,6 +7101,7 @@ function cmApplySecteurBlocs(secteur) {
     const active = recs.includes(item.dataset.bloc);
     cmSetBlocState(item, active);
   });
+  cmRefreshBadges(secteur);
   cmUpdateBlocsCount();
 }
 
@@ -7094,6 +7125,7 @@ function cmSetBlocState(el, active) {
 }
 
 function cmUpdateBlocsCount() {
+  cmRefreshBadges(cmSecteur);
   const n = document.querySelectorAll('#cm-blocs-list .cm-bloc.active').length;
   const el = document.getElementById('cm-blocs-count');
   if (el) el.textContent = '— ' + n + ' blocs actifs';
