@@ -3068,7 +3068,7 @@ nav { background: var(--bg) !important; backdrop-filter: none !important; border
 /* Mouvements décoratifs désactivés */
 .lp-badge-dot, .camp-card.status-processing::before, [class*="pulse"] { animation: none !important; box-shadow: none !important; }
 .lp-reveal { transition-duration: .25s !important; }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } .fade-up, .lp-reveal { opacity: 1 !important; transform: none !important; } }
 
 /* Barres de progression et pastilles en dégradé inline → aplat */
 .lp-demo-progress-bar, #demoBar { background: var(--accent) !important; }
@@ -3598,7 +3598,7 @@ nav { background: var(--bg) !important; backdrop-filter: none !important; border
 ══════════════════════════════════════════ -->
 <div id="auth" class="screen">
   <div class="auth-card fade-up">
-    <div class="auth-logo">Lead<span style="background:linear-gradient(135deg,#5B80FF,#E91E8C);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Page</span></div>
+    <div class="auth-logo">Lead<span style="color:var(--accent)">Page</span></div>
     <div class="auth-subtitle">La prospection personnalisée à l'échelle</div>
 
     <div class="auth-tabs">
