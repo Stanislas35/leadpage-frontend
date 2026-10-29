@@ -5083,17 +5083,19 @@ function normalize(s) {
 function autoDetectMapping(headers) {
   const mapping = {};
   const used    = new Set();
+  const normHeaders = headers.map(normalize);
 
-  // Passe 1 : correspondance exacte uniquement
+  // Passe 1 : le nom exact du champ LeadPage gagne toujours (ex. "Résumé du profil" avant "Headline du profil")
   for (const field of LP_FIELDS) {
-    const norm_aliases = field.aliases.map(normalize);
-    for (const h of headers) {
-      const nh = normalize(h);
-      if (norm_aliases.includes(nh) && !used.has(h)) {
-        mapping[field.key] = h;
-        used.add(h);
-        break;
-      }
+    const i = normHeaders.findIndex((nh, k) => nh === normalize(field.key) && !used.has(headers[k]));
+    if (i !== -1) { mapping[field.key] = headers[i]; used.add(headers[i]); }
+  }
+  // Passe 2 : alias, dans l'ordre de priorité de la liste (le 1er alias est le plus spécifique)
+  for (const field of LP_FIELDS) {
+    if (mapping[field.key]) continue;
+    for (const alias of field.aliases.map(normalize)) {
+      const i = normHeaders.findIndex((nh, k) => nh === alias && !used.has(headers[k]));
+      if (i !== -1) { mapping[field.key] = headers[i]; used.add(headers[i]); break; }
     }
   }
   return mapping;
