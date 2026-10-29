@@ -6813,6 +6813,30 @@ async function loadSettings() {
   } catch(e) { console.error('loadSettings:', e); showToast('Paramètres indisponibles : ' + e.message, '#EF4444'); }
 }
 
+// ---- ONBOARDING : logo + sélecteur de couleur -----------------
+let obLogoBase64 = null;
+function handleLogoUpload(input) {
+  const file = input && input.files && input.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { showToast('Logo trop lourd (2 Mo max)', '#EF4444'); input.value = ''; return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    obLogoBase64 = e.target.result;
+    const zone = input.closest('.upload-zone');
+    if (zone) {
+      const h = zone.querySelector('h3'), p = zone.querySelector('p');
+      if (h) h.textContent = 'Logo ajouté : ' + file.name.slice(0, 30);
+      if (p) p.textContent = 'Cliquez pour le changer';
+    }
+  };
+  reader.readAsDataURL(file);
+}
+function syncColor(n, val) {
+  const t = document.getElementById('color' + n);
+  if (t) t.value = val;
+  updateColor(n);
+}
+
 // ---- FINISH ONBOARDING -----------------
 async function finishOnboarding(btn) {
   const payload = {};
@@ -6830,6 +6854,16 @@ async function finishOnboarding(btn) {
       if (!btn.dataset.label) btn.dataset.label = btn.textContent;
       setLoading(btn, true);
       await apiCall('PUT', '/api/auth/profile', payload, true);
+      if (obLogoBase64) {
+        const ch = await apiCall('GET', '/api/chartes/', null, true).catch(() => null);
+        const list = Array.isArray(ch) ? ch : (ch && ch.chartes) || [];
+        if (list.length === 0) {
+          await apiCall('POST', '/api/chartes/', {
+            name: payload.company_name || 'Ma charte', offer_description: payload.offer_description || null,
+            color_primary: payload.color_primary, color_accent: payload.color_accent, logo_base64: obLogoBase64
+          }, true).catch(e => console.error('Onboarding charte:', e));
+        }
+      }
     } catch(e) { console.error('Onboarding save:', e); }
     finally { setLoading(btn, false); }
   }
