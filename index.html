@@ -3088,6 +3088,68 @@ nav { background: var(--bg) !important; backdrop-filter: none !important; border
 .lp-demo-icon { font-size: 11px; font-weight: 600; color: var(--text2); background: var(--bg3) !important; border-radius: var(--r); }
 .lp-badge-ok, .lp-demo-badge { border-radius: 4px !important; }
 .lp-hero-inner { align-items: center; }
+
+/* ── FINITION PREMIUM ── */
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+::selection { background: var(--accent); color: #fff; }
+a { text-underline-offset: 3px; }
+.lp-hero { min-height: min(92vh, 860px); padding: 120px 0 80px; }
+.lp-hero-inner { max-width: 1200px; gap: 72px; grid-template-columns: 1.05fr .95fr; }
+.lp-h1 { font-size: clamp(40px, 5.2vw, 64px); line-height: 1.06; letter-spacing: -0.02em; margin-bottom: 24px; }
+.lp-sub { font-size: 18px; line-height: 1.65; color: var(--text2); max-width: 52ch; margin-bottom: 36px; }
+.lp-sub strong { color: var(--text); font-weight: 600; }
+.lp-cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 48px; }
+.lp-btn-primary, .lp-btn-ghost { padding: 14px 24px; font-size: 15px; font-weight: 500; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+.lp-stats-row { display: flex; gap: 32px; padding-top: 28px; border-top: 1px solid var(--border); width: fit-content; }
+.lp-stat-sep { display: none; }
+.lp-stat-n { font-size: 30px; }
+.lp-stat-u { font-family: var(--font-display); font-size: 18px; color: var(--text2); }
+.lp-demo-card { min-height: 0; }
+.lp-demo-body { padding-bottom: 20px; }
+
+.lp-section { max-width: 1120px; padding: 104px 32px; }
+.lp-section-sub { font-size: 17px; line-height: 1.6; max-width: 56ch; color: var(--text2); }
+.lp-section-alt { max-width: none; }
+.lp-section-label { margin-bottom: 12px; }
+.lp-h2 { margin-bottom: 16px; max-width: 24ch; }
+
+.lp-result-card { text-align: left; padding: 28px; background: var(--bg2); border: 1px solid var(--border); }
+.lp-result-label { font-family: var(--font-display); font-size: 20px; font-weight: 600; line-height: 1.25; margin-bottom: 10px; text-align: left; }
+.lp-result-label strong { font-weight: 600; }
+.lp-result-source { font-size: 14px; line-height: 1.55; color: var(--text2); text-align: left; }
+
+/* Tarifs */
+.lp-price-card { position: relative; border-width: 1px; border-radius: 8px; padding: 32px 24px 24px; }
+.lp-price-featured { border: 2px solid var(--accent) !important; padding-top: 32px; }
+.lp-price-badge { position: absolute; top: -12px; left: 24px; margin: 0; background: var(--accent); color: #fff; border: none; border-radius: 4px; font-size: 11px; font-weight: 500; padding: 4px 10px; }
+[data-theme="dark"] .lp-price-badge { color: #0E1217; }
+.lp-price-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
+.lp-price-amount { font-family: var(--font-display); font-size: 46px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: lining-nums; }
+.lp-price-period { margin-top: 6px; font-size: 13px; color: var(--text2); }
+.lp-price-features li { font-size: 14px; line-height: 1.5; }
+.lp-price-btn, .lp-price-btn-primary { border-radius: var(--r) !important; padding: 12px 16px; font-weight: 500; }
+
+/* FAQ, CTA final, pied de page */
+.lp-faq-item { background: var(--bg2); border: 1px solid var(--border); }
+.lp-cta-final { padding: 112px 32px; }
+.lp-footer { border-top: 1px solid var(--border); }
+.lp-footer-logo { font-family: var(--font-display); font-weight: 600; }
+.lp-footer-links a:hover { color: var(--accent); text-decoration: underline; }
+
+/* Champs de formulaire */
+.form-input, input[type="text"], input[type="email"], input[type="password"], select, textarea { border-radius: var(--r); transition: border-color .15s, box-shadow .15s; }
+.form-input:focus, input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+.auth-card { border-radius: 10px !important; box-shadow: var(--shadow); }
+
+@media (max-width: 900px) {
+  .lp-hero { padding: 96px 0 56px; min-height: 0; }
+  .lp-hero-inner { grid-template-columns: 1fr; gap: 48px; }
+  .lp-section { padding: 72px 20px; }
+  .lp-stats-row { gap: 24px; }
+}
+@media (max-width: 480px) {
+  .lp-btn-primary, .lp-btn-ghost { width: 100%; justify-content: center; }
+}
 </style>
 </head>
 <body>
@@ -3496,7 +3558,7 @@ nav { background: var(--bg) !important; backdrop-filter: none !important; border
       </div>
 
       <div class="lp-price-card lp-price-featured lp-reveal">
-        <div class="lp-price-badge">⚡ Le plus populaire</div>
+        <div class="lp-price-badge">Le plus populaire</div>
         <div class="lp-price-name">Growth</div>
         <div class="lp-price-amount">79<sup>€</sup></div>
         <div class="lp-price-period">par mois</div>
@@ -3588,7 +3650,7 @@ nav { background: var(--bg) !important; backdrop-filter: none !important; border
         <a href="#lp-faq" onclick="document.getElementById('lp-faq').scrollIntoView({behavior:'smooth'});return false">FAQ</a>
         <a href="#" onclick="showScreen('auth');return false">Connexion</a>
       </div>
-      <div class="lp-footer-copy">© 2025 LeadPage · Propulsé par Devoleads</div>
+      <div class="lp-footer-copy">© 2026 LeadPage · Propulsé par Devoleads</div>
     </div>
   </footer>
 
