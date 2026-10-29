@@ -3150,6 +3150,12 @@ a { text-underline-offset: 3px; }
 @media (max-width: 480px) {
   .lp-btn-primary, .lp-btn-ghost { width: 100%; justify-content: center; }
 }
+
+/* Icônes SVG (remplacent les emojis) */
+.sidebar-icon { display: inline-flex; align-items: center; width: 18px; justify-content: center; }
+.sidebar-icon svg { width: 17px; height: 17px; }
+.upload-icon svg, .drop-icon svg, .empty-state-icon svg, .upload-option-icon svg, .file-info-icon svg, .lp-sim-upload-icon svg { width: 26px; height: 26px; color: var(--text2); }
+.upload-option-icon, .file-info-icon, .drop-icon, .empty-state-icon, .upload-icon { display: flex; align-items: center; justify-content: center; }
 </style>
 </head>
 <body>
@@ -3363,7 +3369,7 @@ a { text-underline-offset: 3px; }
       <div class="lp-browser-bar">
         <div class="lp-browser-dots"><span></span><span></span><span></span></div>
         <div class="lp-browser-url">
-          <span class="lp-browser-lock">🔒</span>
+          
           app.leadpage.fr/dashboard
         </div>
         <div style="width:60px"></div>
@@ -3375,10 +3381,10 @@ a { text-underline-offset: 3px; }
         <!-- Sidebar simulée -->
         <div class="lp-sim-sidebar">
           <div class="lp-sim-logo">Lead<span>Page</span></div>
-          <div class="lp-sim-nav-item lp-sim-active">⚡ Générer</div>
-          <div class="lp-sim-nav-item">📋 Campagnes</div>
-          <div class="lp-sim-nav-item">📊 Stats</div>
-          <div class="lp-sim-nav-item">🎨 Chartes</div>
+          <div class="lp-sim-nav-item lp-sim-active">Générer</div>
+          <div class="lp-sim-nav-item">Campagnes</div>
+          <div class="lp-sim-nav-item">Stats</div>
+          <div class="lp-sim-nav-item">Chartes</div>
         </div>
 
         <!-- Zone principale -->
@@ -3391,7 +3397,7 @@ a { text-underline-offset: 3px; }
               <div class="lp-sim-step-sub">Uploadez votre export CSV</div>
             </div>
             <div class="lp-sim-upload" id="simUpload">
-              <div class="lp-sim-upload-icon">📁</div>
+              <div class="lp-sim-upload-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
               <div class="lp-sim-upload-text">prospects_mars_2025.csv</div>
               <div class="lp-sim-upload-meta">247 contacts · 42 KB</div>
               <div class="lp-sim-upload-bar">
@@ -3404,7 +3410,7 @@ a { text-underline-offset: 3px; }
                 <div class="lp-sim-charte-dot" style="background:linear-gradient(135deg,#1B2D6B,#E91E8C)"></div>
                 Devoleads · Prospection
               </div>
-              <div class="lp-sim-gen-btn" id="simGenBtn">⚡ Générer les PDFs</div>
+              <div class="lp-sim-gen-btn" id="simGenBtn">Générer les PDFs</div>
             </div>
           </div>
 
@@ -3425,7 +3431,7 @@ a { text-underline-offset: 3px; }
           <!-- Étape 3 — Résultats -->
           <div class="lp-sim-step" id="simStep3" style="display:none">
             <div class="lp-sim-step-header">
-              <div class="lp-sim-step-title" style="color:#22C55E">✅ 247 PDFs générés</div>
+              <div class="lp-sim-step-title" style="color:#22C55E">247 PDFs générés</div>
               <div class="lp-sim-step-sub">Campagne Prospection Mars 2025 · 3m 47s</div>
             </div>
             <div class="lp-sim-results-grid" id="simResults"></div>
@@ -3475,7 +3481,7 @@ a { text-underline-offset: 3px; }
             </div>
           </div>
           <div class="lp-sim-tracking-pill" id="simTrackingPill" style="opacity:0">
-            👁 Lien de tracking unique généré
+            Lien de tracking unique généré
           </div>
         </div>
 
@@ -3707,7 +3713,7 @@ a { text-underline-offset: 3px; }
           <div class="plan-option selected" onclick="selectPlan(this)">
             <div class="plan-option-radio"></div>
             <div class="plan-option-info">
-              <div class="plan-option-name">Gratuit 🎁</div>
+              <div class="plan-option-name">Gratuit </div>
               <div class="plan-option-desc">5 PDFs + mails offerts · sans CB</div>
             </div>
             <div class="plan-option-price" style="color:var(--text2)">0€</div>
@@ -3723,7 +3729,7 @@ a { text-underline-offset: 3px; }
           <div class="plan-option" onclick="selectPlan(this)">
             <div class="plan-option-radio"></div>
             <div class="plan-option-info">
-              <div class="plan-option-name">Growth ⚡</div>
+              <div class="plan-option-name">Growth </div>
               <div class="plan-option-desc">2 000 PDFs/mois</div>
             </div>
             <div class="plan-option-price">79€</div>
@@ -3780,7 +3786,7 @@ a { text-underline-offset: 3px; }
         <label class="form-label">Votre logo</label>
         <div class="upload-zone" onclick="this.querySelector('input').click()">
           <input type="file" accept="image/*" style="display:none" onchange="handleLogoUpload(this)">
-          <div class="upload-icon">🖼️</div>
+          <div class="upload-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></div>
           <h3>Glissez votre logo ici</h3>
           <p>PNG ou SVG recommandé · Fond transparent idéal</p>
         </div>
@@ -3888,31 +3894,31 @@ a { text-underline-offset: 3px; }
       <div class="sidebar-section">
         <div class="sidebar-label">Navigation</div>
         <div class="sidebar-item active" onclick="showDashSection('generate', this, true)">
-          <span class="sidebar-icon">⚡</span> Générer
+          <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span> Générer
         </div>
         <div class="sidebar-item" onclick="showDashSection('campaigns', this, true)">
-          <span class="sidebar-icon">📁</span> Campagnes
+          <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span> Campagnes
         </div>
         <div class="sidebar-item" onclick="showDashSection('stats', this, true)">
-          <span class="sidebar-icon">📊</span> Statistiques
+          <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span> Statistiques
         </div>
         <div class="sidebar-item" onclick="showDashSection('chartes', this, true)">
-          <span class="sidebar-icon">🎨</span> Mes chartes
+          <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.3-.5-.8-.5-1.2 0-1.1.9-2 2-2h2.3A3.7 3.7 0 0 0 21 11C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="14.5" cy="7" r="1"/></svg></span> Mes chartes
         </div>
       </div>
       <div class="sidebar-section">
         <div class="sidebar-label">Compte</div>
         <div class="sidebar-item" onclick="showDashSection('profile', this, true)">
-          <span class="sidebar-icon">🎨</span> Mon profil
+          <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span> Mon profil
         </div>
         <div class="sidebar-item" onclick="showDashSection('abonnement', this, true)">
-          <span class="sidebar-icon">💳</span> Abonnement
+          <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span> Abonnement
         </div>
         <div class="sidebar-item" onclick="showDashSection('parametres', this, true)">
           <span class="sidebar-icon">⚙️</span> Paramètres
         </div>
         <div class="sidebar-item" onclick="handleLogout()" style="margin-top:auto;color:var(--text3)">
-          <span class="sidebar-icon">🚪</span> Deconnexion
+          <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></span> Deconnexion
         </div>
       </div>
 
@@ -3922,7 +3928,7 @@ a { text-underline-offset: 3px; }
         <div class="credits-label">Crédits restants</div>
         <div class="credits-bar"><div class="credits-fill" id="creditsFill" style="width:60%"></div></div>
         <div class="credits-count" id="creditsCount">3 <span>/ 5 PDFs gratuits</span></div>
-        <button class="btn btn-primary" style="width:100%;margin-top:12px;font-size:12px;padding:8px" onclick="showUpgradeModal()">⚡ Passer au plan payant</button>
+        <button class="btn btn-primary" style="width:100%;margin-top:12px;font-size:12px;padding:8px" onclick="showUpgradeModal()">Passer au plan payant</button>
       </div>
     </div>
 
@@ -3932,25 +3938,21 @@ a { text-underline-offset: 3px; }
       <!-- KPIs -->
       <div class="kpi-row fade-up" id="dash-kpi">
         <div class="kpi-card" style="position:relative;overflow:hidden">
-          <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;opacity:0.08">📄</div>
           <div class="kpi-label">PDFs générés</div>
           <div class="kpi-value" id="kpi-pdfs">—</div>
           <div class="kpi-sub">total</div>
         </div>
         <div class="kpi-card" style="position:relative;overflow:hidden">
-          <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;opacity:0.08">✉</div>
           <div class="kpi-label">Mails générés</div>
           <div class="kpi-value" id="kpi-mails">—</div>
           <div class="kpi-sub">total</div>
         </div>
         <div class="kpi-card" style="position:relative;overflow:hidden">
-          <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;opacity:0.08">📁</div>
           <div class="kpi-label">Campagnes</div>
           <div class="kpi-value" id="kpi-campaigns">—</div>
           <div class="kpi-sub">au total</div>
         </div>
         <div class="kpi-card" style="position:relative;overflow:hidden">
-          <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;opacity:0.08">⚡</div>
           <div class="kpi-label">Crédits restants</div>
           <div class="kpi-value" id="kpi-credits">—</div>
           <div class="kpi-sub" id="kpi-credits-sub">sur votre plan</div>
@@ -3966,7 +3968,7 @@ a { text-underline-offset: 3px; }
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <input type="text" id="campaign-name" class="form-input" placeholder="Nom de la campagne..." style="width:200px;margin:0">
           <button class="btn btn-primary" onclick="startGeneration()">
-            ⚡ Générer les PDFs
+            Générer les PDFs
           </button>
         </div>
       </div>
@@ -3982,17 +3984,17 @@ a { text-underline-offset: 3px; }
 
         <div class="upload-options">
           <div class="upload-option selected" onclick="selectOption(this)">
-            <div class="upload-option-icon">📋</div>
+            <div class="upload-option-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg></div>
             <h4>Import CSV</h4>
             <p>Tous outils compatibles</p>
           </div>
           <div class="upload-option" onclick="selectOption(this)">
-            <div class="upload-option-icon">🔗</div>
+            <div class="upload-option-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></div>
             <h4>Coller une URL</h4>
             <p>Lien public CSV/Google Sheets</p>
           </div>
           <div class="upload-option" onclick="selectOption(this)">
-            <div class="upload-option-icon">🔌</div>
+            <div class="upload-option-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2v6M15 2v6M6 8h12v4a6 6 0 0 1-12 0zM12 18v4"/></svg></div>
             <h4>API / Webhook</h4>
             <p>Intégration directe</p>
           </div>
@@ -4004,7 +4006,7 @@ a { text-underline-offset: 3px; }
           ondragover="handleDragOver(event)"
           ondrop="handleDrop(event)">
           <input type="file" id="csvInput" accept=".csv" style="display:none" onchange="handleFileSelect(this)">
-          <div class="drop-icon">📂</div>
+          <div class="drop-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg></div>
           <h3>Glissez votre fichier CSV ici</h3>
           <p>ou cliquez pour parcourir · Max 10MB</p>
         </div>
@@ -4022,13 +4024,13 @@ a { text-underline-offset: 3px; }
         </div>
         <!-- FILE INFO (hidden by default) -->
         <div class="file-info" id="fileInfo" style="display:none">
-          <div class="file-info-icon">📄</div>
+          <div class="file-info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg></div>
           <div>
             <div class="file-info-name" id="fileName">contacts_mars2026.csv</div>
             <div class="file-info-meta" id="fileMeta">1 contact · 29 colonnes détectées</div>
           </div>
           <div style="display:flex;gap:8px;margin-left:auto">
-            <button class="btn btn-ghost" style="font-size:12px" onclick="openMappingModal(selectedCsvFile)">🗂 Mapping</button>
+            <button class="btn btn-ghost" style="font-size:12px" onclick="openMappingModal(selectedCsvFile)">Mapping</button>
             <button class="btn btn-ghost" style="font-size:12px" onclick="resetFile()">✕ Supprimer</button>
           </div>
         </div>
@@ -4037,7 +4039,7 @@ a { text-underline-offset: 3px; }
         <div id="previewBeforeGen" style="display:none;background:var(--bg2);border:1px solid var(--border-active);border-radius:16px;padding:20px 24px;margin-bottom:20px">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
             <h3 style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;margin:0">
-              👁 Aperçu · 1er contact détecté
+              Aperçu · 1er contact détecté
               <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:rgba(27,45,107,0.12);color:var(--pink);font-weight:700">AVANT ENVOI</span>
             </h3>
             <button onclick="document.getElementById('previewBeforeGen').style.display='none'" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;line-height:1">✕</button>
@@ -4061,7 +4063,7 @@ a { text-underline-offset: 3px; }
             </div>
           </div>
           <div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px">
-            <span>📊</span>
+            <span></span>
             <span id="prev-total">0 contacts détectés</span>
             <span style="margin-left:auto" id="prev-charte"></span>
           </div>
@@ -4073,7 +4075,7 @@ a { text-underline-offset: 3px; }
             <span style="position:absolute;top:-1px;right:10px;background:var(--pink);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:0 0 6px 6px;letter-spacing:0.05em">Recommandé</span>
             <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
               <input type="checkbox" id="chk-pdf" checked onchange="validateGenOptions()">
-              <span style="font-weight:700">📄 PDF personnalisé</span>
+              <span style="font-weight:700">PDF personnalisé</span>
             </label>
             <p>PDF 2 pages avec logo prospect, accroche IA et lien de tracking unique</p>
           </div>
@@ -4089,7 +4091,7 @@ a { text-underline-offset: 3px; }
 
         <!-- CHARTE SELECTOR -->
         <div style="margin-top:12px">
-          <label style="font-size:12px;color:var(--text3);font-weight:600;display:block;margin-bottom:6px">🎨 Charte graphique</label>
+          <label style="font-size:12px;color:var(--text3);font-weight:600;display:block;margin-bottom:6px">Charte graphique</label>
           <select id="charte-selector" onchange="onCharteChange()"
             style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text1);font-size:13px;cursor:pointer">
             <option value="default">Charte par défaut</option>
@@ -4135,7 +4137,7 @@ a { text-underline-offset: 3px; }
 
         <!-- Contact actif -->
         <div class="progress-contact-strip" id="currentContactStrip" style="display:none">
-          <span style="font-size:16px">⚡</span>
+          <span style="font-size:16px"></span>
           <div>
             <div class="contact-name" id="currentContactName">—</div>
             <div class="contact-company" id="currentContactCompany">—</div>
@@ -4151,10 +4153,10 @@ a { text-underline-offset: 3px; }
       <div class="results-card" id="resultsCard">
         <div class="results-header">
           <div>
-            <h2>✅ 1 PDF généré avec succès</h2>
+            <h2>1 PDF généré avec succès</h2>
           </div>
           <div class="results-actions">
-            <button class="btn btn-ghost">📋 Copier les liens</button>
+            <button class="btn btn-ghost">Copier les liens</button>
             <button class="btn btn-primary">⬇️ Télécharger le CSV</button>
           </div>
         </div>
@@ -4173,7 +4175,7 @@ a { text-underline-offset: 3px; }
               <td class="td-name">Fabienne GRAFFIN</td>
               <td>GRETA-CFA Bretagne</td>
               <td>Formation professionnelle</td>
-              <td><a class="pdf-link" href="#" onclick="return false">🔗 Voir le PDF</a></td>
+              <td><a class="pdf-link" href="#" onclick="return false">Voir le PDF</a></td>
               <td><span class="badge-ok">✓ Généré</span></td>
             </tr>
           </tbody>
@@ -4196,15 +4198,12 @@ a { text-underline-offset: 3px; }
       <!-- Mini stats rapides -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px" id="camp-quick-stats">
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px">
-          <div style="width:36px;height:36px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;font-size:16px">✅</div>
           <div><div style="font-size:20px;font-weight:800" id="qs-done">—</div><div style="font-size:11px;color:var(--text3)">Terminées</div></div>
         </div>
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px">
-          <div style="width:36px;height:36px;border-radius:10px;background:rgba(27,45,107,0.1);display:flex;align-items:center;justify-content:center;font-size:16px">⚡</div>
           <div><div style="font-size:20px;font-weight:800" id="qs-pdfs">—</div><div style="font-size:11px;color:var(--text3)">PDFs générés</div></div>
         </div>
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px">
-          <div style="width:36px;height:36px;border-radius:10px;background:rgba(91,128,255,0.1);display:flex;align-items:center;justify-content:center;font-size:16px">📩</div>
           <div><div style="font-size:20px;font-weight:800" id="qs-mails">—</div><div style="font-size:11px;color:var(--text3)">Mails générés</div></div>
         </div>
       </div>
@@ -4274,7 +4273,7 @@ a { text-underline-offset: 3px; }
     <div id="mappingModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);z-index:600;align-items:center;justify-content:center">
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;width:min(680px,95vw);max-height:90vh;overflow-y:auto;padding:32px;position:relative">
         <button onclick="closeMappingModal()" style="position:absolute;top:16px;right:16px;background:var(--bg3);border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;color:var(--text2)">✕</button>
-        <h2 style="font-size:18px;font-weight:800;margin-bottom:4px">🗂 Relier vos colonnes</h2>
+        <h2 style="font-size:18px;font-weight:800;margin-bottom:4px">Relier vos colonnes</h2>
         <p style="font-size:13px;color:var(--text2);margin-bottom:24px">Reliez vos colonnes CSV aux champs LeadPage. Seuls les champs <span style="color:#EF4444;font-weight:700">obligatoires</span> bloquent la génération — les autres enrichissent la personnalisation.</p>
 
         <div id="mapping-rows" style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px"></div>
@@ -4285,7 +4284,7 @@ a { text-underline-offset: 3px; }
 
         <div style="display:flex;gap:12px;justify-content:flex-end">
           <button class="btn btn-ghost" onclick="closeMappingModal()">Annuler</button>
-          <button class="btn btn-primary" id="mapping-confirm-btn" onclick="confirmMapping()">✅ Confirmer le mapping</button>
+          <button class="btn btn-primary" id="mapping-confirm-btn" onclick="confirmMapping()">Confirmer le mapping</button>
         </div>
       </div>
     </div>
@@ -4327,7 +4326,7 @@ a { text-underline-offset: 3px; }
             </div>
             <div class="form-group" style="margin-bottom:16px"><label class="form-label">Description de l'offre</label><textarea class="form-input" id="cm-desc" rows="3" placeholder="Décrivez l'offre en 3-5 phrases. L'IA s'en servira pour personnaliser chaque PDF..."></textarea></div>
             <div class="form-group" style="margin-bottom:16px">
-              <label class="form-label">🗓 Lien agenda (optionnel)</label>
+              <label class="form-label">Lien agenda (optionnel)</label>
               <input class="form-input" id="cm-calendly" placeholder="https://calendly.com/votre-lien ou cal.com/..." style="font-size:13px">
               <div style="font-size:11px;color:var(--text3);margin-top:5px">Apparaît en lien cliquable dans le CTA du PDF · Compatible Calendly, Cal.com, HubSpot...</div>
             </div>
@@ -4339,7 +4338,7 @@ a { text-underline-offset: 3px; }
                 <div id="cm-logo-drop" onclick="document.getElementById('cm-logo-input').click()" style="border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--bg3)" onmouseover="this.style.borderColor='var(--border-pink)'" onmouseout="this.style.borderColor='var(--border)'">
                   <input type="file" id="cm-logo-input" accept="image/*" style="display:none" onchange="cmHandleLogo(this)">
                   <div id="cm-logo-preview">
-                    <div style="font-size:28px;margin-bottom:6px">🖼️</div>
+                    <div style="font-size:28px;margin-bottom:6px"></div>
                     <div style="font-size:12px;font-weight:700;margin-bottom:2px">Glissez votre logo</div>
                     <div style="font-size:11px;color:var(--text2)">PNG, SVG · Fond transparent</div>
                   </div>
@@ -4384,22 +4383,22 @@ a { text-underline-offset: 3px; }
             <div style="font-size:13px;font-weight:700;margin-bottom:16px">Quel est votre secteur ?</div>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px" id="cm-secteurs">
               <div class="cm-secteur-btn" data-secteur="web" onclick="cmSelectSecteur(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:all 0.2s">
-                <div style="font-size:22px;margin-bottom:5px">💻</div><div style="font-size:12px;font-weight:700">Agence Web</div><div style="font-size:10px;color:var(--text2)">Création, refonte</div>
+                <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">Agence Web</div><div style="font-size:10px;color:var(--text2)">Création, refonte</div>
               </div>
               <div class="cm-secteur-btn" data-secteur="audiovisuel" onclick="cmSelectSecteur(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:all 0.2s">
-                <div style="font-size:22px;margin-bottom:5px">🎬</div><div style="font-size:12px;font-weight:700">Audiovisuel</div><div style="font-size:10px;color:var(--text2)">Vidéo, motion</div>
+                <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">Audiovisuel</div><div style="font-size:10px;color:var(--text2)">Vidéo, motion</div>
               </div>
               <div class="cm-secteur-btn active" data-secteur="prospection" onclick="cmSelectSecteur(this)" style="background:rgba(27,45,107,0.07);border:2px solid var(--pink);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:all 0.2s">
-                <div style="font-size:22px;margin-bottom:5px">🎯</div><div style="font-size:12px;font-weight:700">Prospection</div><div style="font-size:10px;color:var(--text2)">RDV, cold email</div>
+                <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">Prospection</div><div style="font-size:10px;color:var(--text2)">RDV, cold email</div>
               </div>
               <div class="cm-secteur-btn" data-secteur="seo" onclick="cmSelectSecteur(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:all 0.2s">
-                <div style="font-size:22px;margin-bottom:5px">📈</div><div style="font-size:12px;font-weight:700">SEO / Marketing</div><div style="font-size:10px;color:var(--text2)">Référencement</div>
+                <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">SEO / Marketing</div><div style="font-size:10px;color:var(--text2)">Référencement</div>
               </div>
               <div class="cm-secteur-btn" data-secteur="rh" onclick="cmSelectSecteur(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:all 0.2s">
-                <div style="font-size:22px;margin-bottom:5px">👥</div><div style="font-size:12px;font-weight:700">RH / Recrutement</div><div style="font-size:10px;color:var(--text2)">Sourcing, chasse</div>
+                <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">RH / Recrutement</div><div style="font-size:10px;color:var(--text2)">Sourcing, chasse</div>
               </div>
               <div class="cm-secteur-btn" data-secteur="autre" onclick="cmSelectSecteur(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:all 0.2s">
-                <div style="font-size:22px;margin-bottom:5px">✨</div><div style="font-size:12px;font-weight:700">Autre / Custom</div><div style="font-size:10px;color:var(--text2)">Tout personnaliser</div>
+                <div style="font-size:22px;margin-bottom:5px"></div><div style="font-size:12px;font-weight:700">Autre / Custom</div><div style="font-size:10px;color:var(--text2)">Tout personnaliser</div>
               </div>
             </div>
             <div id="cm-secteur-info" style="background:rgba(27,45,107,0.2);border:1px solid rgba(100,120,255,0.15);border-radius:10px;padding:12px 16px;font-size:12px;color:#8899FF">
@@ -4412,7 +4411,6 @@ a { text-underline-offset: 3px; }
             <div style="font-size:13px;font-weight:700;margin-bottom:16px">Composition du PDF <span id="cm-blocs-count" style="color:var(--text2);font-weight:400;font-size:12px">— 5 blocs actifs</span></div>
             <div style="display:flex;flex-direction:column;gap:8px" id="cm-blocs-list">
               <div class="cm-bloc active locked" data-bloc="header" style="background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px">
-                <div style="width:20px;height:20px;border-radius:5px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0">🔒</div>
                 <div style="flex:1"><div style="font-size:13px;font-weight:700">En-tête + logo</div><div style="font-size:11px;color:var(--text2)">Logo, nom, bandeau couleur</div></div>
                 <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(27,45,107,0.4);color:#8899FF;border:1px solid rgba(100,120,255,0.2)">Toujours</span>
               </div>
@@ -4457,7 +4455,6 @@ a { text-underline-offset: 3px; }
                 <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(27,45,107,0.12);color:var(--pink);border:1px solid var(--border-pink)">Recommandé</span>
               </div>
               <div class="cm-bloc active locked" data-bloc="cta" style="background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px">
-                <div style="width:20px;height:20px;border-radius:5px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0">🔒</div>
                 <div style="flex:1"><div style="font-size:13px;font-weight:700">CTA + Coordonnées</div><div style="font-size:11px;color:var(--text2)">Bouton d'action, email, lien</div></div>
                 <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(27,45,107,0.4);color:#8899FF;border:1px solid rgba(100,120,255,0.2)">Toujours</span>
               </div>
@@ -4479,19 +4476,19 @@ a { text-underline-offset: 3px; }
                 <label class="form-label" style="margin-bottom:10px;display:block">Style d'écriture</label>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="cm-style-grid">
                   <div class="cm-style-opt" data-style="direct" onclick="cmSelectStyle(this)" style="background:rgba(27,45,107,0.07);border:2px solid var(--pink);border-radius:10px;padding:12px;cursor:pointer;transition:all 0.2s">
-                    <div style="font-size:13px;font-weight:700;margin-bottom:3px">⚡ Direct &amp; Percutant</div>
+                    <div style="font-size:13px;font-weight:700;margin-bottom:3px">Direct &amp; Percutant</div>
                     <div style="font-size:11px;color:var(--text2)">Phrases courtes, chiffres, efficacité</div>
                   </div>
                   <div class="cm-style-opt" data-style="professionnel" onclick="cmSelectStyle(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all 0.2s">
-                    <div style="font-size:13px;font-weight:700;margin-bottom:3px">🤝 Professionnel &amp; Chaleureux</div>
+                    <div style="font-size:13px;font-weight:700;margin-bottom:3px">Professionnel &amp; Chaleureux</div>
                     <div style="font-size:11px;color:var(--text2)">Ton agence conseil, vouvoiement soigné</div>
                   </div>
                   <div class="cm-style-opt" data-style="amical" onclick="cmSelectStyle(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all 0.2s">
-                    <div style="font-size:13px;font-weight:700;margin-bottom:3px">😊 Amical &amp; Moderne</div>
+                    <div style="font-size:13px;font-weight:700;margin-bottom:3px">Amical &amp; Moderne</div>
                     <div style="font-size:11px;color:var(--text2)">Tutoiement assumé, startup vibe</div>
                   </div>
                   <div class="cm-style-opt" data-style="premium" onclick="cmSelectStyle(this)" style="background:var(--bg3);border:2px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all 0.2s">
-                    <div style="font-size:13px;font-weight:700;margin-bottom:3px">💎 Luxe &amp; Premium</div>
+                    <div style="font-size:13px;font-weight:700;margin-bottom:3px">Luxe &amp; Premium</div>
                     <div style="font-size:11px;color:var(--text2)">Vocabulaire raffiné, posture experte</div>
                   </div>
                 </div>
@@ -4502,17 +4499,17 @@ a { text-underline-offset: 3px; }
                 <label class="form-label" style="margin-bottom:10px;display:block">Utilisation des emojis</label>
                 <div style="display:flex;gap:8px" id="cm-emoji-grid">
                   <div class="cm-emoji-opt" data-emoji="aucun" onclick="cmSelectEmoji(this)" style="flex:1;background:rgba(27,45,107,0.07);border:2px solid var(--pink);border-radius:10px;padding:10px;cursor:pointer;text-align:center;transition:all 0.2s">
-                    <div style="font-size:20px;margin-bottom:4px">🚫</div>
+                    <div style="font-size:20px;margin-bottom:4px"></div>
                     <div style="font-size:12px;font-weight:700">Aucun</div>
                     <div style="font-size:10px;color:var(--text2)">100% texte</div>
                   </div>
                   <div class="cm-emoji-opt" data-emoji="subtil" onclick="cmSelectEmoji(this)" style="flex:1;background:var(--bg3);border:2px solid var(--border);border-radius:10px;padding:10px;cursor:pointer;text-align:center;transition:all 0.2s">
-                    <div style="font-size:20px;margin-bottom:4px">✨</div>
+                    <div style="font-size:20px;margin-bottom:4px"></div>
                     <div style="font-size:12px;font-weight:700">Subtil</div>
                     <div style="font-size:10px;color:var(--text2)">1-2 max</div>
                   </div>
                   <div class="cm-emoji-opt" data-emoji="expressif" onclick="cmSelectEmoji(this)" style="flex:1;background:var(--bg3);border:2px solid var(--border);border-radius:10px;padding:10px;cursor:pointer;text-align:center;transition:all 0.2s">
-                    <div style="font-size:20px;margin-bottom:4px">🎯</div>
+                    <div style="font-size:20px;margin-bottom:4px"></div>
                     <div style="font-size:12px;font-weight:700">Expressif</div>
                     <div style="font-size:10px;color:var(--text2)">Par section</div>
                   </div>
@@ -4630,9 +4627,9 @@ a { text-underline-offset: 3px; }
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px">
           <h2 style="font-size:16px;font-weight:700;margin-bottom:18px">Integrations</h2>
           <div style="display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg3);border-radius:10px"><div style="display:flex;align-items:center;gap:10px"><span>📦</span><div><div style="font-size:13px;font-weight:600">Dropbox</div><div style="font-size:11px;color:var(--text3)">Stockage PDFs</div></div></div><span style="padding:3px 10px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#22C55E;border-radius:100px;font-size:11px;font-weight:600">Connecte</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg3);border-radius:10px"><div style="display:flex;align-items:center;gap:10px"><span>📧</span><div><div style="font-size:13px;font-weight:600">Snov.io / Lemlist</div><div style="font-size:11px;color:var(--text3)">Export CSV</div></div></div><button class="btn btn-ghost" style="font-size:12px;padding:5px 12px">Connecter</button></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg3);border-radius:10px"><div style="display:flex;align-items:center;gap:10px"><span>🔗</span><div><div style="font-size:13px;font-weight:600">Zapier / Make</div><div style="font-size:11px;color:var(--text3)">Automatisations</div></div></div><button class="btn btn-ghost" style="font-size:12px;padding:5px 12px">Connecter</button></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg3);border-radius:10px"><div style="display:flex;align-items:center;gap:10px"><div><div style="font-size:13px;font-weight:600">Stockage des PDFs</div><div style="font-size:11px;color:var(--text3)">Hébergement sécurisé</div></div></div><span style="padding:3px 10px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#22C55E;border-radius:100px;font-size:11px;font-weight:600">Connecte</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg3);border-radius:10px"><div style="display:flex;align-items:center;gap:10px"><div><div style="font-size:13px;font-weight:600">Snov.io / Lemlist</div><div style="font-size:11px;color:var(--text3)">Export CSV</div></div></div><button class="btn btn-ghost" style="font-size:12px;padding:5px 12px">Connecter</button></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg3);border-radius:10px"><div style="display:flex;align-items:center;gap:10px"><div><div style="font-size:13px;font-weight:600">Zapier / Make</div><div style="font-size:11px;color:var(--text3)">Automatisations</div></div></div><button class="btn btn-ghost" style="font-size:12px;padding:5px 12px">Connecter</button></div>
           </div>
         </div>
         <div style="background:var(--bg2);border:1px solid rgba(239,68,68,0.25);border-radius:16px;padding:28px">
@@ -4650,7 +4647,7 @@ a { text-underline-offset: 3px; }
   <div style="background:var(--bg2);border:1px solid var(--border-active);border-radius:24px;padding:48px 40px;max-width:460px;width:90%;position:relative;box-shadow:0 40px 80px rgba(0,0,0,0.4)">
     <button onclick="closeUpgradeModal()" style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--text3);font-size:20px;cursor:pointer">✕</button>
     <div style="text-align:center;margin-bottom:28px">
-      <div style="font-size:48px;margin-bottom:12px">🎉</div>
+      <div style="font-size:48px;margin-bottom:12px"></div>
       <h2 style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:800;margin-bottom:8px">Vous avez adoré ?</h2>
       <p style="color:var(--text2);font-size:14px;line-height:1.6">Vous avez utilisé <strong>2 de vos 5 PDFs gratuits</strong>.<br>Passez au plan payant pour continuer à grande échelle.</p>
     </div>
@@ -4888,14 +4885,14 @@ function initScreenDemo() {
 
 const STYLE_PREVIEWS = {
   'direct_aucun':           'Votre taux de réponse plafonne à 2%. En 30 jours, nos clients doublent leur volume de RDV qualifiés. Voici comment.',
-  'direct_subtil':          '⚡ Votre taux de réponse plafonne à 2%. En 30 jours, nos clients doublent leur volume de RDV. Voici comment.',
-  'direct_expressif':       '⚡ Taux de réponse à 2% ? Nos clients x2 leurs RDV en 30 jours. 🎯 Voici exactement comment.',
+  'direct_subtil':          'Votre taux de réponse plafonne à 2%. En 30 jours, nos clients doublent leur volume de RDV. Voici comment.',
+  'direct_expressif':       'Taux de réponse à 2% ? Nos clients x2 leurs RDV en 30 jours. Voici exactement comment.',
   'professionnel_aucun':    "Nous accompagnons des entreprises comme la vôtre dans l'accélération de leur prospection. Nos clients observent en moyenne +85% de RDV qualifiés dès le premier mois.",
-  'professionnel_subtil':   "✅ Nous accompagnons des entreprises comme la vôtre. Nos clients observent +85% de RDV qualifiés dès le premier mois.",
-  'professionnel_expressif': "✅ Nous accompagnons des entreprises comme la vôtre. 📈 +85% de RDV qualifiés dès le premier mois. 🤝 Échangeons.",
+  'professionnel_subtil':   "Nous accompagnons des entreprises comme la vôtre. Nos clients observent +85% de RDV qualifiés dès le premier mois.",
+  'professionnel_expressif': "Nous accompagnons des entreprises comme la vôtre. +85% de RDV qualifiés dès le premier mois. Échangeons.",
   'amical_aucun':           "On sait que ta boite performe déjà bien. Mais imagine doubler tes RDV sans doubler ton équipe. C'est exactement ce qu'on fait.",
-  'amical_subtil':          "On sait que ta boite performe déjà bien 💪 Mais imagine doubler tes RDV sans doubler ton équipe. C'est exactement ce qu'on fait !",
-  'amical_expressif':       "💪 Ta boite performe déjà bien ! Mais imagine x2 tes RDV sans doubler ton équipe. 🚀 C'est exactement ce qu'on fait.",
+  'amical_subtil':          "On sait que ta boite performe déjà bien Mais imagine doubler tes RDV sans doubler ton équipe. C'est exactement ce qu'on fait !",
+  'amical_expressif':       "Ta boite performe déjà bien ! Mais imagine x2 tes RDV sans doubler ton équipe. C'est exactement ce qu'on fait.",
   'premium_aucun':          "Votre positionnement mérite une prospection à la hauteur de vos ambitions. Nous sélectionnons les décideurs les plus pertinents pour des échanges à forte valeur.",
   'premium_subtil':         "✦ Votre positionnement mérite une prospection à la hauteur de vos ambitions. Décideurs ciblés, échanges à forte valeur.",
   'premium_expressif':      "✦ Votre positionnement mérite l'excellence. ✦ Décideurs ciblés. ✦ Points de contact soignés. ✦ Résultats mesurables.",
@@ -5033,7 +5030,7 @@ function startDemoAnimation() {
       bar.style.width = '100%';
       count.textContent = total + ' / ' + total;
       pct.textContent   = '100%';
-      current.textContent = '✅ Génération terminée';
+      current.textContent = 'Génération terminée';
       output.style.opacity = '1';
       setTimeout(() => {
         // Restart après 3s
@@ -5074,7 +5071,7 @@ function startDemoAnimation() {
       '<div class="lp-demo-pdf-tag">✓ PDF</div>';
     pdfs.appendChild(item);
 
-    current.textContent = '⚡ ' + contact.name.split(' · ')[0] + '...';
+    current.textContent = '' + contact.name.split(' · ')[0] + '...';
 
     const delay = 400 + Math.random() * 300;
     setTimeout(tick, delay);
@@ -5127,7 +5124,7 @@ function showScreen(id, pushState) {
       const dropIcon = dropZone.querySelector('.drop-icon');
       const dropH3   = dropZone.querySelector('h3');
       const dropP    = dropZone.querySelector('p');
-      if (dropIcon) dropIcon.textContent = '📂';
+      
       if (dropH3)   dropH3.textContent   = 'Glissez votre fichier CSV ici';
       if (dropP)    dropP.textContent    = '';
     }
@@ -5370,9 +5367,9 @@ function renderMappingRows(headers, total) {
   const container = document.getElementById('mapping-rows');
 
   const GROUPS = {
-    required:  { label: '🔴 Obligatoires',  color: '#EF4444' },
-    important: { label: '🟡 Importants',    color: '#F59E0B' },
-    bonus:     { label: '🟢 Bonus',         color: '#22C55E' },
+    required:  { label: 'Obligatoires',  color: '#EF4444' },
+    important: { label: 'Importants',    color: '#F59E0B' },
+    bonus:     { label: 'Bonus',         color: '#22C55E' },
   };
 
   let html = '';
@@ -5453,14 +5450,14 @@ function updateMappingStatus() {
     btn.style.opacity = missingRequired.length > 0 ? '0.5' : '1';
     btn.textContent = missingRequired.length > 0
       ? `⚠️ Champs requis manquants (${missingRequired.length})`
-      : '✅ Confirmer le mapping';
+      : 'Confirmer le mapping';
   }
 }
 
 function confirmMapping() {
   try { localStorage.setItem('lp_mapping', JSON.stringify(currentMapping)); } catch(e) {}
   closeMappingModal();
-  showToast('Mapping confirmé — cliquez sur ⚡ Générer les PDFs', '#22C55E');
+  showToast('Mapping confirmé — cliquez sur Générer les PDFs', '#22C55E');
 }
 
 function handleFileSelect(input) {
@@ -5510,7 +5507,7 @@ const logs = [
   { t: 3200, msg: '  [OK] Contenu genere par IA', type: 'ok' },
   { t: 3800, msg: '  [PDF] Génération PDF 2 pages...', type: 'processing' },
   { t: 5000, msg: '  [OK] PDF généré -- 148 KB', type: 'ok' },
-  { t: 5600, msg: '  [C]  Upload Dropbox...', type: 'processing' },
+  { t: 5600, msg: '  [C]  Envoi des PDFs...', type: 'processing' },
   { t: 7000, msg: '  [OK] https://dl.dropboxusercontent.com/...', type: 'ok' },
   { t: 7500, msg: '-------------------------------------', type: 'ok' },
   { t: 7800, msg: '[OK] Pipeline terminé -- 1/1 PDFs générés', type: 'ok' },
@@ -5713,7 +5710,7 @@ async function startGeneration() {
                   const hasMail = ok && r.mail1_corps && r.mail1_corps.trim();
                   tr.innerHTML = '<td>'+escHtml(r.first_name)+' '+escHtml(r.last_name)+'</td>'
                     +'<td>'+escHtml(r.company)+'</td>'
-                    +'<td>'+(ok ? '<a class="pdf-link" href="'+r.tracking_url+'" target="_blank">🔗 Voir le PDF</a>' : '<span style="color:#EF4444;font-size:12px">'+r.status+'</span>')+'</td>'
+                    +'<td>'+(ok ? '<a class="pdf-link" href="'+r.tracking_url+'" target="_blank">Voir le PDF</a>' : '<span style="color:#EF4444;font-size:12px">'+r.status+'</span>')+'</td>'
                     +'<td style="white-space:nowrap">'+(ok ? '<span class="badge-ok">✓ Généré</span>' : '<span style="color:#EF4444;font-size:12px;font-weight:600">✗ Erreur</span>')
                     +(hasMail ? ' <button onclick="toggleMail(\''+mailId+'\')" style="margin-left:6px;padding:2px 8px;font-size:10px;border:1px solid var(--border-active);border-radius:6px;background:none;color:var(--pink);cursor:pointer">✉ Voir</button>' : '')+'</td>';
                   tbody.appendChild(tr);
@@ -5741,13 +5738,13 @@ async function startGeneration() {
           document.getElementById('statusBadge').innerHTML = '<div class="status-dot"></div> ' + (allFailed ? 'Erreur' : 'Terminé');
 
           if (allFailed) {
-            addLog('⚠️ Échec — vérifiez votre token Dropbox dans Render', 'error');
-            showToast('Erreur Dropbox — regénérez le token', '#EF4444');
+            addLog('⚠️ Échec de l\'envoi du PDF, réessayez', 'error');
+            showToast('Erreur d\'envoi du PDF — réessayez', '#EF4444');
           } else if (hasErrors) {
-            addLog('✅ ' + okCount + ' PDFs générés · ⚠️ ' + failCount + ' erreurs', 'ok');
+            addLog('' + okCount + ' PDFs générés · ⚠️ ' + failCount + ' erreurs', 'ok');
             showToast(okCount + ' PDFs générés (' + failCount + ' erreurs)', '#F59E0B');
           } else {
-            addLog('✅ Pipeline terminé : ' + okCount + ' PDFs générés', 'ok');
+            addLog('Pipeline terminé : ' + okCount + ' PDFs générés', 'ok');
             showToast('Génération terminée : ' + okCount + ' PDFs prêts !', '#22C55E');
             setTimeout(() => { showDashSection('campaigns'); loadCampaigns(); }, 2500);
           }
@@ -5897,10 +5894,10 @@ async function loadCampaigns() {
 
     if (campaigns.length === 0) {
       grid.innerHTML = '<div class="empty-state">'
-        + '<div class="empty-state-icon">📁</div>'
+        + '<div class="empty-state-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>'
         + '<h3>Aucune campagne pour l\'instant</h3>'
         + '<p>Importez votre premier fichier CSV et lancez une génération pour voir vos campagnes apparaître ici.</p>'
-        + '<button class="btn btn-primary" onclick="showDashSection(\'generate\', document.querySelector(\'.sidebar-item\'))">⚡ Lancer ma première campagne</button>'
+        + '<button class="btn btn-primary" onclick="showDashSection(\'generate\', document.querySelector(\'.sidebar-item\'))">Lancer ma première campagne</button>'
         + '</div>';
       return;
     }
@@ -5924,17 +5921,17 @@ async function loadCampaigns() {
       if (camp.status === 'done') {
         dlBtn = '<button class="btn btn-primary" style="font-size:12px;padding:6px 14px" onclick="downloadCampaignCsv(\'' + camp.id + '\')">⬇ CSV</button>';
       } else if (camp.status === 'processing') {
-        dlBtn = '<button class="btn btn-ghost" style="font-size:12px;padding:6px 14px" onclick="showDashSection(\'generate\',null)">👁 Voir</button>';
+        dlBtn = '<button class="btn btn-ghost" style="font-size:12px;padding:6px 14px" onclick="showDashSection(\'generate\',null)">Voir</button>';
       }
 
       var metaHtml = '';
-      metaHtml += '<div class="camp-meta-item">📅 <strong>' + date + '</strong></div>';
-      metaHtml += '<div class="camp-meta-item">👥 <strong>' + total + '</strong> contacts</div>';
+      metaHtml += '<div class="camp-meta-item"><strong>' + date + '</strong></div>';
+      metaHtml += '<div class="camp-meta-item"><strong>' + total + '</strong> contacts</div>';
       if (camp.status === 'processing') {
-        metaHtml += '<div class="camp-meta-item">⚡ <strong>' + done_c + '/' + total + '</strong> traités (' + pct + '%)</div>';
+        metaHtml += '<div class="camp-meta-item"><strong>' + done_c + '/' + total + '</strong> traités (' + pct + '%)</div>';
       }
       if (camp.status === 'done') {
-        metaHtml += '<div class="camp-meta-item">✅ <strong>' + done_c + '</strong> générés</div>';
+        metaHtml += '<div class="camp-meta-item"><strong>' + done_c + '</strong> générés</div>';
       }
       if (camp.error_rows > 0) {
         metaHtml += '<div class="camp-meta-item" style="color:#EF4444">⚠ <strong>' + camp.error_rows + '</strong> erreurs</div>';
@@ -5946,7 +5943,7 @@ async function loadCampaigns() {
       }
 
       var tagHtml = '';
-      if (hasPdf)  tagHtml += '<span style="font-size:10px;padding:2px 7px;border-radius:100px;background:var(--bg4);color:var(--text3)">📄 PDF</span>';
+      if (hasPdf)  tagHtml += '<span style="font-size:10px;padding:2px 7px;border-radius:100px;background:var(--bg4);color:var(--text3)">PDF</span>';
       if (hasMail) tagHtml += '<span style="font-size:10px;padding:2px 7px;border-radius:100px;background:var(--bg4);color:var(--text3)">✉ Mail</span>';
 
       var card = document.createElement('div');
@@ -5986,7 +5983,7 @@ async function downloadCampaignCsv(campaignId) {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    showToast('✅ CSV téléchargé', '#22C55E');
+    showToast('CSV téléchargé', '#22C55E');
   } catch(e) { showToast('Erreur téléchargement', '#EF4444'); }
 }
 
@@ -6324,7 +6321,7 @@ async function loadCharteSelector() {
 
       sel.innerHTML = chartes.map(c => {
         const shouldSelect = currentStillValid ? (c.id === currentId) : c.is_default;
-        return '<option value="' + c.id + '"' + (shouldSelect ? ' selected' : '') + '>🎨 ' + (c.name || 'Charte') + '</option>';
+        return '<option value="' + c.id + '"' + (shouldSelect ? ' selected' : '') + '>' + (c.name || 'Charte') + '</option>';
       }).join('');
 
       // Mettre à jour selectedCharteId selon la sélection finale
@@ -6335,11 +6332,11 @@ async function loadCharteSelector() {
         onCharteChange(selected.value);
       }
     } else {
-      sel.innerHTML = '<option value="default">🎨 Charte par défaut</option>';
+      sel.innerHTML = '<option value="default">Charte par défaut</option>';
       window.selectedCharteId = 'default';
     }
   } catch(e) {
-    sel.innerHTML = '<option value="default">🎨 Charte par défaut</option>';
+    sel.innerHTML = '<option value="default">Charte par défaut</option>';
   }
 }
 
@@ -6415,7 +6412,7 @@ function openNewCharte() {
   document.getElementById('cm-website').value = '';
   document.getElementById('cm-desc').value = '';
   document.getElementById('cm-calendly').value = '';
-  document.getElementById('cm-logo-preview').innerHTML = '<div style="font-size:28px;margin-bottom:6px">🖼️</div><div style="font-size:12px;font-weight:700;margin-bottom:2px">Glissez votre logo</div><div style="font-size:11px;color:var(--text2)">PNG, SVG · Fond transparent</div>';
+  document.getElementById('cm-logo-preview').innerHTML = '<div style="font-size:28px;margin-bottom:6px"></div><div style="font-size:12px;font-weight:700;margin-bottom:2px">Glissez votre logo</div><div style="font-size:11px;color:var(--text2)">PNG, SVG · Fond transparent</div>';
   document.getElementById('cm-logo-drop').style.borderStyle = 'dashed';
   cmApplyColors('#1B2D6B', '#E91E8C');
   cmRenderStep(1);
@@ -6777,7 +6774,7 @@ function updateCharteSelector(chartes) {
   if (!sel || !chartes.length) return;
   sel.innerHTML = chartes.map(ch =>
     '<option value="' + ch.id + '"' + (ch.is_default ? ' selected' : '') + '>' +
-    (ch.is_default ? '🎨 ' : '') + ch.name + '</option>'
+    (ch.is_default ? '' : '') + ch.name + '</option>'
   ).join('');
 }
 
@@ -6953,7 +6950,7 @@ function showPreviewBeforeGen(csvText, filename) {
     el = document.getElementById('prev-total');   if (el) el.textContent = total + ' contact' + (total>1?'s':'') + ' détecté' + (total>1?'s':'');
     var sel = document.getElementById('charte-selector');
     el = document.getElementById('prev-charte');
-    if (el && sel) { var opt = sel.options[sel.selectedIndex]; el.textContent = opt ? '🎨 '+opt.text.replace('🎨 ','') : ''; }
+    if (el && sel) { var opt = sel.options[sel.selectedIndex]; el.textContent = opt ? ''+opt.text.replace('','') : ''; }
     document.getElementById('previewBeforeGen').style.display = 'block';
   } catch(e) { console.warn('Preview CSV:', e); }
 }
