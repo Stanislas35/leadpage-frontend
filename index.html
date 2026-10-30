@@ -7921,24 +7921,24 @@ let cmFetchTimer = null;
 const CM_SECTEUR_BLOCS = {
   prospection: ['header','accroche','roi','offre','mail','temoignage','cta'],
   web:         ['header','accroche','audit','offre','timeline','portfolio','cta'],
-  audiovisuel: ['header','accroche','roi','offre','timeline','mail','temoignage','cta'],
+  audiovisuel: ['header','accroche','roi','offre','timeline','temoignage','cta'],
   seo:         ['header','accroche','audit','roi','offre','timeline','cta'],
   rh:          ['header','accroche','audit','offre','timeline','roi','cta'],
   conseil:     ['header','accroche','audit','offre','timeline','temoignage','cta'],
   design:      ['header','accroche','audit','offre','timeline','portfolio','cta'],
   saas:        ['header','accroche','roi','audit','offre','timeline','cta'],
-  autre:       ['header','accroche','offre','cta'],
+  autre:       ['header','accroche','audit','offre','cta'],
 };
 const CM_SECTEUR_INFO = {
   prospection: 'Prospection BtoB : objectifs chiffrés (rendez-vous, réponses) et mail d\'exemple mis en avant.',
   web:         'Agence web : diagnostic de présence en ligne, calendrier de projet et situations comparables.',
-  audiovisuel: 'Studio audiovisuel : objectifs de production, calendrier de tournage et mail d\'exemple.',
+  audiovisuel: 'Studio audiovisuel : objectifs de production, calendrier de tournage et engagement de méthode.',
   seo:         'SEO / Marketing : diagnostic de visibilité, objectifs et feuille de route.',
   rh:          'RH / Recrutement : diagnostic du besoin, déroulé de mission et objectifs de présentation de profils.',
   conseil:     'Conseil / Formation : diagnostic, déroulé de l\'accompagnement et engagement de méthode.',
   design:      'Branding / Design : lecture de l\'identité du prospect, calendrier de création et situations comparables.',
   saas:        'Logiciel / SaaS : processus à soutenir, objectifs d\'adoption et plan de mise en place.',
-  autre:       'Autre activité : blocs de base uniquement, à compléter selon vos besoins.',
+  autre:       'Autre activité : blocs de base. Pour une offre atypique, essayez le modèle sur mesure (IA) à l\'étape 3.',
 };
 
 function cmRefreshBadges(secteur) {
