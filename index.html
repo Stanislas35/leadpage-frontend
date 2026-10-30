@@ -4602,6 +4602,9 @@ nav { background: rgba(27,36,85,.9) !important; }
         </div>
       </div>
 
+      <!-- Détail d'une campagne -->
+      <div id="camp-detail" style="display:none"></div>
+
       <!-- Liste des campagnes -->
       <div class="camp-grid" id="camp-grid">
         <!-- Injecté par JS -->
@@ -6413,6 +6416,7 @@ function renderLoadError(container, message, retryFn) {
 
 async function loadCampaigns() {
   if (!authToken) return;
+  closeCampaignDetail();
   const campCount = document.getElementById('camp-count');
   const grid = document.getElementById('camp-grid');
   if (campCount) { campCount.textContent = 'Chargement...'; campCount.style.opacity = '0.5'; }
@@ -6460,7 +6464,8 @@ async function loadCampaigns() {
 
       var dlBtn = '';
       if (camp.status === 'done') {
-        dlBtn = '<button class="btn btn-primary" style="font-size:12px;padding:6px 14px" onclick="downloadCampaignCsv(\'' + camp.id + '\')">⬇ CSV</button>';
+        dlBtn = '<button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;margin-right:6px" onclick="openCampaignDetail(\'' + camp.id + '\')">Ouvrir</button>'
+              + '<button class="btn btn-primary" style="font-size:12px;padding:6px 14px" onclick="downloadCampaignCsv(\'' + camp.id + '\')">⬇ CSV</button>';
       } else if (camp.status === 'processing') {
         dlBtn = '<button class="btn btn-ghost" style="font-size:12px;padding:6px 14px" onclick="showDashSection(\'generate\',null)">Voir</button>';
       }
@@ -6507,6 +6512,212 @@ async function loadCampaigns() {
     console.error('loadCampaigns:', e);
     if (campCount) { campCount.style.opacity = '1'; campCount.textContent = 'Indisponible'; }
     renderLoadError(grid, e.message, 'loadCampaigns');
+  }
+}
+
+// ── DÉTAIL D'UNE CAMPAGNE : contacts, PDF par contact, téléchargement groupé ──────────────
+let cdState = { id: '', name: '', rows: [], filter: '', limit: 100, allCols: false, colOrder: [] };
+
+function closeCampaignDetail() {
+  const d = document.getElementById('camp-detail');
+  if (d) { d.style.display = 'none'; d.innerHTML = ''; }
+  const g = document.getElementById('camp-grid');           if (g) g.style.display = '';
+  const q = document.getElementById('camp-quick-stats');    if (q) q.style.display = 'grid';
+}
+
+function cdParseRaw(r) {
+  let raw = {};
+  try { raw = JSON.parse(r.raw_data || '{}'); } catch (e) { raw = {}; }
+  const idx = raw._row_index;
+  delete raw._row_index;
+  return { raw, i: (typeof idx === 'number' ? idx : 1e9) };
+}
+
+function cdFileName(r) {
+  const base = [r.first_name, r.last_name, r.company].filter(Boolean).join('-')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
+  return (base || 'document') + '.pdf';
+}
+
+async function openCampaignDetail(campaignId) {
+  const d = document.getElementById('camp-detail');
+  if (!d) return;
+  const g = document.getElementById('camp-grid');        if (g) g.style.display = 'none';
+  const q = document.getElementById('camp-quick-stats'); if (q) q.style.display = 'none';
+  d.style.display = 'block';
+  d.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Chargement des contacts...</div>';
+  try {
+    const rows = await apiCall('GET', '/api/campaigns/' + campaignId + '/results', null, true);
+    const camps = await apiCall('GET', '/api/campaigns/', null, true).catch(() => []);
+    const camp = (camps || []).find(c => c.id === campaignId) || {};
+    const list = (rows || []).map(r => { const p = cdParseRaw(r); return { r, raw: p.raw, i: p.i }; });
+    list.sort((a, b) => a.i - b.i);
+    cdState = { id: campaignId, name: camp.name || 'Campagne', rows: list, filter: '', limit: 100, allCols: false,
+                total: camp.total || list.length, errors: camp.error_rows || 0 };
+    // Colonnes disponibles : celles du fichier d'origine, dans l'ordre d'apparition
+    const seen = [];
+    list.forEach(x => Object.keys(x.raw).forEach(k => { if (!seen.includes(k)) seen.push(k); }));
+    cdState.colOrder = seen;
+    renderCampaignDetail();
+  } catch (e) {
+    d.innerHTML = '<div style="padding:30px;color:#EF4444">Impossible de charger la campagne : ' + escHtml(e.message || e) + '</div>'
+      + '<button class="btn btn-ghost" onclick="loadCampaigns()">Retour</button>';
+  }
+}
+
+function renderCampaignDetail() {
+  const d = document.getElementById('camp-detail');
+  if (!d) return;
+  const st = cdState;
+  const f = st.filter.trim().toLowerCase();
+  const filtered = st.rows.filter(x => !f || (Object.values(x.raw).join(' ') + ' ' + (x.r.company || '')).toLowerCase().includes(f));
+  const shown = filtered.slice(0, st.limit);
+  const baseCols = ['Prénom', 'Nom', 'Entreprise', 'Titre', 'Email', "Secteurs d'activité", 'Lieu'];
+  const cols = st.allCols ? st.colOrder : baseCols.filter(c => st.colOrder.includes(c));
+  const btn = 'padding:7px 14px;font-size:12px';
+  let html = '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px">'
+    + '<div><button class="btn btn-ghost" style="' + btn + '" onclick="loadCampaigns()">← Campagnes</button>'
+    + '<span style="font-size:18px;font-weight:800;margin-left:14px">' + escHtml(st.name) + '</span>'
+    + '<span style="font-size:12px;color:var(--text3);margin-left:10px">' + st.rows.length + ' document' + (st.rows.length > 1 ? 's' : '')
+    + (st.errors ? ' · <span style="color:#EF4444">' + st.errors + ' en erreur (remboursés)</span>' : '') + '</span></div>'
+    + '<div style="display:flex;gap:8px;flex-wrap:wrap">'
+    + '<button class="btn btn-ghost" style="' + btn + '" onclick="downloadCampaignCsv(\'' + st.id + '\')">⬇ CSV</button>'
+    + '<button class="btn btn-primary" style="' + btn + '" id="cd-zip-btn" onclick="downloadAllPdfs()">⬇ Tous les PDF (zip)</button></div></div>'
+    + '<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">'
+    + '<input class="form-input" style="margin:0;max-width:320px;font-size:13px" placeholder="Rechercher un contact, une entreprise..." value="' + escAttr(st.filter) + '" oninput="cdState.filter=this.value;cdState.limit=100;renderCampaignDetail();this.focus();this.setSelectionRange(this.value.length,this.value.length)">'
+    + '<label style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" ' + (st.allCols ? 'checked' : '') + ' onchange="cdState.allCols=this.checked;renderCampaignDetail()"> Toutes les colonnes du fichier</label>'
+    + '<span id="cd-zip-status" style="font-size:12px;color:var(--text3)"></span></div>';
+  html += '<div style="overflow:auto;border:1px solid var(--border);border-radius:12px;background:var(--bg2)"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr>';
+  const th = 'text-align:left;padding:10px 12px;font-size:11px;color:var(--text3);border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0;background:var(--bg2)';
+  cols.forEach(c => { html += '<th style="' + th + '">' + escHtml(c) + '</th>'; });
+  html += '<th style="' + th + '">Document</th></tr></thead><tbody>';
+  shown.forEach((x, i) => {
+    const r = x.r, idx = st.rows.indexOf(x);
+    html += '<tr style="border-bottom:1px solid var(--border)">';
+    cols.forEach(c => {
+      let v = String(x.raw[c] == null ? '' : x.raw[c]);
+      const full = v; if (v.length > 80) v = v.slice(0, 80) + '…';
+      html += '<td style="padding:9px 12px;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + escAttr(full) + '">' + escHtml(v) + '</td>';
+    });
+    const hasPdf = !!r.dropbox_url;
+    html += '<td style="padding:9px 12px;white-space:nowrap">'
+      + (hasPdf ? '<a class="pdf-link" href="' + escAttr(r.dropbox_url) + '" target="_blank" rel="noopener">Voir</a>'
+        + ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px;margin-left:4px" onclick="downloadOnePdf(' + idx + ')">⬇ PDF</button>'
+        + (r.tracking_url ? ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px" onclick="copyText(\'' + escAttr(r.tracking_url) + '\')">Copier le lien</button>' : '')
+        : '<span style="color:var(--text3)">—</span>')
+      + ((r.mail1_corps || '').trim() ? ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px" onclick="cdShowMail(' + idx + ')">✉ Mail</button>' : '')
+      + '</td></tr>';
+  });
+  if (!shown.length) html += '<tr><td colspan="' + (cols.length + 1) + '" style="padding:24px;text-align:center;color:var(--text3)">Aucun contact</td></tr>';
+  html += '</tbody></table></div>';
+  if (filtered.length > shown.length) {
+    html += '<div style="text-align:center;margin-top:12px"><button class="btn btn-ghost" style="' + btn + '" onclick="cdState.limit+=200;renderCampaignDetail()">Afficher plus (' + (filtered.length - shown.length) + ' restants)</button></div>';
+  }
+  d.innerHTML = html;
+}
+
+function copyText(t) {
+  try { navigator.clipboard.writeText(t).then(() => showToast('Lien copié', '#22C55E')); }
+  catch (e) { showToast('Copie impossible', '#EF4444'); }
+}
+
+function cdShowMail(idx) {
+  const r = cdState.rows[idx] && cdState.rows[idx].r;
+  if (!r) return;
+  const o = document.createElement('div');
+  o.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  o.onclick = e => { if (e.target === o) o.remove(); };
+  o.innerHTML = '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;max-width:620px;width:100%;max-height:80vh;overflow:auto;padding:24px">'
+    + '<div style="font-weight:700;margin-bottom:12px">Mail pour ' + escHtml((r.first_name || '') + ' ' + (r.last_name || '')) + '</div>'
+    + '<div style="white-space:pre-wrap;font-size:13px;line-height:1.6">' + escHtml(r.mail1_corps) + '</div>'
+    + '<div style="margin-top:16px;display:flex;gap:8px"><button class="btn btn-primary" style="padding:7px 14px;font-size:12px" id="cd-mail-copy">Copier</button>'
+    + '<button class="btn btn-ghost" style="padding:7px 14px;font-size:12px" onclick="this.closest(\'div[style*=fixed]\').remove()">Fermer</button></div></div>';
+  document.body.appendChild(o);
+  document.getElementById('cd-mail-copy').onclick = () => copyText(r.mail1_corps);
+}
+
+async function cdFetchPdf(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.blob();
+}
+
+async function downloadOnePdf(idx) {
+  const r = cdState.rows[idx] && cdState.rows[idx].r;
+  if (!r || !r.dropbox_url) return;
+  try {
+    const blob = await cdFetchPdf(r.dropbox_url);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = cdFileName(r);
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  } catch (e) {
+    window.open(r.dropbox_url, '_blank');   // repli : ouverture dans un onglet
+  }
+}
+
+function cdLoadJsZip() {
+  return new Promise((resolve, reject) => {
+    if (window.JSZip) return resolve(window.JSZip);
+    const sc = document.createElement('script');
+    sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+    sc.onload = () => resolve(window.JSZip);
+    sc.onerror = () => reject(new Error('Bibliothèque zip indisponible'));
+    document.head.appendChild(sc);
+  });
+}
+
+async function downloadAllPdfs() {
+  const btn = document.getElementById('cd-zip-btn'), status = document.getElementById('cd-zip-status');
+  const items = cdState.rows.map(x => x.r).filter(r => r.dropbox_url);
+  if (!items.length) { showToast('Aucun PDF à télécharger', '#F59E0B'); return; }
+  if (items.length > 500 && !confirm(items.length + ' PDF vont être téléchargés dans un seul zip. Continuer ?')) return;
+  if (btn) { btn.disabled = true; btn.style.opacity = '.6'; }
+  try {
+    const JSZip = await cdLoadJsZip();
+    const zip = new JSZip();
+    const used = {};
+    let done = 0, failed = 0, next = 0;
+    async function worker() {
+      while (next < items.length) {
+        const r = items[next++];
+        try {
+          const blob = await cdFetchPdf(r.dropbox_url);
+          let name = cdFileName(r);
+          if (used[name]) { used[name]++; name = name.replace(/\.pdf$/, '-' + used[name] + '.pdf'); } else used[name] = 1;
+          zip.file(name, blob);
+        } catch (e) { failed++; }
+        done++;
+        if (status) status.textContent = 'Préparation du zip : ' + done + ' / ' + items.length;
+      }
+    }
+    await Promise.all(Array.from({ length: 6 }, worker));
+    if (failed === items.length) {
+      // Le navigateur ne peut pas lire les PDF directement : repli sur le zip préparé par le serveur
+      if (status) status.textContent = 'Préparation du zip par le serveur (peut prendre un moment)...';
+      const r = await fetch(API_URL + '/api/campaigns/' + cdState.id + '/pdfs.zip', { headers: { 'Authorization': 'Bearer ' + authToken } });
+      if (!r.ok) { const err = await r.json().catch(() => ({})); throw new Error(err.detail || ('Erreur ' + r.status)); }
+      const blobS = await r.blob();
+      const aS = document.createElement('a');
+      aS.href = URL.createObjectURL(blobS); aS.download = 'campagne-pdfs.zip';
+      document.body.appendChild(aS); aS.click(); aS.remove();
+      setTimeout(() => URL.revokeObjectURL(aS.href), 4000);
+      if (status) status.textContent = items.length + ' PDF téléchargés';
+      return;
+    }
+    if (status) status.textContent = 'Compression...';
+    const out = await zip.generateAsync({ type: 'blob', compression: 'STORE' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(out);
+    a.download = ((cdState.name || 'campagne').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').slice(0, 40) || 'campagne') + '-pdfs.zip';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    if (status) status.textContent = failed ? (items.length - failed) + ' PDF dans le zip, ' + failed + ' non récupérés' : items.length + ' PDF téléchargés';
+  } catch (e) {
+    showToast('Zip impossible : ' + (e.message || e), '#EF4444');
+    if (status) status.textContent = '';
+  } finally {
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
   }
 }
 
