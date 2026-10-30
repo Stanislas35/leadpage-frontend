@@ -5766,7 +5766,8 @@ function autoDetectMapping(headers) {
       // évite les faux positifs : "Nom" ne doit pas capter "Nom de l'entreprise", "Email" pas "Email status"
       && !(field.key === 'Nom' && /entreprise|company|societe/.test(nh))
       && !(field.key === 'Email' && /status|statut|verif|valid/.test(nh))
-      && !(field.key === 'Site web entreprise' && /linkedin/.test(nh)));
+      && !(field.key === 'Site web entreprise' && /linkedin/.test(nh))
+      && !(field.key === 'LinkedIn' && /corporate|company|entreprise|societe|specialit/.test(nh)));
     if (i !== -1) { mapping[field.key] = headers[i]; used.add(headers[i]); }
   }
   return mapping;
