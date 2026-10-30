@@ -2738,6 +2738,43 @@ tr:hover td { background: var(--card-hover); }
 }
 
 
+
+/* ═══ CHARTE : proposition IA ═══ */
+.lpx-ai-box { border: 1px solid var(--pink); background: linear-gradient(135deg, rgba(233,30,140,.08), rgba(91,128,255,.08)); border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; }
+.lpx-ai-title { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+.lpx-ai-desc { font-size: 12px; color: var(--text2); line-height: 1.5; margin-bottom: 12px; }
+.lpx-ai-form { display: flex; gap: 8px; }
+.lpx-ai-form input { flex: 1; }
+#cm-ai-result { margin-bottom: 20px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg3); padding: 14px; }
+.lpx-ai-head { margin-bottom: 10px; }
+.lpx-ai-head b { font-size: 14px; }
+.lpx-ai-sub { font-size: 11px; color: var(--text3); margin-top: 3px; }
+.lpx-ai-conf { font-size: 10px; font-weight: 700; margin-left: 8px; padding: 2px 8px; border-radius: 100px; background: var(--bg4); color: var(--text2); }
+.lpx-ai-conf.haute { color: #22C55E; } .lpx-ai-conf.faible { color: #F59E0B; }
+.lpx-ai-warn { font-size: 12px; color: #F59E0B; background: rgba(245,158,11,.1); border-radius: 8px; padding: 8px 12px; margin-bottom: 8px; }
+.lpx-ai-err { font-size: 13px; color: #EF4444; line-height: 1.6; } .lpx-ai-err span { color: var(--text3); font-size: 12px; }
+.lpx-ai-wait { display: flex; gap: 14px; align-items: center; font-size: 13px; } .lpx-ai-wait span { color: var(--text3); font-size: 12px; }
+.lpx-spin { width: 22px; height: 22px; border: 3px solid var(--border); border-top-color: var(--pink); border-radius: 50%; animation: lpxspin .8s linear infinite; flex-shrink: 0; }
+@keyframes lpxspin { to { transform: rotate(360deg); } }
+.lpx-ai-row { display: flex; gap: 12px; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; cursor: pointer; background: var(--bg2); transition: border-color .15s; }
+.lpx-ai-row:hover { border-color: var(--text3); }
+.lpx-ai-row.on { border-color: var(--pink); }
+.lpx-ai-check { width: 20px; height: 20px; border-radius: 5px; border: 1.5px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; margin-top: 1px; }
+.lpx-ai-row.on .lpx-ai-check { background: var(--pink); border-color: var(--pink); }
+.lpx-ai-body { min-width: 0; flex: 1; }
+.lpx-ai-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; }
+.lpx-ai-val { font-size: 13px; line-height: 1.5; }
+.lpx-ai-text { font-size: 12.5px; color: var(--text2); }
+.lpx-ai-why { font-size: 11.5px; color: var(--text3); margin-top: 5px; font-style: italic; }
+.lpx-ai-cur { font-size: 11px; color: var(--text3); margin-top: 4px; }
+.lpx-ai-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 12px; }
+.lpx-pill { display: inline-block; font-size: 11px; padding: 2px 9px; border-radius: 100px; background: var(--bg4); color: var(--text2); margin: 2px 2px 2px 0; }
+.lpx-sw { display: inline-block; width: 16px; height: 16px; border-radius: 4px; vertical-align: middle; border: 1px solid rgba(255,255,255,.2); margin-right: 4px; }
+.lpx-logo-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.lpx-logo-opt { border: 2px solid var(--border); border-radius: 10px; padding: 8px; background: #fff; text-align: center; width: 130px; }
+.lpx-logo-opt.sel { border-color: var(--pink); }
+.lpx-logo-opt img { max-width: 112px; max-height: 50px; object-fit: contain; display: block; margin: 0 auto 4px; }
+.lpx-logo-opt span { font-size: 10px; color: #667; }
 /* ═══ GESTION CAMPAGNES + STATS (lpx) ═══ */
 #camp-grid .camp-card { overflow: visible !important; animation: none !important; opacity: 1 !important; }
 .camp-card::before { border-radius: 16px 0 0 16px; }
@@ -4778,6 +4815,12 @@ nav { background: rgba(27,36,85,.9) !important; }
 
           <!-- STEP 1 — IDENTITÉ -->
           <div id="cm-content1">
+            <div class="lpx-ai-box">
+              <div class="lpx-ai-title"><span>✨</span> Remplir automatiquement depuis votre site</div>
+              <div class="lpx-ai-desc">L'IA lit votre site et propose le logo, les couleurs, l'offre, le ton et les blocs adaptés. Vous validez ce que vous voulez garder.</div>
+              <div class="lpx-ai-form"><input class="form-input" id="cm-ai-url" placeholder="www.votre-site.fr" onkeydown="if(event.key==='Enter')cmAiAnalyze()"><button class="btn btn-primary" id="cm-ai-btn" onclick="cmAiAnalyze()">Analyser</button></div>
+            </div>
+            <div id="cm-ai-result" style="display:none"></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
               <div class="form-group"><label class="form-label">Nom de la charte / client</label><input class="form-input" id="cm-name" placeholder="Ex: Devoleads, Client Pitchy..."></div>
               <div class="form-group"><label class="form-label">Site web</label><input class="form-input" id="cm-website" placeholder="https://..." oninput="cmTryFetchColors(this.value)"></div>
@@ -7558,9 +7601,134 @@ function cmRefreshBadges(secteur) {
   });
 }
 
+// ── CHARTE : proposition de l'IA depuis le site web ──────────────────────────────────────
+let cmAi = null;        // { res, checked: {key:bool}, logoIdx }
+let cmAiBlocs = null;   // blocs proposés à appliquer à l'étape 2 (nouvelle charte)
+const CM_SECTEUR_LABELS = { prospection: 'Prospection BtoB', web: 'Agence web', audiovisuel: 'Studio audiovisuel', seo: 'SEO / Marketing', rh: 'RH / Recrutement', conseil: 'Conseil / Formation', design: 'Branding / Design', saas: 'Logiciel / SaaS', autre: 'Autre activité' };
+const CM_BLOC_LABELS = { header: 'En-tête', accroche: 'Accroche', roi: 'Objectifs chiffrés', audit: 'Diagnostic', offre: 'Plan d\'action', timeline: 'Calendrier', portfolio: 'Situations comparables', temoignage: 'Engagements', mail: 'Mail d\'exemple', cta: 'CTA' };
+const CM_STYLE_LABELS = { direct: 'Direct', professionnel: 'Professionnel', amical: 'Amical', premium: 'Premium' };
+const CM_EMOJI_LABELS = { aucun: 'Aucun emoji', subtil: 'Emojis subtils', expressif: 'Emojis expressifs' };
+
+async function cmAiAnalyze() {
+  if (!authToken) return;
+  const inp = document.getElementById('cm-ai-url');
+  const url = (inp.value || document.getElementById('cm-website').value || '').trim();
+  if (!url || !url.includes('.')) { showToast('Indiquez l\'adresse de votre site', '#EF4444'); inp.focus(); return; }
+  const btn = document.getElementById('cm-ai-btn'), box = document.getElementById('cm-ai-result');
+  btn.disabled = true; btn.textContent = 'Analyse en cours…';
+  box.style.display = 'block';
+  box.innerHTML = '<div class="lpx-ai-wait"><div class="lpx-spin"></div><div><b>Lecture de votre site</b><br><span>Pages principales, logo, couleurs, ton… compter 15 à 30 secondes.</span></div></div>';
+  const ctrl = new AbortController(); const timer = setTimeout(() => ctrl.abort(), 110000);
+  try {
+    const r = await fetch(API_URL + '/api/chartes/analyze-site', { method: 'POST', signal: ctrl.signal,
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken }, body: JSON.stringify({ url: url }) });
+    let data = null; try { data = await r.json(); } catch (e) {}
+    if (!r.ok) throw new Error((data && data.detail) || ('Erreur serveur (' + r.status + ')'));
+    cmAiShow(data);
+  } catch (e) {
+    const msg = e.name === 'AbortError' ? 'L\'analyse a pris trop de temps. Réessayez.' : e.message;
+    box.innerHTML = '<div class="lpx-ai-err">' + escHtml(msg) + '<br><span>Vous pouvez aussi remplir la charte à la main.</span></div>';
+  } finally { clearTimeout(timer); btn.disabled = false; btn.textContent = 'Analyser'; }
+}
+
+function cmAiCurrent() {
+  return {
+    name: document.getElementById('cm-name').value.trim(), desc: document.getElementById('cm-desc').value.trim(),
+    calendly: document.getElementById('cm-calendly').value.trim(), logo: !!cmLogoBase64,
+    sector: cmSecteur, style: cmCurrentStyle, emoji: cmCurrentEmoji,
+  };
+}
+
+function cmAiShow(res) {
+  const p = res.proposal, cur = cmAiCurrent(), edit = !!cmEditId;
+  const has = {
+    name: !!p.name, desc: !!p.offer_description, sector: !!p.sector, style: !!p.writing_style, emoji: !!p.emoji_level,
+    blocs: !!(p.blocs && p.blocs.length), calendly: !!p.calendly_url, colors: !!(res.colors && res.colors.primary), logo: !!(res.logos && res.logos.length),
+  };
+  const empty = { name: !cur.name, desc: !cur.desc, sector: false, style: false, emoji: false, blocs: false, calendly: !cur.calendly, colors: false, logo: !cur.logo };
+  const checked = {}; Object.keys(has).forEach(k => { checked[k] = has[k] && (!edit || empty[k]); });
+  cmAi = { res: res, checked: checked, logoIdx: 0 };
+  cmAiRender();
+  if (res.website) { document.getElementById('cm-website').value = res.website; document.getElementById('cm-ai-url').value = res.website; }
+}
+
+function cmAiToggle(k) { cmAi.checked[k] = !cmAi.checked[k]; cmAiRender(); }
+function cmAiPickLogo(i) { cmAi.logoIdx = i; cmAi.checked.logo = true; cmAiRender(); }
+
+function cmAiRender() {
+  const box = document.getElementById('cm-ai-result'); if (!box || !cmAi) return;
+  const res = cmAi.res, p = res.proposal, ck = cmAi.checked, edit = !!cmEditId, cur = cmAiCurrent();
+  const rat = p.rationale || {};
+  const row = function(k, label, valueHtml, why, curHtml) {
+    return '<div class="lpx-ai-row' + (ck[k] ? ' on' : '') + '" onclick="cmAiToggle(\'' + k + '\')">'
+      + '<div class="lpx-ai-check">' + (ck[k] ? '✓' : '') + '</div>'
+      + '<div class="lpx-ai-body"><div class="lpx-ai-label">' + label + '</div><div class="lpx-ai-val">' + valueHtml + '</div>'
+      + (why ? '<div class="lpx-ai-why">' + escHtml(why) + '</div>' : '')
+      + (edit && curHtml ? '<div class="lpx-ai-cur">Actuel : ' + curHtml + '</div>' : '') + '</div></div>';
+  };
+  let h = '<div class="lpx-ai-head"><div><b>Proposition de l\'IA</b><span class="lpx-ai-conf ' + escHtml(p.confidence) + '">confiance ' + escHtml(p.confidence) + '</span></div>'
+    + '<div class="lpx-ai-sub">' + res.pages_read + ' page' + (res.pages_read > 1 ? 's' : '') + ' lue' + (res.pages_read > 1 ? 's' : '') + ' · cochez ce que vous voulez appliquer, rien n\'est enregistré avant « Sauvegarder »</div></div>';
+  (res.warnings || []).forEach(w => { h += '<div class="lpx-ai-warn">⚠ ' + escHtml(w) + '</div>'; });
+  if (p.name) h += row('name', 'Nom', '<b>' + escHtml(p.name) + '</b>', rat.name, escHtml(cur.name || '—'));
+  if (res.logos && res.logos.length) {
+    const thumbs = res.logos.map((l, i) => '<div class="lpx-logo-opt' + (i === cmAi.logoIdx ? ' sel' : '') + '" onclick="event.stopPropagation();cmAiPickLogo(' + i + ')" title="' + escHtml(l.label) + '"><img alt="Logo proposé" src="' + l.data + '"><span>' + escHtml(l.label) + '</span></div>').join('');
+    h += row('logo', 'Logo', '<div class="lpx-logo-row">' + thumbs + '</div>', 'Choisissez le logo à utiliser dans l\'en-tête du PDF.', cur.logo ? 'logo déjà défini' : 'aucun');
+  }
+  if (res.colors && res.colors.primary) {
+    const sw = function(c) { return '<span class="lpx-sw" style="background:' + c + '"></span><code>' + c + '</code>'; };
+    h += row('colors', 'Couleurs', sw(res.colors.primary) + (res.colors.accent ? ' &nbsp; ' + sw(res.colors.accent) : ''), 'Tirées du logo et des styles du site (principale puis accent).', '<span class="lpx-sw" style="background:' + cmColor1 + '"></span> <span class="lpx-sw" style="background:' + cmColor2 + '"></span>');
+  }
+  if (p.offer_description) h += row('desc', 'Description de l\'offre', '<div class="lpx-ai-text">' + escHtml(p.offer_description) + '</div>', rat.offer_description, escHtml((cur.desc || '—').slice(0, 120)));
+  h += row('sector', 'Secteur', '<b>' + escHtml(CM_SECTEUR_LABELS[p.sector] || p.sector) + '</b>', rat.sector, escHtml(CM_SECTEUR_LABELS[cur.sector] || cur.sector));
+  h += row('style', 'Style d\'écriture', '<b>' + escHtml(CM_STYLE_LABELS[p.writing_style] || p.writing_style) + '</b>', rat.writing_style, escHtml(CM_STYLE_LABELS[cur.style] || cur.style));
+  h += row('emoji', 'Emojis', '<b>' + escHtml(CM_EMOJI_LABELS[p.emoji_level] || p.emoji_level) + '</b>', rat.emoji_level, escHtml(CM_EMOJI_LABELS[cur.emoji] || cur.emoji));
+  h += row('blocs', 'Blocs du PDF', (p.blocs || []).map(b => '<span class="lpx-pill">' + escHtml(CM_BLOC_LABELS[b] || b) + '</span>').join(' '), rat.blocs, '');
+  if (p.calendly_url) h += row('calendly', 'Lien agenda', '<code>' + escHtml(p.calendly_url) + '</code>', 'Lien de prise de rendez-vous trouvé sur le site.', escHtml(cur.calendly || '—'));
+  const n = Object.keys(ck).filter(k => ck[k]).length;
+  h += '<div class="lpx-ai-actions"><button class="btn btn-ghost" onclick="cmAiDismiss()">Ignorer</button>'
+    + '<button class="btn btn-primary" ' + (n ? '' : 'disabled') + ' onclick="cmAiApply()">Appliquer ' + n + ' élément' + (n > 1 ? 's' : '') + '</button></div>';
+  box.innerHTML = h;
+}
+
+function cmAiReset() { cmAi = null; const b = document.getElementById('cm-ai-result'); if (b) { b.style.display = 'none'; b.innerHTML = ''; } const u = document.getElementById('cm-ai-url'); if (u) u.value = ''; }
+function cmAiDismiss() { cmAi = null; const b = document.getElementById('cm-ai-result'); b.style.display = 'none'; b.innerHTML = ''; }
+
+function cmAiApply() {
+  if (!cmAi) return;
+  const res = cmAi.res, p = res.proposal, ck = cmAi.checked;
+  if (ck.name) document.getElementById('cm-name').value = p.name;
+  if (ck.desc) document.getElementById('cm-desc').value = p.offer_description;
+  if (ck.calendly) document.getElementById('cm-calendly').value = p.calendly_url;
+  if (ck.logo && res.logos[cmAi.logoIdx]) {
+    cmLogoBase64 = res.logos[cmAi.logoIdx].data;
+    document.getElementById('cm-logo-preview').innerHTML = '<img alt="Logo" src="' + cmLogoBase64 + '" style="max-height:70px;max-width:130px;object-fit:contain;border-radius:4px"><div style="font-size:10px;color:var(--text2);margin-top:6px">Cliquez pour changer</div>';
+    document.getElementById('cm-logo-drop').style.borderStyle = 'solid';
+  }
+  if (ck.colors) cmApplyColors(res.colors.primary, res.colors.accent || cmColor2);
+  if (ck.sector) {
+    cmSecteur = p.sector;
+    document.querySelectorAll('.cm-secteur-btn').forEach(b => {
+      const on = b.dataset.secteur === cmSecteur;
+      b.style.background = on ? 'rgba(233,30,140,0.07)' : 'var(--bg3)';
+      b.style.border = on ? '2px solid var(--pink)' : '2px solid var(--border)';
+      b.classList.toggle('active', on);
+    });
+    const info = document.getElementById('cm-secteur-info'); if (info) info.innerHTML = 'ℹ️ ' + (CM_SECTEUR_INFO[cmSecteur] || '');
+    cmRefreshBadges(cmSecteur);
+  }
+  if (ck.style || ck.emoji) cmLoadStyleEmoji({ writing_style: ck.style ? p.writing_style : cmCurrentStyle, emoji_level: ck.emoji ? p.emoji_level : cmCurrentEmoji });
+  if (ck.blocs) {
+    document.querySelectorAll('#cm-blocs-list .cm-bloc:not(.locked)').forEach(item => cmSetBlocState(item, p.blocs.includes(item.dataset.bloc)));
+    cmUpdateBlocsCount();
+    if (cmEditId) cmPendingBlocs = p.blocs.slice(); else cmAiBlocs = p.blocs.slice();
+  }
+  showToast('Proposition appliquée : vérifiez puis sauvegardez');
+  cmAiDismiss();
+}
+
 // ── Ouvrir / fermer ──
 function openNewCharte() {
-  cmStep = 1; cmEditId = null; cmLogoBase64 = null;
+  cmStep = 1; cmEditId = null; cmLogoBase64 = null; cmAiBlocs = null; cmAiReset();
   cmColor1 = '#1B2D6B'; cmColor2 = '#E91E8C'; cmSecteur = 'prospection';
   document.getElementById('charte-modal-title').textContent = 'Nouvelle charte';
   document.getElementById('cm-name').value = '';
@@ -7575,7 +7743,7 @@ function openNewCharte() {
 }
 
 function openEditCharte(id, data) {
-  cmEditId = id; cmStep = 1;
+  cmEditId = id; cmStep = 1; cmAiBlocs = null; cmAiReset();
   cmColor1 = data.color_primary || '#1B2D6B';
   cmColor2 = data.color_accent  || '#E91E8C';
   cmSecteur = data.sector || 'prospection';
@@ -7643,7 +7811,10 @@ function cmNextStep() {
   } else if (cmStep === 2) {
     // Pour une nouvelle charte on applique les blocs recommandés du secteur
     // Pour une édition on garde les blocs déjà cochés (ne pas écraser)
-    if (!cmEditId) cmApplySecteurBlocs(cmSecteur);
+    if (!cmEditId && cmAiBlocs) {
+      document.querySelectorAll('#cm-blocs-list .cm-bloc:not(.locked)').forEach(item => cmSetBlocState(item, cmAiBlocs.includes(item.dataset.bloc)));
+      cmUpdateBlocsCount();
+    } else if (!cmEditId) cmApplySecteurBlocs(cmSecteur);
     else if (cmPendingBlocs && cmPendingBlocs.length) {
       // Restaurer les blocs sauvegardés
       document.querySelectorAll('#cm-blocs-list .cm-bloc:not(.locked)').forEach(item => {
@@ -7667,7 +7838,7 @@ function cmSelectSecteur(el) {
   });
   el.style.borderColor = 'var(--pink)';
   el.style.background  = 'rgba(233,30,140,0.07)';
-  cmSecteur = el.dataset.secteur;
+  cmSecteur = el.dataset.secteur; cmAiBlocs = null;
   const info = document.getElementById('cm-secteur-info');
   if (info) info.innerHTML = 'ℹ️ ' + (CM_SECTEUR_INFO[cmSecteur] || '');
   cmRefreshBadges(cmSecteur);
