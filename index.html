@@ -1512,7 +1512,7 @@ tr:hover td { background: var(--card-hover); }
   #section-profile [style*="grid-template-columns: 1fr 1fr"],
   #section-parametres [style*="grid-template-columns: 1fr 1fr"],
   #section-abonnement [style*="grid-template-columns: repeat(3"],
-  #section-stats [style*="grid-template-columns: repeat(4"] {
+  #section-stats-unused {
     display: flex !important;
     flex-direction: column !important;
     gap: 12px !important;
@@ -2737,6 +2737,77 @@ tr:hover td { background: var(--card-hover); }
   .lp-sim-preview { display: none; }
 }
 
+
+/* ═══ GESTION CAMPAGNES + STATS (lpx) ═══ */
+#camp-grid .camp-card { overflow: visible !important; animation: none !important; opacity: 1 !important; }
+.camp-card::before { border-radius: 16px 0 0 16px; }
+.camp-card.selected { border-color: var(--pink); }
+#camp-grid .camp-card.menu-open { z-index: 40; }
+.lpx-check, .lpx-listhead input { width: 16px; height: 16px; accent-color: var(--pink); cursor: pointer; }
+.lpx-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 420px; }
+.lpx-tag { font-size: 10px; padding: 2px 7px; border-radius: 100px; background: var(--bg4); color: var(--text3); white-space: nowrap; }
+.lpx-tag.folder { color: var(--text2); cursor: pointer; border: 1px solid var(--border); }
+.lpx-tag.folder:hover { border-color: var(--pink); color: var(--pink); }
+.lpx-sm { font-size: 12px !important; padding: 6px 14px !important; }
+.lpx-dots { padding: 6px 10px !important; font-size: 16px !important; line-height: 1; }
+.lpx-menu-wrap { position: relative; }
+.lpx-menu { position: absolute; right: 0; top: calc(100% + 6px); background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; min-width: 210px; padding: 6px; z-index: 50; box-shadow: 0 12px 32px rgba(0,0,0,.35); }
+.lpx-menu button { display: block; width: 100%; text-align: left; background: none; border: none; color: var(--text); font: inherit; font-size: 13px; padding: 9px 12px; border-radius: 7px; cursor: pointer; }
+.lpx-menu button:hover { background: var(--bg3); }
+.lpx-menu button.danger { color: #EF4444; }
+.lpx-toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+.lpx-search, .lpx-select, .lpx-input { background: var(--bg2); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 9px 14px; font: inherit; font-size: 13px; outline: none; }
+.lpx-search { flex: 1; min-width: 200px; }
+.lpx-search:focus, .lpx-input:focus, .lpx-select:focus { border-color: var(--pink); }
+.lpx-input { width: 100%; box-sizing: border-box; margin-bottom: 18px; }
+.lpx-folders { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+.lpx-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--bg2); border: 1px solid var(--border); color: var(--text2); border-radius: 100px; padding: 6px 14px; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all .15s; }
+.lpx-chip:hover { border-color: var(--pink); color: var(--text); }
+.lpx-chip.active { background: var(--pink); border-color: var(--pink); color: #fff; }
+.lpx-chip .n { font-size: 11px; opacity: .7; font-weight: 700; }
+.lpx-chip.add { border-style: dashed; background: none; }
+.lpx-folder-tools { margin-left: auto; display: flex; gap: 6px; }
+.lpx-folder-tools button { background: none; border: none; color: var(--text3); font: inherit; font-size: 12px; cursor: pointer; text-decoration: underline; }
+.lpx-folder-tools button:hover { color: var(--text); }
+.lpx-bulk { display: none; align-items: center; gap: 10px; background: var(--bg3); border: 1px solid var(--pink); border-radius: 12px; padding: 10px 16px; margin-bottom: 12px; font-size: 13px; position: sticky; top: 8px; z-index: 20; }
+.lpx-listhead { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text3); padding: 0 6px 2px; }
+.lpx-listhead label { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+.btn.lpx-danger { background: #EF4444; color: #fff; border: none; }
+.btn.lpx-danger:hover { background: #DC2626; }
+.lpx-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(3px); z-index: 900; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.lpx-dialog { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; width: min(440px, 100%); padding: 26px; }
+.lpx-dialog h3 { font-size: 17px; font-weight: 800; margin-bottom: 10px; }
+.lpx-dialog p { font-size: 13.5px; color: var(--text2); line-height: 1.55; margin-bottom: 20px; }
+.lpx-dlg-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.lpx-options { display: flex; flex-direction: column; gap: 6px; max-height: 280px; overflow-y: auto; margin-bottom: 20px; }
+.lpx-opt { text-align: left; background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 10px 14px; font: inherit; font-size: 13.5px; cursor: pointer; }
+.lpx-opt:hover { border-color: var(--pink); }
+.lpx-opt.sel { border-color: var(--pink); background: var(--pink-glow); font-weight: 700; }
+.lpx-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.lpx-kpi { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+.lpx-kpi .l { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; }
+.lpx-kpi .v { font-size: 30px; font-weight: 800; line-height: 1; margin-bottom: 6px; background: linear-gradient(135deg,#5B80FF,#E91E8C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.lpx-kpi .s { font-size: 12px; color: var(--text3); }
+.lpx-panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin-bottom: 20px; }
+.lpx-panel-h { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; gap: 10px; flex-wrap: wrap; }
+.lpx-panel-h h2 { font-size: 15px; font-weight: 700; }
+.lpx-panel-h span { font-size: 12px; color: var(--text3); }
+.lpx-empty-chart { text-align: center; padding: 30px 10px; color: var(--text2); font-size: 13.5px; line-height: 1.6; }
+.lpx-empty-chart span { font-size: 12px; color: var(--text3); }
+.lpx-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.lpx-table th { text-align: left; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text3); padding: 0 12px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.lpx-table td { padding: 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.lpx-table tr:last-child td { border-bottom: none; }
+.lpx-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.lpx-link { color: var(--text); font-weight: 600; text-decoration: none; }
+.lpx-link:hover { color: var(--pink); }
+.lpx-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.lpx-rate { display: flex; align-items: center; gap: 10px; }
+.lpx-rate .bar { flex: 1; height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+.lpx-rate .bar div { height: 100%; background: linear-gradient(90deg,#5B80FF,#E91E8C); }
+.lpx-rate b { font-size: 12px; min-width: 44px; text-align: right; }
+.lpx-note { font-size: 12px; color: var(--text3); line-height: 1.6; }
+@media (max-width: 720px) { .lpx-name { max-width: 180px; } .camp-card { grid-template-columns: auto 1fr !important; } .camp-actions { grid-column: 1 / -1; } }
 
 /* ═══ CAMPAIGN CARDS ═══ */
 .camp-grid {
@@ -4578,13 +4649,14 @@ nav { background: rgba(27,36,85,.9) !important; }
 
     <!-- CAMPAIGNS SECTION -->
     <div id="section-campaigns" style="display:none">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:12px;flex-wrap:wrap">
         <div>
           <h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Campagnes</h1>
-          <p style="color:var(--text2);font-size:14px;margin-top:4px">Historique de toutes vos générations</p>
+          <p style="color:var(--text2);font-size:14px;margin-top:4px">Historique de vos générations, classées par dossier</p>
         </div>
-        <div style="display:flex;gap:10px;align-items:center">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <span id="camp-count" style="font-size:13px;color:var(--text3);padding:6px 14px;background:var(--bg3);border-radius:100px;border:1px solid var(--border)">0 campagnes</span>
+          <button class="btn btn-ghost" onclick="campNewFolder()">+ Nouveau dossier</button>
           <button class="btn btn-primary" onclick="showDashSection('generate', document.querySelector('.sidebar-item'))">+ Nouvelle campagne</button>
         </div>
       </div>
@@ -4602,6 +4674,18 @@ nav { background: rgba(27,36,85,.9) !important; }
         </div>
       </div>
 
+      <!-- Barre d'outils -->
+      <div id="camp-toolbar">
+        <div class="lpx-toolbar">
+          <input id="camp-search" class="lpx-search" type="search" placeholder="Rechercher une campagne…" oninput="campState.q=this.value;renderCampaignList()">
+          <select id="camp-status" class="lpx-select" onchange="campState.status=this.value;renderCampaignList()">
+            <option value="">Tous les statuts</option><option value="done">Terminées</option><option value="processing">En cours</option><option value="error">En erreur</option>
+          </select>
+        </div>
+        <div class="lpx-folders" id="camp-folders"></div>
+        <div class="lpx-bulk" id="camp-bulk"></div>
+      </div>
+
       <!-- Détail d'une campagne -->
       <div id="camp-detail" style="display:none"></div>
 
@@ -4613,35 +4697,12 @@ nav { background: rgba(27,36,85,.9) !important; }
 
     <!-- STATS SECTION -->
     <div id="section-stats" style="display:none">
-      <div style="margin-bottom:32px"><h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Statistiques</h1><p style="color:var(--text2);font-size:14px;margin-top:4px">Performance de vos campagnes</p></div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
-        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">PDFs générés</div>
-          <div style="font-size:32px;font-weight:800;background:linear-gradient(135deg,#5B80FF,#E91E8C);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:6px" id="stat-pdfs">—</div>
-          <div id="stat-pdfs-sub" style="font-size:12px;color:var(--text3)">sur 0 campagnes</div>
-        </div>
-        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Taux de clic moyen</div>
-          <div id="stat-clicks" style="font-size:32px;font-weight:800;background:linear-gradient(135deg,#5B80FF,#E91E8C);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:6px">—</div>
-          <div style="font-size:12px;color:var(--text3)">sur les liens PDF</div>
-        </div>
-        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">PDFs consultés</div>
-          <div id="stat-opened" style="font-size:32px;font-weight:800;background:linear-gradient(135deg,#5B80FF,#E91E8C);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:6px">—</div>
-          <div style="font-size:12px;color:var(--text3)">prospects engages</div>
-        </div>
-        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Meilleure campagne</div>
-          <div id="stat-best-camp" style="font-size:18px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:6px">—</div>
-          <div id="stat-best-pct" style="font-size:12px;color:var(--text3)">aucune donnée</div>
-        </div>
+      <div style="margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+        <div><h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Statistiques</h1><p style="color:var(--text2);font-size:14px;margin-top:4px">Volume généré et engagement de vos prospects</p></div>
+        <button class="btn btn-ghost" onclick="loadStatsPage()">Actualiser</button>
       </div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px">
-        <h2 style="font-size:16px;font-weight:700;margin-bottom:20px">Performance par campagne</h2>
-        <div id="stats-bars"><p style="color:var(--text3);font-size:13px">Aucune campagne pour l'instant.</p></div>
-      </div>
+      <div id="stats-root"></div>
     </div>
-
 
     <!-- CHARTES SECTION -->
     <div id="section-chartes" style="display:none">
@@ -6345,8 +6406,8 @@ function showDashSection(section, el, pushState) {
   } else {
     const target = document.getElementById('section-' + section);
     if (target) target.style.display = 'block';
-    if (section === 'campaigns' || section === 'stats') loadCampaigns();
-    if (section === 'stats') loadDashboardData();
+    if (section === 'campaigns') loadCampaigns();
+    if (section === 'stats') loadStatsPage();
     if (section === 'profile') loadProfile();
     if (section === 'abonnement') loadDashboardData();
     if (section === 'parametres') loadSettings();
@@ -6416,105 +6477,356 @@ function renderLoadError(container, message, retryFn) {
     + '<button class="btn btn-primary" onclick="' + retryFn + '()">Réessayer</button></div>';
 }
 
+// ── DIALOGUES (remplace prompt/confirm du navigateur) ─────────────────────────────────────
+function lpDialog(opts) {
+  return new Promise(function(resolve) {
+    const ov = document.createElement('div');
+    ov.className = 'lpx-overlay';
+    const hasInput = opts.input !== undefined;
+    const hasSelect = Array.isArray(opts.options);
+    ov.innerHTML = '<div class="lpx-dialog" role="dialog" aria-modal="true">'
+      + '<h3>' + escHtml(opts.title || '') + '</h3>'
+      + (opts.text ? '<p>' + opts.text + '</p>' : '')
+      + (hasInput ? '<input class="lpx-input" id="lpx-dlg-input" maxlength="60" value="' + escHtml(opts.input) + '" placeholder="' + escHtml(opts.placeholder || '') + '">' : '')
+      + (hasSelect ? '<div class="lpx-options" id="lpx-dlg-opts">' + opts.options.map(function(o, i) {
+          return '<button type="button" class="lpx-opt' + (o.selected ? ' sel' : '') + '" data-v="' + escHtml(o.value) + '">' + escHtml(o.label) + '</button>';
+        }).join('') + '</div>' : '')
+      + '<div class="lpx-dlg-actions"><button class="btn btn-ghost" id="lpx-dlg-cancel">Annuler</button>'
+      + '<button class="btn ' + (opts.danger ? 'lpx-danger' : 'btn-primary') + '" id="lpx-dlg-ok">' + escHtml(opts.confirmText || 'Valider') + '</button></div></div>';
+    document.body.appendChild(ov);
+    let chosen = (opts.options || []).filter(function(o) { return o.selected; }).map(function(o) { return o.value; })[0];
+    const close = function(v) { document.removeEventListener('keydown', onKey); ov.remove(); resolve(v); };
+    const ok = function() {
+      if (hasInput) { const v = document.getElementById('lpx-dlg-input').value.trim(); if (!v && !opts.allowEmpty) return; close(v); }
+      else if (hasSelect) { if (chosen === undefined) return; close(chosen); }
+      else close(true);
+    };
+    const onKey = function(e) { if (e.key === 'Escape') close(null); if (e.key === 'Enter' && (hasInput || !hasSelect)) ok(); };
+    document.addEventListener('keydown', onKey);
+    ov.addEventListener('click', function(e) { if (e.target === ov) close(null); });
+    document.getElementById('lpx-dlg-cancel').onclick = function() { close(null); };
+    document.getElementById('lpx-dlg-ok').onclick = ok;
+    if (hasSelect) ov.querySelectorAll('.lpx-opt').forEach(function(b) {
+      b.onclick = function() { ov.querySelectorAll('.lpx-opt').forEach(function(x) { x.classList.remove('sel'); }); b.classList.add('sel'); chosen = b.getAttribute('data-v'); };
+      b.ondblclick = ok;
+    });
+    const inp = document.getElementById('lpx-dlg-input'); if (inp) { inp.focus(); inp.select(); }
+  });
+}
+
+// ── CAMPAGNES : liste, dossiers, recherche, sélection, suppression ────────────────────────
+let campState = { camps: [], folder: '*', q: '', status: '', sel: {}, menu: '' };
+
+function lpUserKey() { return (currentUser && (currentUser.email || currentUser.id)) || 'anon'; }
+function lpLocalGet(k, d) { try { const v = localStorage.getItem(k + '_' + lpUserKey()); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+function lpLocalSet(k, v) { try { localStorage.setItem(k + '_' + lpUserKey(), JSON.stringify(v)); } catch (e) {} }
+
+function campFolderOf(c) { const m = lpLocalGet('lp_foldermap', {}); return (c.folder || m[c.id] || '').trim(); }
+function campFolderNames() {
+  const set = {};
+  lpLocalGet('lp_folders', []).forEach(function(n) { set[n] = 1; });
+  campState.camps.forEach(function(c) { const f = campFolderOf(c); if (f) set[f] = 1; });
+  return Object.keys(set).sort(function(a, b) { return a.localeCompare(b, 'fr'); });
+}
+
+async function campSetFolder(ids, folder) {
+  folder = (folder || '').trim();
+  let local = false;
+  for (const id of ids) {
+    try { await apiCall('PATCH', '/api/campaigns/' + id, { folder: folder }, true); }
+    catch (e) { local = true; }
+    const c = campState.camps.find(function(x) { return x.id === id; });
+    if (c) c.folder = folder || null;
+    const m = lpLocalGet('lp_foldermap', {});
+    if (local) { if (folder) m[id] = folder; else delete m[id]; lpLocalSet('lp_foldermap', m); if (c) c.folder = null; }
+    else if (m[id]) { delete m[id]; lpLocalSet('lp_foldermap', m); }
+  }
+  if (local) showToast('Classement enregistré sur cet appareil', '#F59E0B');
+}
+
+async function campNewFolder(moveIds) {
+  const name = await lpDialog({ title: 'Nouveau dossier', input: '', placeholder: 'Ex. Clients assurance', confirmText: 'Créer' });
+  if (!name) return;
+  const list = lpLocalGet('lp_folders', []);
+  if (!list.includes(name)) { list.push(name); lpLocalSet('lp_folders', list); }
+  if (moveIds && moveIds.length) await campSetFolder(moveIds, name);
+  campState.folder = name;
+  renderCampaignList();
+}
+
+async function campRenameFolder(name) {
+  const nn = await lpDialog({ title: 'Renommer le dossier', input: name, confirmText: 'Renommer' });
+  if (!nn || nn === name) return;
+  const ids = campState.camps.filter(function(c) { return campFolderOf(c) === name; }).map(function(c) { return c.id; });
+  const list = lpLocalGet('lp_folders', []).filter(function(n) { return n !== name; }); list.push(nn); lpLocalSet('lp_folders', list);
+  await campSetFolder(ids, nn);
+  campState.folder = nn; renderCampaignList();
+}
+
+async function campDeleteFolder(name) {
+  const ids = campState.camps.filter(function(c) { return campFolderOf(c) === name; }).map(function(c) { return c.id; });
+  const ok = await lpDialog({ title: 'Supprimer le dossier « ' + name + ' » ?', text: 'Les ' + ids.length + ' campagne(s) qu\'il contient ne sont pas supprimées : elles repassent dans « Sans dossier ».', confirmText: 'Supprimer le dossier', danger: true });
+  if (!ok) return;
+  lpLocalSet('lp_folders', lpLocalGet('lp_folders', []).filter(function(n) { return n !== name; }));
+  await campSetFolder(ids, '');
+  campState.folder = '*'; renderCampaignList();
+}
+
+async function campMove(ids) {
+  const names = campFolderNames();
+  const opts = [{ value: '', label: 'Sans dossier' }].concat(names.map(function(n) { return { value: n, label: n }; })).concat([{ value: '__new__', label: '+ Nouveau dossier…' }]);
+  const v = await lpDialog({ title: 'Déplacer ' + ids.length + ' campagne' + (ids.length > 1 ? 's' : ''), options: opts, confirmText: 'Déplacer' });
+  if (v === null || v === undefined) return;
+  if (v === '__new__') { await campNewFolder(ids); return; }
+  await campSetFolder(ids, v);
+  campState.sel = {}; renderCampaignList();
+  showToast(v ? 'Déplacé dans « ' + v + ' »' : 'Retiré du dossier');
+}
+
+async function campRename(id) {
+  const c = campState.camps.find(function(x) { return x.id === id; }); if (!c) return;
+  const nn = await lpDialog({ title: 'Renommer la campagne', input: c.name || '', confirmText: 'Renommer' });
+  if (!nn || nn === c.name) return;
+  try { await apiCall('PATCH', '/api/campaigns/' + id, { name: nn }, true); c.name = nn; renderCampaignList(); showToast('Campagne renommée'); }
+  catch (e) { showToast('Erreur : ' + e.message, '#EF4444'); }
+}
+
+async function campDelete(ids) {
+  const list = ids.map(function(id) { return campState.camps.find(function(x) { return x.id === id; }); }).filter(Boolean);
+  if (!list.length) return;
+  const label = list.length === 1 ? '« ' + escHtml(list[0].name || 'Campagne') + ' »' : list.length + ' campagnes';
+  const ok = await lpDialog({ title: 'Supprimer définitivement ?',
+    text: label + ' sera supprimée avec ses contacts, ses PDF et ses statistiques de clics. <b>Cette action est irréversible</b> et les crédits utilisés ne sont pas remboursés.',
+    confirmText: 'Supprimer', danger: true });
+  if (!ok) return;
+  let fail = 0, last = '';
+  for (const c of list) {
+    try { await apiCall('DELETE', '/api/campaigns/' + c.id, null, true); campState.camps = campState.camps.filter(function(x) { return x.id !== c.id; }); delete campState.sel[c.id]; }
+    catch (e) { fail++; last = e.message; }
+  }
+  renderCampaignList();
+  if (fail) showToast(fail + ' non supprimée(s) : ' + last, '#EF4444'); else showToast(list.length > 1 ? list.length + ' campagnes supprimées' : 'Campagne supprimée');
+}
+
+function campToggleSel(id, on) { if (on) campState.sel[id] = 1; else delete campState.sel[id]; renderCampaignBulk(); }
+function campSelAll(on) { campFiltered().forEach(function(c) { if (on) campState.sel[c.id] = 1; else delete campState.sel[c.id]; }); renderCampaignList(); }
+function campSelIds() { return Object.keys(campState.sel); }
+
+function campFiltered() {
+  const q = campState.q.trim().toLowerCase();
+  return campState.camps.filter(function(c) {
+    const f = campFolderOf(c);
+    if (campState.folder === '' && f) return false;
+    if (campState.folder !== '*' && campState.folder !== '' && f !== campState.folder) return false;
+    if (campState.status && c.status !== campState.status) return false;
+    if (q && !(c.name || '').toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function campToggleMenu(id, ev) { if (ev) ev.stopPropagation(); campState.menu = campState.menu === id ? '' : id; renderCampaignList(); }
+document.addEventListener('click', function() { if (campState.menu) { campState.menu = ''; const g = document.getElementById('camp-grid'); if (g && g.children.length) renderCampaignList(); } });
+
+function renderCampaignBulk() {
+  const el = document.getElementById('camp-bulk'); if (!el) return;
+  const ids = campSelIds();
+  if (!ids.length) { el.style.display = 'none'; el.innerHTML = ''; return; }
+  el.style.display = 'flex';
+  el.innerHTML = '<span><b>' + ids.length + '</b> sélectionnée' + (ids.length > 1 ? 's' : '') + '</span>'
+    + '<span style="flex:1"></span>'
+    + '<button class="btn btn-ghost" onclick="campMove(campSelIds())">Déplacer vers…</button>'
+    + '<button class="btn lpx-danger" onclick="campDelete(campSelIds())">Supprimer</button>'
+    + '<button class="btn btn-ghost" onclick="campState.sel={};renderCampaignList()">Annuler</button>';
+}
+
+function renderCampaignList() {
+  const grid = document.getElementById('camp-grid'); if (!grid) return;
+  const camps = campState.camps;
+  const campCount = document.getElementById('camp-count');
+  if (campCount) { campCount.style.opacity = '1'; campCount.textContent = camps.length + ' campagne' + (camps.length > 1 ? 's' : ''); }
+
+  // Dossiers (puces)
+  const names = campFolderNames();
+  const cnt = function(f) { return camps.filter(function(c) { return campFolderOf(c) === f; }).length; };
+  const noF = camps.filter(function(c) { return !campFolderOf(c); }).length;
+  const chip = function(val, label, n, extra) {
+    const act = campState.folder === val;
+    return '<button class="lpx-chip' + (act ? ' active' : '') + '" onclick="campState.folder=' + JSON.stringify(val).replace(/"/g, '&quot;') + ';campState.sel={};renderCampaignList()">'
+      + (val !== '*' && val !== '' ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>' : '')
+      + escHtml(label) + ' <span class="n">' + n + '</span></button>';
+  };
+  const tb = document.getElementById('camp-folders');
+  if (tb) {
+    let h = chip('*', 'Toutes', camps.length) + chip('', 'Sans dossier', noF);
+    names.forEach(function(n) { h += chip(n, n, cnt(n)); });
+    h += '<button class="lpx-chip add" onclick="campNewFolder()">+ Dossier</button>';
+    if (campState.folder && campState.folder !== '*') {
+      const q = JSON.stringify(campState.folder).replace(/"/g, '&quot;');
+      h += '<span class="lpx-folder-tools"><button title="Renommer le dossier" onclick="campRenameFolder(' + q + ')">Renommer</button><button title="Supprimer le dossier" onclick="campDeleteFolder(' + q + ')">Supprimer</button></span>';
+    }
+    tb.innerHTML = h;
+  }
+
+  const list = campFiltered();
+  renderCampaignBulk();
+  if (!camps.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>'
+      + '<h3>Aucune campagne pour l\'instant</h3><p>Importez votre premier fichier CSV et lancez une génération pour voir vos campagnes apparaître ici.</p>'
+      + '<button class="btn btn-primary" onclick="showDashSection(\'generate\', document.querySelector(\'.sidebar-item\'))">Lancer ma première campagne</button></div>';
+    return;
+  }
+  if (!list.length) {
+    grid.innerHTML = '<div class="empty-state"><h3>Aucun résultat</h3><p>Aucune campagne ne correspond à ces filtres.</p>'
+      + '<button class="btn btn-ghost" onclick="campState.q=\'\';campState.status=\'\';campState.folder=\'*\';document.getElementById(\'camp-search\').value=\'\';document.getElementById(\'camp-status\').value=\'\';renderCampaignList()">Réinitialiser</button></div>';
+    return;
+  }
+
+  const allSel = list.every(function(c) { return campState.sel[c.id]; });
+  let html = '<div class="lpx-listhead"><label><input type="checkbox" ' + (allSel ? 'checked' : '') + ' onchange="campSelAll(this.checked)"> Tout sélectionner</label><span>' + list.length + ' affichée' + (list.length > 1 ? 's' : '') + '</span></div>';
+  const statusMap = { done: ['Terminé', 'done'], processing: ['En cours', 'processing'], error: ['Erreur', 'error'] };
+  list.forEach(function(camp) {
+    const date = new Date(camp.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+    const st = statusMap[camp.status] || ['En attente', 'pending'];
+    const total = camp.total || 0, dn = camp.processed || 0, pct = total > 0 ? Math.round(dn / total * 100) : 0;
+    const f = campFolderOf(camp);
+    const id = camp.id;
+    let acts = '';
+    if (camp.status === 'done') acts += '<button class="btn btn-ghost lpx-sm" onclick="openCampaignDetail(\'' + id + '\')">Ouvrir</button><button class="btn btn-primary lpx-sm" onclick="downloadCampaignCsv(\'' + id + '\')">CSV</button>';
+    else if (camp.status === 'processing') acts += '<button class="btn btn-ghost lpx-sm" onclick="showDashSection(\'generate\',null)">Voir</button>';
+    acts += '<div class="lpx-menu-wrap"><button class="btn btn-ghost lpx-sm lpx-dots" aria-label="Plus d\'actions" onclick="campToggleMenu(\'' + id + '\', event)">⋯</button>'
+      + (campState.menu === id ? '<div class="lpx-menu" onclick="event.stopPropagation()">'
+        + '<button onclick="campState.menu=\'\';campRename(\'' + id + '\')">Renommer</button>'
+        + '<button onclick="campState.menu=\'\';campMove([\'' + id + '\'])">Déplacer vers un dossier</button>'
+        + '<button class="danger" onclick="campState.menu=\'\';campDelete([\'' + id + '\'])">Supprimer</button></div>' : '')
+      + '</div>';
+    let meta = '<div class="camp-meta-item"><strong>' + date + '</strong></div><div class="camp-meta-item"><strong>' + total + '</strong> contacts</div>';
+    if (camp.status === 'processing') meta += '<div class="camp-meta-item"><strong>' + dn + '/' + total + '</strong> traités (' + pct + '%)</div>';
+    if (camp.status === 'done') meta += '<div class="camp-meta-item"><strong>' + dn + '</strong> générés</div>';
+    if (camp.error_rows > 0) meta += '<div class="camp-meta-item" style="color:#EF4444">⚠ <strong>' + camp.error_rows + '</strong> erreurs</div>';
+    const bar = camp.status === 'processing' ? '<div style="margin-top:10px;height:3px;background:var(--bg4);border-radius:3px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,var(--blue-light),var(--pink));transition:width .5s"></div></div>' : '';
+    const tags = (camp.generate_pdf !== false ? '<span class="lpx-tag">PDF</span>' : '') + (camp.generate_mail1 ? '<span class="lpx-tag">Mail</span>' : '')
+      + (f ? '<span class="lpx-tag folder" onclick="campState.folder=' + JSON.stringify(f).replace(/"/g, '&quot;') + ';renderCampaignList()" title="Ouvrir le dossier">' + escHtml(f) + '</span>' : '');
+    html += '<div class="camp-card status-' + st[1] + (campState.sel[id] ? ' selected' : '') + (campState.menu === id ? ' menu-open' : '') + '" style="grid-template-columns:auto 1fr auto">'
+      + '<input type="checkbox" class="lpx-check" ' + (campState.sel[id] ? 'checked' : '') + ' onchange="campToggleSel(\'' + id + '\', this.checked);this.closest(\'.camp-card\').classList.toggle(\'selected\', this.checked)" aria-label="Sélectionner">'
+      + '<div style="min-width:0"><div class="camp-card-title"><span class="lpx-name">' + (escHtml(camp.name) || 'Campagne sans nom') + '</span>'
+      + '<span class="camp-badge camp-badge-' + st[1] + '"><span class="camp-badge-dot"></span>' + st[0] + '</span>' + tags + '</div>'
+      + '<div class="camp-card-meta">' + meta + '</div>' + bar + '</div>'
+      + '<div class="camp-actions" style="display:flex;gap:6px;align-items:center">' + acts + '</div></div>';
+  });
+  grid.innerHTML = html;
+}
+
 async function loadCampaigns() {
   if (!authToken) return;
   closeCampaignDetail();
   const campCount = document.getElementById('camp-count');
   const grid = document.getElementById('camp-grid');
   if (campCount) { campCount.textContent = 'Chargement...'; campCount.style.opacity = '0.5'; }
-  if (grid) grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Chargement...</div>';
+  if (grid && !campState.camps.length) grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Chargement...</div>';
   try {
     const campaigns = await apiCall('GET', '/api/campaigns/', null, true);
-    if (campCount) { campCount.style.opacity = '1'; campCount.textContent = campaigns.length + ' campagne' + (campaigns.length > 1 ? 's' : ''); }
-    if (!grid) return;
-
-    // Quick stats
-    const done  = campaigns.filter(c => c.status === 'done').length;
-    const pdfs  = campaigns.reduce((a,c) => a + (c.total || 0), 0);
-    const mails = campaigns.reduce((a,c) => a + (c.mail1_count || 0), 0);
-    const qsDone  = document.getElementById('qs-done');
-    const qsPdfs  = document.getElementById('qs-pdfs');
-    const qsMails = document.getElementById('qs-mails');
-    if (qsDone)  qsDone.textContent  = done;
-    if (qsPdfs)  qsPdfs.textContent  = pdfs || '—';
-    if (qsMails) qsMails.textContent = mails || '—';
-
-    if (campaigns.length === 0) {
-      grid.innerHTML = '<div class="empty-state">'
-        + '<div class="empty-state-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>'
-        + '<h3>Aucune campagne pour l\'instant</h3>'
-        + '<p>Importez votre premier fichier CSV et lancez une génération pour voir vos campagnes apparaître ici.</p>'
-        + '<button class="btn btn-primary" onclick="showDashSection(\'generate\', document.querySelector(\'.sidebar-item\'))">Lancer ma première campagne</button>'
-        + '</div>';
-      return;
+    campState.camps = campaigns;
+    campState.sel = {};
+    const set = function(id, v) { const e = document.getElementById(id); if (e) e.textContent = v; };
+    set('qs-done', campaigns.filter(function(c) { return c.status === 'done'; }).length);
+    set('qs-pdfs', campaigns.reduce(function(a, c) { return a + (c.processed || 0); }, 0) || '—');
+    set('qs-mails', campaigns.reduce(function(a, c) { return a + (c.mail1_count || 0); }, 0) || '—');
+    renderCampaignList();
+    // Rafraîchit tant qu'une campagne tourne
+    clearTimeout(campState.timer);
+    if (campaigns.some(function(c) { return c.status === 'processing'; })) {
+      campState.timer = setTimeout(function() {
+        const s = document.getElementById('section-campaigns');
+        const open = document.getElementById('camp-detail');
+        if (s && s.style.display !== 'none' && (!open || open.style.display === 'none')) loadCampaigns();
+      }, 8000);
     }
-
-    grid.innerHTML = '';
-    campaigns.forEach(function(camp) {
-      var date = new Date(camp.created_at).toLocaleDateString('fr-FR', {day:'2-digit', month:'short', year:'numeric'});
-      var statusMap = {
-        done:       { label: 'Terminé',   cls: 'done' },
-        processing: { label: 'En cours',  cls: 'processing' },
-        error:      { label: 'Erreur',    cls: 'error' }
-      };
-      var st = statusMap[camp.status] || { label: 'En attente', cls: 'pending' };
-      var total  = camp.total || 0;
-      var done_c = camp.processed || 0;
-      var pct    = total > 0 ? Math.round(done_c / total * 100) : 0;
-      var hasMail = camp.generate_mail1 || false;
-      var hasPdf  = camp.generate_pdf !== false;
-
-      var dlBtn = '';
-      if (camp.status === 'done') {
-        dlBtn = '<button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;margin-right:6px" onclick="openCampaignDetail(\'' + camp.id + '\')">Ouvrir</button>'
-              + '<button class="btn btn-primary" style="font-size:12px;padding:6px 14px" onclick="downloadCampaignCsv(\'' + camp.id + '\')">⬇ CSV</button>';
-      } else if (camp.status === 'processing') {
-        dlBtn = '<button class="btn btn-ghost" style="font-size:12px;padding:6px 14px" onclick="showDashSection(\'generate\',null)">Voir</button>';
-      }
-
-      var metaHtml = '';
-      metaHtml += '<div class="camp-meta-item"><strong>' + date + '</strong></div>';
-      metaHtml += '<div class="camp-meta-item"><strong>' + total + '</strong> contacts</div>';
-      if (camp.status === 'processing') {
-        metaHtml += '<div class="camp-meta-item"><strong>' + done_c + '/' + total + '</strong> traités (' + pct + '%)</div>';
-      }
-      if (camp.status === 'done') {
-        metaHtml += '<div class="camp-meta-item"><strong>' + done_c + '</strong> générés</div>';
-      }
-      if (camp.error_rows > 0) {
-        metaHtml += '<div class="camp-meta-item" style="color:#EF4444">⚠ <strong>' + camp.error_rows + '</strong> erreurs</div>';
-      }
-
-      var progressBar = '';
-      if (camp.status === 'processing') {
-        progressBar = '<div style="margin-top:10px;height:3px;background:var(--bg4);border-radius:3px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,var(--blue-light),var(--pink));transition:width 0.5s"></div></div>';
-      }
-
-      var tagHtml = '';
-      if (hasPdf)  tagHtml += '<span style="font-size:10px;padding:2px 7px;border-radius:100px;background:var(--bg4);color:var(--text3)">PDF</span>';
-      if (hasMail) tagHtml += '<span style="font-size:10px;padding:2px 7px;border-radius:100px;background:var(--bg4);color:var(--text3)">✉ Mail</span>';
-
-      var card = document.createElement('div');
-      card.className = 'camp-card status-' + st.cls;
-      card.innerHTML =
-        '<div>'
-        + '<div class="camp-card-title">'
-        + (escHtml(camp.name) || 'Campagne sans nom')
-        + ' <span class="camp-badge camp-badge-' + st.cls + '"><span class="camp-badge-dot"></span>' + st.label + '</span>'
-        + ' ' + tagHtml
-        + '</div>'
-        + '<div class="camp-card-meta">' + metaHtml + '</div>'
-        + progressBar
-        + '</div>'
-        + '<div class="camp-actions">' + dlBtn + '</div>';
-      grid.appendChild(card);
-    });
-
-  } catch(e) {
+  } catch (e) {
     console.error('loadCampaigns:', e);
     if (campCount) { campCount.style.opacity = '1'; campCount.textContent = 'Indisponible'; }
     renderLoadError(grid, e.message, 'loadCampaigns');
   }
+}
+
+// ── STATISTIQUES ─────────────────────────────────────────────────────────────────────────
+async function loadStatsPage() {
+  if (!authToken) return;
+  const root = document.getElementById('stats-root'); if (!root) return;
+  if (!root.dataset.loaded) root.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Chargement des statistiques...</div>';
+  try {
+    const d = await apiCall('GET', '/api/campaigns/stats/overview', null, true);
+    root.dataset.loaded = '1';
+    renderStatsPage(d);
+  } catch (e) {
+    renderLoadError(root, e.message, 'loadStatsPage');
+  }
+}
+
+function renderStatsPage(d) {
+  const root = document.getElementById('stats-root'); if (!root) return;
+  const t = d.totals || {};
+  const nf = function(n) { return (n || 0).toLocaleString('fr-FR'); };
+  if (!t.campaigns) {
+    root.innerHTML = '<div class="empty-state"><h3>Pas encore de statistiques</h3><p>Lancez une campagne : les contacts traités, les mails générés et les clics sur vos liens PDF apparaîtront ici.</p>'
+      + '<button class="btn btn-primary" onclick="showDashSection(\'generate\', document.querySelector(\'.sidebar-item\'))">Lancer une campagne</button></div>';
+    return;
+  }
+  const kpi = function(label, val, sub) { return '<div class="lpx-kpi"><div class="l">' + label + '</div><div class="v">' + val + '</div><div class="s">' + sub + '</div></div>'; };
+  let html = '<div class="lpx-kpis">'
+    + kpi('Campagnes', nf(t.campaigns), nf(t.contacts) + ' contacts importés')
+    + kpi('PDF générés', nf(t.ok), t.errors ? nf(t.errors) + ' en erreur' : 'aucune erreur')
+    + kpi('Mails rédigés', nf(t.mails), 'mails de prospection personnalisés')
+    + kpi('Prospects ayant cliqué', nf(t.clicked), nf(t.clicks) + ' clic' + (t.clicks > 1 ? 's' : '') + ' au total')
+    + kpi('Taux de clic', t.ok ? t.click_rate + ' %' : '—', 'prospects ayant ouvert leur PDF')
+    + '</div>';
+
+  // Clics par jour
+  const days = d.daily || [], max = Math.max.apply(null, days.map(function(x) { return x.n; }).concat([1]));
+  const sum = days.reduce(function(a, x) { return a + x.n; }, 0);
+  let chart;
+  if (!sum) {
+    chart = '<div class="lpx-empty-chart">Aucun clic enregistré sur les 30 derniers jours.<br><span>Un clic est compté quand un prospect ouvre le lien de son PDF (lien « leadpage-backend…/v/… » du CSV).</span></div>';
+  } else {
+    const W = 720, H = 150, bw = W / days.length;
+    chart = '<svg viewBox="0 0 ' + W + ' ' + (H + 22) + '" width="100%" role="img" aria-label="Clics par jour sur 30 jours" style="display:block">';
+    [0, .5, 1].forEach(function(g) { chart += '<line x1="0" x2="' + W + '" y1="' + (H - g * (H - 10)) + '" y2="' + (H - g * (H - 10)) + '" stroke="var(--border)" stroke-width="1"/>'; });
+    days.forEach(function(x, i) {
+      const h = Math.round(x.n / max * (H - 10));
+      const dt = new Date(x.d + 'T00:00:00');
+      chart += '<g><title>' + dt.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) + ' : ' + x.n + ' clic' + (x.n > 1 ? 's' : '') + '</title>'
+        + '<rect x="' + (i * bw + 2) + '" y="' + (H - h) + '" width="' + (bw - 4) + '" height="' + Math.max(h, x.n ? 2 : 0) + '" rx="2" fill="#5B80FF" opacity="' + (x.n ? 1 : .15) + '"/>'
+        + '<rect x="' + (i * bw) + '" y="0" width="' + bw + '" height="' + H + '" fill="transparent"/></g>';
+      if (i % 5 === 0 || i === days.length - 1) chart += '<text x="' + (i * bw + bw / 2) + '" y="' + (H + 15) + '" text-anchor="middle" font-size="10" fill="var(--text3)">' + dt.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) + '</text>';
+    });
+    chart += '</svg>';
+  }
+  html += '<div class="lpx-panel"><div class="lpx-panel-h"><h2>Clics sur les PDF</h2><span>30 derniers jours · ' + nf(sum) + ' clic' + (sum > 1 ? 's' : '') + '</span></div>' + chart + '</div>';
+
+  // Tableau campagnes
+  const rows = (d.campaigns || []).map(function(c) {
+    const rate = c.click_rate || 0;
+    return '<tr><td><a href="#" onclick="event.preventDefault();showDashSection(\'campaigns\',null);setTimeout(function(){openCampaignDetail(\'' + c.id + '\')},50)" class="lpx-link">' + (escHtml(c.name) || 'Campagne') + '</a>'
+      + (c.folder ? '<div class="lpx-sub">' + escHtml(c.folder) + '</div>' : '') + '</td>'
+      + '<td class="num">' + nf(c.contacts) + '</td><td class="num">' + nf(c.ok) + '</td>'
+      + '<td class="num"' + (c.errors ? ' style="color:#EF4444"' : '') + '>' + nf(c.errors) + '</td><td class="num">' + nf(c.mails) + '</td>'
+      + '<td class="num">' + nf(c.clicked) + '</td>'
+      + '<td style="min-width:130px"><div class="lpx-rate"><div class="bar"><div style="width:' + Math.min(rate, 100) + '%"></div></div><b>' + rate + ' %</b></div></td></tr>';
+  }).join('');
+  html += '<div class="lpx-panel"><div class="lpx-panel-h"><h2>Performance par campagne</h2></div><div style="overflow-x:auto"><table class="lpx-table"><thead><tr>'
+    + '<th>Campagne</th><th class="num">Contacts</th><th class="num">PDF</th><th class="num">Erreurs</th><th class="num">Mails</th><th class="num">Cliqueurs</th><th>Taux de clic</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+
+  // Prospects les plus engagés
+  const top = d.top || [];
+  html += '<div class="lpx-panel"><div class="lpx-panel-h"><h2>Prospects les plus engagés</h2><span>à relancer en priorité</span></div>';
+  if (!top.length) html += '<div class="lpx-empty-chart">Aucun prospect n\'a encore ouvert son PDF.</div>';
+  else html += '<table class="lpx-table"><thead><tr><th>Prospect</th><th>Entreprise</th><th>Campagne</th><th class="num">Clics</th><th>Dernier clic</th></tr></thead><tbody>'
+    + top.map(function(p) {
+      const last = p.last ? new Date(p.last).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
+      return '<tr><td><b>' + escHtml(p.name) + '</b></td><td>' + escHtml(p.company) + '</td><td class="lpx-sub" style="margin:0">' + escHtml(p.campaign) + '</td><td class="num">' + p.clicks + '</td><td>' + last + '</td></tr>';
+    }).join('') + '</tbody></table>';
+  html += '</div>';
+  html += '<p class="lpx-note">Le taux de clic compte les prospects distincts ayant ouvert leur lien. Certains outils de messagerie ouvrent les liens automatiquement : un clic isolé n\'est pas toujours une lecture humaine.</p>';
+  root.innerHTML = html;
 }
 
 // ── DÉTAIL D'UNE CAMPAGNE : contacts, PDF par contact, téléchargement groupé ──────────────
@@ -6525,6 +6837,7 @@ function closeCampaignDetail() {
   if (d) { d.style.display = 'none'; d.innerHTML = ''; }
   const g = document.getElementById('camp-grid');           if (g) g.style.display = '';
   const q = document.getElementById('camp-quick-stats');    if (q) q.style.display = 'grid';
+  const tb = document.getElementById('camp-toolbar');       if (tb) tb.style.display = '';
 }
 
 function cdParseRaw(r) {
@@ -6546,6 +6859,7 @@ async function openCampaignDetail(campaignId) {
   if (!d) return;
   const g = document.getElementById('camp-grid');        if (g) g.style.display = 'none';
   const q = document.getElementById('camp-quick-stats'); if (q) q.style.display = 'none';
+  const tb = document.getElementById('camp-toolbar');    if (tb) tb.style.display = 'none';
   d.style.display = 'block';
   d.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Chargement des contacts...</div>';
   try {
@@ -6987,27 +7301,9 @@ async function loadDashboardData() {
       planLabel.textContent = 'Plan actuel : ' + (planNames[user.plan] || 'Gratuit');
     }
 
-    // Stats barres
-    const statsDiv = document.getElementById('stats-bars');
-    if (statsDiv && campaigns.length > 0) {
-      const maxPdfs = Math.max(...campaigns.map(c => c.processed || 0), 1);
-      statsDiv.innerHTML = campaigns.map(camp => {
-        const pct = Math.round(((camp.processed || 0) / maxPdfs) * 100);
-        return '<div style="margin-bottom:16px">'
-          + '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">'
-          + '<span style="font-weight:600">' + escHtml(camp.name) + '</span>'
-          + '<span style="color:var(--pink);font-weight:700">' + (camp.processed || 0) + ' PDFs</span>'
-          + '</div>'
-          + '<div style="height:8px;background:var(--bg3);border-radius:4px;overflow:hidden">'
-          + '<div style="width:' + pct + '%;height:100%;background:linear-gradient(90deg,#5B80FF,#E91E8C);border-radius:4px"></div>'
-          + '</div></div>';
-      }).join('');
-    }
-
     // Stat-pdfs
     set('stat-pdfs', totalPdfs);
     set('stat-pdfs-sub', 'sur ' + campaigns.length + ' campagne' + (campaigns.length > 1 ? 's' : ''));
-    loadTrackingStats(campaigns).catch(function(err) { console.error('loadTrackingStats:', err); });
 
   } catch(e) {
     console.error('Erreur chargement dashboard:', e);
@@ -7019,25 +7315,6 @@ async function loadDashboardData() {
 }
 
 // Statistiques de suivi (clics sur les liens PDF), agrégées sur les dernières campagnes
-async function loadTrackingStats(campaigns) {
-  const setT = (id, v) => { const el = document.getElementById(id); if (el) { el.textContent = v; el.style.opacity = '1'; } };
-  const recent = (campaigns || []).filter(c => (c.processed || 0) > 0).slice(0, 10);
-  if (!recent.length) { setT('stat-clicks', '—'); setT('stat-opened', '0'); setT('stat-best-camp', '—'); setT('stat-best-pct', 'aucune donnée'); return; }
-  const settled = await Promise.allSettled(recent.map(c => apiCall('GET', '/v/stats/' + c.id, null, true).then(st => ({ c: c, st: st }))));
-  let sent = 0, unique = 0, best = null;
-  settled.forEach(r => {
-    if (r.status !== 'fulfilled') return;
-    const st = r.value.st, c = r.value.c;
-    sent += st.total_sent || 0;
-    unique += st.unique_clicks || 0;
-    if ((st.total_sent || 0) > 0 && (!best || st.click_rate > best.rate)) best = { name: c.name, rate: st.click_rate };
-  });
-  setT('stat-clicks', sent ? (Math.round(unique / sent * 1000) / 10) + ' %' : '—');
-  setT('stat-opened', unique);
-  setT('stat-best-camp', best ? (best.name || 'Campagne') : '—');
-  setT('stat-best-pct', best ? best.rate + ' % de clics' : 'aucune donnée');
-}
-
 // ---- SAVE SETTINGS ---------------------
 async function saveSettings(btn) {
   if (!authToken) return;
