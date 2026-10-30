@@ -5755,8 +5755,8 @@ function autoDetectMapping(headers) {
     "Description de l'entreprise": ['descriptionentreprise', 'companydescription', 'descriptiondelentreprise'],
     'Email': ['email', 'mail', 'courriel'],
     'LinkedIn': ['linkedin', 'profileurl', 'profilurl'],
-    'Site web entreprise': ['siteweb', 'website', 'domain', 'domaine', 'companyurl', 'url'],
-    'Téléphone': ['telephone', 'phone', 'mobile', 'tel'],
+    'Site web entreprise': ['siteweb', 'website', 'domain', 'domaine', 'companyurl'],
+    'Téléphone': ['telephone', 'phone', 'mobile', 'portable'],
     'A commencé le': ['commencele', 'startdate', 'startedon', 'depuis'],
   };
   for (const field of LP_FIELDS) {
@@ -5766,6 +5766,7 @@ function autoDetectMapping(headers) {
       // évite les faux positifs : "Nom" ne doit pas capter "Nom de l'entreprise", "Email" pas "Email status"
       && !(field.key === 'Nom' && /entreprise|company|societe/.test(nh))
       && !(field.key === 'Email' && /status|statut|verif|valid/.test(nh))
+      && !(field.key === 'Entreprise' && /url|site|web|linkedin|domain|description|size|taille|employee|effectif|specialit/.test(nh))
       && !(field.key === 'Site web entreprise' && /linkedin/.test(nh))
       && !(field.key === 'LinkedIn' && /corporate|company|entreprise|societe|specialit/.test(nh)));
     if (i !== -1) { mapping[field.key] = headers[i]; used.add(headers[i]); }
