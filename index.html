@@ -2771,6 +2771,19 @@ tr:hover td { background: var(--card-hover); }
 .lpx-ai-box { border: 1px solid var(--pink); background: linear-gradient(135deg, rgba(233,30,140,.08), rgba(91,128,255,.08)); border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; }
 .lpx-ai-title { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
 .lpx-ai-desc { font-size: 12px; color: var(--text2); line-height: 1.5; margin-bottom: 12px; }
+.lpx-tpl { background: var(--bg3); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 18px; }
+.lpx-tpl.on { border-color: var(--pink); }
+.lpx-tpl h4 { margin: 0 0 4px; font-size: 13px; font-weight: 700; }
+.lpx-tpl p { margin: 0 0 10px; font-size: 12px; color: var(--text2); line-height: 1.5; }
+.lpx-tpl-row { display: flex; gap: 8px; }
+.lpx-tpl-row input { flex: 1; }
+.lpx-tpl-sec { display: flex; gap: 10px; padding: 8px 0; border-top: 1px solid var(--border); font-size: 12px; }
+.lpx-tpl-sec b { display: block; font-size: 12.5px; }
+.lpx-tpl-sec span { color: var(--text2); }
+.lpx-tpl-n { flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--pink); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.lpx-tpl-tag { font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 100px; background: rgba(100,120,255,0.15); color: #8899FF; margin-left: 6px; }
+.lpx-tpl iframe { width: 100%; height: 520px; border: 1px solid var(--border); border-radius: 8px; background: #fff; margin-top: 10px; }
+.lpx-tpl-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
 .lpx-ai-form { display: flex; gap: 8px; }
 .lpx-ai-form input { flex: 1; }
 #cm-ai-result { margin-bottom: 20px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg3); padding: 14px; }
@@ -4947,7 +4960,12 @@ nav { background: rgba(27,36,85,.9) !important; }
 
           <!-- STEP 3 — BLOCS PDF -->
           <div id="cm-content3" style="display:none">
-            <div style="font-size:13px;font-weight:700;margin-bottom:16px">Composition du PDF <span id="cm-blocs-count" style="color:var(--text2);font-weight:400;font-size:12px">— 5 blocs actifs</span></div>
+            <div class="lpx-tpl" id="cm-tpl">
+              <h4>Modèle sur mesure (IA)</h4>
+              <p>L'IA conçoit une seule fois la meilleure structure de document pour votre offre. Vous la validez, elle est enregistrée sur cette charte et ne bouge plus : seuls les textes s'adaptent à chaque prospect.</p>
+              <div id="cm-tpl-body"></div>
+            </div>
+            <div id="cm-blocs-head" style="font-size:13px;font-weight:700;margin-bottom:16px">Composition du PDF <span id="cm-blocs-count" style="color:var(--text2);font-weight:400;font-size:12px">— 5 blocs actifs</span></div>
             <div style="display:flex;flex-direction:column;gap:8px" id="cm-blocs-list">
               <div class="cm-bloc active locked" data-bloc="header" style="background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px">
                 <div style="flex:1"><div style="font-size:13px;font-weight:700">En-tête + logo</div><div style="font-size:11px;color:var(--text2)">Logo, nom, bandeau couleur</div></div>
@@ -7786,7 +7804,7 @@ function cmAiApply() {
 
 // ── Ouvrir / fermer ──
 function openNewCharte() {
-  cmStep = 1; cmEditId = null; cmLogoBase64 = null; cmAiBlocs = null; cmAiReset();
+  cmStep = 1; cmEditId = null; cmLogoBase64 = null; cmAiBlocs = null; cmAiReset(); cmTplReset(null);
   cmColor1 = '#1B2D6B'; cmColor2 = '#E91E8C'; cmSecteur = 'prospection';
   document.getElementById('charte-modal-title').textContent = 'Nouvelle charte';
   document.getElementById('cm-name').value = '';
@@ -7801,7 +7819,7 @@ function openNewCharte() {
 }
 
 function openEditCharte(id, data) {
-  cmEditId = id; cmStep = 1; cmAiBlocs = null; cmAiReset();
+  cmEditId = id; cmStep = 1; cmAiBlocs = null; cmAiReset(); cmTplReset(data.custom_template);
   cmColor1 = data.color_primary || '#1B2D6B';
   cmColor2 = data.color_accent  || '#E91E8C';
   cmSecteur = data.sector || 'prospection';
@@ -8103,6 +8121,85 @@ function createAddCharteCard() {
   return div;
 }
 
+
+// ── Modèle sur mesure (IA) ─────────────────────────────────────────────────────────────
+let cmTemplate = null;      // modèle validé (enregistré sur la charte)
+let cmTplDraft = null;      // proposition en cours {template, pdf_base64}
+let cmTplBusy = null;       // texte d'avancement pendant la conception
+let cmTplErr = '';
+let cmTplClear = false;
+let cmTplBlob = null;
+const CM_LVL = { sector: 'commun à votre secteur', company: 'propre à l’entreprise', contact: 'propre au contact' };
+const CM_TYPE = { narrative: 'Texte', facts: '3 constats', metrics: '4 chiffres clés', steps: 'Étapes', list: 'Liste', callout: 'Encadré', mail: 'Exemple de mail' };
+
+function cmTplEsc(v) { return String(v == null ? '' : v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function cmTplPdfUrl(b64) {
+  if (cmTplBlob) { try { URL.revokeObjectURL(cmTplBlob); } catch (e) {} }
+  const bin = atob(b64), a = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i);
+  cmTplBlob = URL.createObjectURL(new Blob([a], { type: 'application/pdf' }));
+  return cmTplBlob;
+}
+function cmTplSections(t) {
+  return (t.sections || []).map((s, i) => '<div class="lpx-tpl-sec"><div class="lpx-tpl-n">' + (i + 1) + '</div><div><b>' + cmTplEsc(s.title || 'Exemple de mail')
+    + '<span class="lpx-tpl-tag">' + cmTplEsc(CM_TYPE[s.type] || s.type) + '</span></b><span>' + cmTplEsc(s.why || s.intent || '') + ' · ' + cmTplEsc(CM_LVL[s.level] || '') + '</span></div></div>').join('');
+}
+function cmTplRender() {
+  const box = document.getElementById('cm-tpl-body'); if (!box) return;
+  const wrap = document.getElementById('cm-tpl');
+  const active = !!cmTemplate && !cmTplClear;
+  if (wrap) wrap.classList.toggle('on', active);
+  ['cm-blocs-head', 'cm-blocs-list'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = active ? 'none' : ''; });
+  let h = '';
+  if (cmTplBusy) {
+    h = '<div style="font-size:12.5px;color:var(--text2)">⏳ ' + cmTplEsc(cmTplBusy) + '… cela prend environ une minute.</div>';
+  } else if (cmTplDraft) {
+    h = '<div style="font-size:12.5px;margin-bottom:6px"><b>Proposition</b> : ' + cmTplEsc(cmTplDraft.template.summary || '') + '</div>' + cmTplSections(cmTplDraft.template)
+      + '<iframe title="Aperçu" src="' + cmTplPdfUrl(cmTplDraft.pdf_base64) + '"></iframe>'
+      + '<div style="font-size:11px;color:var(--text2);margin-top:6px">Aperçu sur un prospect fictif. Les textes seront réécrits pour chaque vrai prospect, la structure restera identique.</div>'
+      + '<div class="lpx-tpl-row" style="margin-top:12px"><input class="form-input" id="cm-tpl-fb" placeholder="Un changement à demander ? (ex. ajouter un exemple de mail, moins de chiffres)" onkeydown="if(event.key===\'Enter\')cmTplDesign(true)"><button class="btn btn-secondary" onclick="cmTplDesign(true)">Modifier</button></div>'
+      + '<div class="lpx-tpl-actions"><button class="btn btn-primary" onclick="cmTplValidate()">✓ Valider ce modèle</button><button class="btn btn-secondary" onclick="cmTplDiscard()">Abandonner</button></div>';
+  } else if (active) {
+    h = '<div style="font-size:12.5px;margin-bottom:6px"><b>Modèle validé et enregistré.</b> ' + cmTplEsc(cmTemplate.summary || '') + '</div>' + cmTplSections(cmTemplate)
+      + '<div class="lpx-tpl-actions"><button class="btn btn-secondary" onclick="cmTplDesign(false)">Concevoir un autre modèle</button><button class="btn btn-secondary" onclick="cmTplRemove()">Revenir aux blocs classiques</button></div>';
+  } else {
+    h = '<div class="lpx-tpl-row"><input class="form-input" id="cm-tpl-guid" placeholder="Une idée en tête ? (facultatif)"><button class="btn btn-primary" onclick="cmTplDesign(false)">Concevoir avec l’IA</button></div>';
+  }
+  if (cmTplErr) h += '<div style="color:#EF4444;font-size:12px;margin-top:8px">' + cmTplEsc(cmTplErr) + '</div>';
+  box.innerHTML = h;
+}
+async function cmTplDesign(isFeedback) {
+  if (cmTplBusy) return;
+  const g = document.getElementById('cm-tpl-guid'), f = document.getElementById('cm-tpl-fb');
+  const body = {
+    name: document.getElementById('cm-name').value.trim(), website: document.getElementById('cm-website').value.trim(),
+    offer_description: document.getElementById('cm-desc').value.trim(), calendly_url: document.getElementById('cm-calendly').value.trim(),
+    color_primary: cmColor1, color_accent: cmColor2, sector: cmSecteur, writing_style: cmCurrentStyle, emoji_level: cmCurrentEmoji,
+    logo_base64: cmLogoBase64 || null, guidance: g ? g.value.trim() : '', feedback: isFeedback && f ? f.value.trim() : '',
+    previous_template: isFeedback && cmTplDraft ? cmTplDraft.template : (cmTemplate && !cmTplClear ? cmTemplate : null),
+  };
+  if (!body.offer_description && !body.website) { cmTplErr = 'Renseignez la description de votre offre ou votre site web (étape 1) pour que l’IA puisse concevoir le modèle.'; cmTplRender(); return; }
+  cmTplErr = ''; cmTplBusy = 'Démarrage'; cmTplRender();
+  try {
+    const { job_id } = await apiCall('POST', '/api/chartes/template/design', body, true);
+    for (let i = 0; i < 100; i++) {
+      await new Promise(r => setTimeout(r, 2500));
+      const st = await apiCall('GET', '/api/chartes/template/design/' + job_id, null, true);
+      if (st.status === 'running') { cmTplBusy = st.step || 'Conception'; cmTplRender(); continue; }
+      if (st.status === 'done') { cmTplDraft = { template: st.template, pdf_base64: st.pdf_base64 }; cmTplBusy = null; cmTplRender(); return; }
+      throw new Error(st.error || 'La conception a échoué');
+    }
+    throw new Error('Délai dépassé, réessayez');
+  } catch (e) { cmTplErr = e.message || 'La conception a échoué'; cmTplBusy = null; cmTplRender(); }
+}
+function cmTplValidate() { cmTemplate = cmTplDraft.template; cmTplDraft = null; cmTplClear = false; cmTplErr = ''; cmTplRender(); showToast('Modèle validé, il sera enregistré avec la charte'); }
+function cmTplDiscard() { cmTplDraft = null; cmTplErr = ''; cmTplRender(); }
+async function cmTplRemove() {
+  if (!(await lpDialog({ title: 'Revenir aux blocs classiques ?', text: 'Le modèle sur mesure sera retiré de cette charte à l’enregistrement.', confirmText: 'Retirer', danger: true }))) return;
+  cmTemplate = null; cmTplClear = true; cmTplRender();
+}
+function cmTplReset(tpl) { cmTemplate = tpl || null; cmTplDraft = null; cmTplBusy = null; cmTplErr = ''; cmTplClear = false; cmTplRender(); }
+
 async function cmSaveCharte() {
   if (!authToken) return;
   const btn = document.getElementById('cm-btn-next');
@@ -8120,6 +8217,8 @@ async function cmSaveCharte() {
     emoji_level:       cmCurrentEmoji,
     logo_base64:       cmLogoBase64 || null,
   };
+  if (cmTemplate && !cmTplClear) payload.custom_template = cmTemplate;
+  else if (cmEditId && cmTplClear) payload.custom_template_clear = true;
   try {
     setLoading(btn, true);
     if (cmEditId) {
