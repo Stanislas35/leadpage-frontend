@@ -2739,6 +2739,13 @@ tr:hover td { background: var(--card-hover); }
 
 
 
+
+.lpx-estimate { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px; }
+.lpx-est-row { display: flex; gap: 28px; flex-wrap: wrap; }
+.lpx-est-row div { display: flex; flex-direction: column; gap: 2px; }
+.lpx-est-row b { font-size: 18px; font-weight: 800; }
+.lpx-est-row span { font-size: 11px; color: var(--text3); max-width: 210px; }
+.lpx-est-test { display: flex; align-items: center; gap: 14px; justify-content: space-between; flex-wrap: wrap; margin-top: 14px; background: var(--bg3); border-radius: 10px; padding: 10px 14px; font-size: 12px; color: var(--text2); }
 /* ═══ CHARTE : proposition IA ═══ */
 .lpx-ai-box { border: 1px solid var(--pink); background: linear-gradient(135deg, rgba(233,30,140,.08), rgba(91,128,255,.08)); border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; }
 .lpx-ai-title { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
@@ -4569,6 +4576,7 @@ nav { background: rgba(27,36,85,.9) !important; }
             <span id="prev-total">0 contacts détectés</span>
             <span style="margin-left:auto" id="prev-charte"></span>
           </div>
+          <div class="lpx-estimate" id="prev-estimate"></div>
         </div>
 
         <!-- OPTIONS -->
@@ -6155,7 +6163,8 @@ async function startGeneration() {
   const btn = document.querySelector('[onclick="startGeneration()"]');
   if (btn && btn.dataset.loading) return;
 
-  const campaignName = (document.getElementById('campaign-name').value.trim()) || ('Campagne ' + new Date().toLocaleDateString('fr-FR'));
+  const testN = window.__lpTestN || 0; window.__lpTestN = 0;
+  const campaignName = (testN ? '[Test] ' : '') + ((document.getElementById('campaign-name').value.trim()) || ('Campagne ' + new Date().toLocaleDateString('fr-FR')));
 
   const pc = document.getElementById('progressCard');
   const rc = document.getElementById('resultsCard');
@@ -6221,7 +6230,8 @@ async function startGeneration() {
         const q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
 
         const out = [lpHeaders.concat(extraIdx.map(i => origHeaders[i])).map(q).join(',')];
-        for (let r = 1; r < rows.length; r++) {
+        const lastRow = testN ? Math.min(rows.length, testN + 1) : rows.length;
+        for (let r = 1; r < lastRow; r++) {
           const vals = rows[r];
           const mappedVals = lpHeaders.map(lp => {
             const srcCol = currentMapping[lp];
@@ -6238,6 +6248,14 @@ async function startGeneration() {
       }
     }
 
+    if (testN && fileToSend === selectedCsvFile) {
+      try {
+        const t = await readCsvText(selectedCsvFile);
+        const pr = parseCsvText(t).rows.slice(0, testN + 1);
+        const q2 = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+        fileToSend = new File([new Blob(['\ufeff' + pr.map(r => r.map(q2).join(',')).join('\n')], { type: 'text/csv;charset=utf-8' })], selectedCsvFile.name, { type: 'text/csv' });
+      } catch (e3) { console.warn('Test: découpe impossible', e3); }
+    }
     formData.append('file', fileToSend);
     formData.append('name', campaignName);
     const doPdf   = document.getElementById('chk-pdf')   ? (document.getElementById('chk-pdf').checked   ? '1' : '0') : '1';
@@ -6934,12 +6952,15 @@ function renderCampaignDetail() {
   const baseCols = ['Prénom', 'Nom', 'Entreprise', 'Titre', 'Email', "Secteurs d'activité", 'Lieu'];
   const cols = st.allCols ? st.colOrder : baseCols.filter(c => st.colOrder.includes(c));
   const btn = 'padding:7px 14px;font-size:12px';
+  const isErr = x => String(x.r.status || '').startsWith('error');
+  const nErr = st.rows.filter(isErr).length, nOk = st.rows.length - nErr;
   let html = '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px">'
     + '<div><button class="btn btn-ghost" style="' + btn + '" onclick="loadCampaigns()">← Campagnes</button>'
     + '<span style="font-size:18px;font-weight:800;margin-left:14px">' + escHtml(st.name) + '</span>'
-    + '<span style="font-size:12px;color:var(--text3);margin-left:10px">' + st.rows.length + ' document' + (st.rows.length > 1 ? 's' : '')
-    + (st.errors ? ' · <span style="color:#EF4444">' + st.errors + ' en erreur (remboursés)</span>' : '') + '</span></div>'
+    + '<span style="font-size:12px;color:var(--text3);margin-left:10px">' + nOk + ' document' + (nOk > 1 ? 's' : '')
+    + (nErr ? ' · <span style="color:#EF4444">' + nErr + ' en erreur (crédits remboursés)</span>' : '') + '</span></div>'
     + '<div style="display:flex;gap:8px;flex-wrap:wrap">'
+    + (nErr ? '<button class="btn lpx-danger" style="' + btn + '" id="cd-retry-btn" onclick="retryCampaignErrors()">↻ Relancer les ' + nErr + ' erreur' + (nErr > 1 ? 's' : '') + '</button>' : '')
     + '<button class="btn btn-ghost" style="' + btn + '" onclick="downloadCampaignCsv(\'' + st.id + '\')">⬇ CSV</button>'
     + '<button class="btn btn-primary" style="' + btn + '" id="cd-zip-btn" onclick="downloadAllPdfs()">⬇ Tous les PDF (zip)</button></div></div>'
     + '<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">'
@@ -6963,7 +6984,7 @@ function renderCampaignDetail() {
       + (hasPdf ? '<a class="pdf-link" href="' + escAttr(r.dropbox_url) + '" target="_blank" rel="noopener">Voir</a>'
         + ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px;margin-left:4px" onclick="downloadOnePdf(' + idx + ')">⬇ PDF</button>'
         + (r.tracking_url ? ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px" onclick="copyText(\'' + escAttr(r.tracking_url) + '\')">Copier le lien</button>' : '')
-        : '<span style="color:var(--text3)">—</span>')
+        : (isErr(x) ? '<span style="color:#EF4444;cursor:help" title="' + escAttr(String(r.status || '').replace(/^error:\s*/, '')) + '">Erreur</span>' : '<span style="color:var(--text3)">—</span>'))
       + ((r.mail1_corps || '').trim() ? ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px" onclick="cdShowMail(' + idx + ')">✉ Mail</button>' : '')
       + '</td></tr>';
   });
@@ -6973,6 +6994,21 @@ function renderCampaignDetail() {
     html += '<div style="text-align:center;margin-top:12px"><button class="btn btn-ghost" style="' + btn + '" onclick="cdState.limit+=200;renderCampaignDetail()">Afficher plus (' + (filtered.length - shown.length) + ' restants)</button></div>';
   }
   d.innerHTML = html;
+}
+
+async function retryCampaignErrors() {
+  const st = cdState;
+  const n = st.rows.filter(x => String(x.r.status || '').startsWith('error')).length;
+  if (!n) return;
+  const ok = await lpDialog({ title: 'Relancer ' + n + ' contact' + (n > 1 ? 's' : '') + ' en erreur ?',
+    text: 'Les contacts seront régénérés dans cette campagne. ' + n + ' crédit' + (n > 1 ? 's' : '') + ' seront débités (ils avaient été remboursés), et re-remboursés si un contact échoue encore.', confirmText: 'Relancer' });
+  if (!ok) return;
+  const b = document.getElementById('cd-retry-btn'); if (b) { b.disabled = true; b.textContent = 'Lancement…'; }
+  try {
+    await apiCall('POST', '/api/campaigns/' + st.id + '/retry-errors', {}, true);
+    showToast('Relance lancée : ' + n + ' contact' + (n > 1 ? 's' : ''));
+    loadCampaigns();
+  } catch (e) { showToast('Erreur : ' + e.message, '#EF4444'); if (b) { b.disabled = false; b.textContent = '↻ Relancer'; } }
 }
 
 function copyText(t) {
@@ -8224,6 +8260,25 @@ function validateGenOptions() {
   if (btn) btn.disabled = !valid;
 }
 
+function lpRenderEstimate(n) {
+  const box = document.getElementById('prev-estimate'); if (!box) return;
+  window.__lpTotal = n;
+  const doPdf = !document.getElementById('chk-pdf') || document.getElementById('chk-pdf').checked;
+  const doMail = document.getElementById('chk-mail') && document.getElementById('chk-mail').checked;
+  const mins = Math.max(1, Math.round((45 + n * (doPdf ? 1.8 : 0.9)) / 60));
+  const dur = mins >= 60 ? (Math.floor(mins / 60) + ' h ' + String(mins % 60).padStart(2, '0')) : (mins + ' min');
+  const left = (typeof freeCredits !== 'undefined') ? freeCredits : null;
+  const short = left !== null && n > left;
+  let h = '<div class="lpx-est-row"><div><b>' + n + ' crédit' + (n > 1 ? 's' : '') + '</b><span>1 par contact, remboursé si un contact échoue</span></div>'
+    + '<div><b>≈ ' + dur + '</b><span>durée estimée, vous pouvez quitter la page</span></div>'
+    + (left !== null ? '<div><b' + (short ? ' style="color:#EF4444"' : '') + '>' + left + '</b><span>crédits disponibles' + (short ? ' : insuffisant' : '') + '</span></div>' : '') + '</div>';
+  if (n > 3) h += '<div class="lpx-est-test"><span>Pas encore sûr du rendu ? Testez la charte sur les 3 premiers contacts avant de lancer le reste.</span>'
+    + '<button class="btn btn-ghost" onclick="startGenerationTest()">Tester sur 3 contacts (3 crédits)</button></div>';
+  box.innerHTML = h;
+}
+
+function startGenerationTest() { window.__lpTestN = 3; return startGeneration(); }
+
 function showPreviewBeforeGen(csvText, filename) {
   try {
     // Parser robuste — même logique que parseCsvRow
@@ -8270,12 +8325,15 @@ function showPreviewBeforeGen(csvText, filename) {
     var titre   = get('titre','title','poste','job title','job_title','headline');
     var email   = get('email','mail','e-mail');
     var total   = lines.length - 1;
+    window.__lpTotal = total;
     var el;
     el = document.getElementById('prev-name');    if (el) el.textContent = (prenom !== '—' ? prenom : '') + (nom !== '—' ? ' '+nom : '');
     el = document.getElementById('prev-company'); if (el) el.textContent = company;
     el = document.getElementById('prev-title');   if (el) el.textContent = titre.length > 40 ? titre.substring(0,40)+'…' : titre;
     el = document.getElementById('prev-email');   if (el) el.textContent = email;
+    try { const pr = parseCsvText(csvText).rows; if (pr && pr.length > 1) total = pr.length - 1; } catch (e2) {}
     el = document.getElementById('prev-total');   if (el) el.textContent = total + ' contact' + (total>1?'s':'') + ' détecté' + (total>1?'s':'');
+    lpRenderEstimate(total);
     var sel = document.getElementById('charte-selector');
     el = document.getElementById('prev-charte');
     if (el && sel) { var opt = sel.options[sel.selectedIndex]; el.textContent = opt ? ''+opt.text.replace('','') : ''; }
@@ -8284,6 +8342,7 @@ function showPreviewBeforeGen(csvText, filename) {
 }
 
 function validateGenOptions() {
+  if (window.__lpTotal) { try { lpRenderEstimate(window.__lpTotal); } catch (e) {} }
   var pdf  = document.getElementById('chk-pdf');
   var mail = document.getElementById('chk-mail');
   var err  = document.getElementById('gen-opt-error');
