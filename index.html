@@ -6530,7 +6530,7 @@ function lpDialog(opts) {
     ov.innerHTML = '<div class="lpx-dialog" role="dialog" aria-modal="true">'
       + '<h3>' + escHtml(opts.title || '') + '</h3>'
       + (opts.text ? '<p>' + opts.text + '</p>' : '')
-      + (hasInput ? '<input class="lpx-input" id="lpx-dlg-input" maxlength="60" value="' + escHtml(opts.input) + '" placeholder="' + escHtml(opts.placeholder || '') + '">' : '')
+      + (hasInput ? '<input class="lpx-input" id="lpx-dlg-input" maxlength="120" value="' + escHtml(opts.input) + '" placeholder="' + escHtml(opts.placeholder || '') + '">' : '')
       + (hasSelect ? '<div class="lpx-options" id="lpx-dlg-opts">' + opts.options.map(function(o, i) {
           return '<button type="button" class="lpx-opt' + (o.selected ? ' sel' : '') + '" data-v="' + escHtml(o.value) + '">' + escHtml(o.label) + '</button>';
         }).join('') + '</div>' : '')
@@ -6751,7 +6751,7 @@ function renderCampaignList() {
       + (f ? '<span class="lpx-tag folder" onclick="campState.folder=' + JSON.stringify(f).replace(/"/g, '&quot;') + ';renderCampaignList()" title="Ouvrir le dossier">' + escHtml(f) + '</span>' : '');
     html += '<div class="camp-card status-' + st[1] + (campState.sel[id] ? ' selected' : '') + (campState.menu === id ? ' menu-open' : '') + '" style="grid-template-columns:auto 1fr auto">'
       + '<input type="checkbox" class="lpx-check" ' + (campState.sel[id] ? 'checked' : '') + ' onchange="campToggleSel(\'' + id + '\', this.checked);this.closest(\'.camp-card\').classList.toggle(\'selected\', this.checked)" aria-label="Sélectionner">'
-      + '<div style="min-width:0"><div class="camp-card-title"><span class="lpx-name">' + (escHtml(camp.name) || 'Campagne sans nom') + '</span>'
+      + '<div style="min-width:0"><div class="camp-card-title"><span class="lpx-name" title="Double-clic pour renommer" ondblclick="campRename(\'' + id + '\')">' + (escHtml(camp.name) || 'Campagne sans nom') + '</span>'
       + '<span class="camp-badge camp-badge-' + st[1] + '"><span class="camp-badge-dot"></span>' + st[0] + '</span>' + tags + '</div>'
       + '<div class="camp-card-meta">' + meta + '</div>' + bar + '</div>'
       + '<div class="camp-actions" style="display:flex;gap:6px;align-items:center">' + acts + '</div></div>';
