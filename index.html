@@ -8139,6 +8139,7 @@ function closeCharteModal() {
 // ── Steps navigation ──
 function cmRenderStep(step) {
   cmStep = step;
+  try { cmMailVisibility(); } catch (e) {}
   [1,2,3].forEach(i => {
     const s = document.getElementById('cm-step' + i);
     const n = document.getElementById('cm-snum' + i);
@@ -8198,6 +8199,16 @@ function cmSelectSecteur(el) {
   if (info) info.innerHTML = 'ℹ️ ' + (CM_SECTEUR_INFO[cmSecteur] || '');
   cmRefreshBadges(cmSecteur);
   if (!cmEditId) cmApplySecteurBlocs(cmSecteur);
+  cmMailVisibility();
+}
+// L'exemple de mail n'a de sens que pour une agence de prospection BtoB : masqué pour les autres secteurs
+function cmMailVisibility() {
+  const row = document.querySelector('#cm-blocs-list .cm-bloc[data-bloc="mail"]');
+  if (!row) return;
+  const ok = cmSecteur === 'prospection';
+  row.style.display = ok ? '' : 'none';
+  if (!ok && row.classList.contains('active')) cmSetBlocState(row, false);
+  cmUpdateBlocsCount();
 }
 
 function cmApplySecteurBlocs(secteur) {
@@ -8494,7 +8505,7 @@ function cmTplReset(tpl) { cmTemplate = tpl || null; cmTplDraft = null; cmTplBus
 async function cmSaveCharte() {
   if (!authToken) return;
   const btn = document.getElementById('cm-btn-next');
-  const blocs = Array.from(document.querySelectorAll('#cm-blocs-list .cm-bloc.active')).map(el => el.dataset.bloc);
+  const blocs = Array.from(document.querySelectorAll('#cm-blocs-list .cm-bloc.active')).map(el => el.dataset.bloc).filter(b => b !== 'mail' || cmSecteur === 'prospection');
   const payload = {
     name:              document.getElementById('cm-name').value.trim(),
     website:           document.getElementById('cm-website').value.trim(),
