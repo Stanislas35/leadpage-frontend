@@ -2771,6 +2771,33 @@ tr:hover td { background: var(--card-hover); }
 .lpx-ai-box { border: 1px solid var(--pink); background: linear-gradient(135deg, rgba(233,30,140,.08), rgba(91,128,255,.08)); border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; }
 .lpx-ai-title { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
 .lpx-ai-desc { font-size: 12px; color: var(--text2); line-height: 1.5; margin-bottom: 12px; }
+.lpw-box { margin: 0 0 14px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg3); }
+.lpw-box label { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text3); margin-bottom: 6px; }
+.lpw-box select { width: 100%; background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 7px 8px; font-size: 12.5px; }
+.lpw-banner { margin: 0 0 18px; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); border-left: 3px solid var(--pink); background: var(--bg2); font-size: 12.5px; color: var(--text2); }
+.lpc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
+.lpc-card { background: var(--bg2); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px; }
+.lpc-card h3 { margin: 0 0 4px; font-size: 15px; font-weight: 700; }
+.lpc-stats { display: flex; gap: 14px; font-size: 12px; color: var(--text2); margin: 8px 0 12px; flex-wrap: wrap; }
+.lpc-stats b { color: var(--text); }
+.lpc-act { display: flex; gap: 6px; flex-wrap: wrap; }
+.lpc-link { margin-top: 10px; display: flex; gap: 6px; }
+.lpc-link input { flex: 1; font-size: 11px; }
+.lpt-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--border); font-size: 13px; flex-wrap: wrap; }
+.lpt-row .em { flex: 1; min-width: 160px; word-break: break-all; }
+.lpt-row select { background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 5px 8px; font-size: 12px; }
+.lpt-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px; background: rgba(100,120,255,.15); color: #8899FF; }
+.lpt-tag.pend { background: rgba(245,158,11,.15); color: #F59E0B; }
+.lpx-client-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px; background: rgba(233,30,140,.12); color: var(--pink); }
+#lp-public { background: var(--bg); }
+.lpp-wrap { max-width: 860px; margin: 0 auto; padding: 40px 20px 60px; }
+.lpp-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 22px 0; }
+.lpp-kpi { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.lpp-kpi b { display: block; font-size: 26px; font-weight: 800; }
+.lpp-kpi span { font-size: 12px; color: var(--text2); }
+.lpp-table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.lpp-table th, .lpp-table td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--border); }
+.lpp-table th { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--text3); }
 .lpx-tpl { background: var(--bg3); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 18px; }
 .lpx-tpl.on { border-color: var(--pink); }
 .lpx-tpl h4 { margin: 0 0 4px; font-size: 13px; font-weight: 700; }
@@ -4429,12 +4456,15 @@ nav { background: rgba(27,36,85,.9) !important; }
 <!-- ══════════════════════════════════════════
      SCREEN 4 — DASHBOARD
 ══════════════════════════════════════════ -->
+<div id="lp-public" class="screen"><div class="lpp-wrap" id="lpp-body"></div></div>
+
 <div id="dashboard" class="screen">
   <div class="dash-layout">
 
     <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="sidebar-section">
+        <div id="lp-ws" class="lpw-box" style="display:none"></div>
         <div class="sidebar-label">Navigation</div>
         <div class="sidebar-item active" onclick="showDashSection('generate', this, true)">
           <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span> Générer
@@ -4448,11 +4478,17 @@ nav { background: rgba(27,36,85,.9) !important; }
         <div class="sidebar-item" onclick="showDashSection('chartes', this, true)">
           <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.3-.5-.8-.5-1.2 0-1.1.9-2 2-2h2.3A3.7 3.7 0 0 0 21 11C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="14.5" cy="7" r="1"/></svg></span> Mes chartes
         </div>
+        <div class="sidebar-item" onclick="showDashSection('clients', this, true)">
+          <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span> Clients
+        </div>
       </div>
       <div class="sidebar-section">
         <div class="sidebar-label">Compte</div>
         <div class="sidebar-item" onclick="showDashSection('profile', this, true)">
           <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span> Mon profil
+        </div>
+        <div class="sidebar-item" onclick="showDashSection('team', this, true)">
+          <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.6a3.5 3.5 0 0 1 0 6.8M21.5 20a6.5 6.5 0 0 0-4-6"/></svg></span> Équipe
         </div>
         <div class="sidebar-item" onclick="showDashSection('abonnement', this, true)">
           <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span> Abonnement
@@ -4477,6 +4513,7 @@ nav { background: rgba(27,36,85,.9) !important; }
 
     <!-- MAIN -->
     <div class="dash-main">
+      <div id="lp-ws-banner" class="lpw-banner" style="display:none"></div>
 
       <!-- KPIs -->
       <div class="kpi-row fade-up" id="dash-kpi">
@@ -4760,6 +4797,7 @@ nav { background: rgba(27,36,85,.9) !important; }
           <select id="camp-status" class="lpx-select" onchange="campState.status=this.value;renderCampaignList()">
             <option value="">Tous les statuts</option><option value="done">Terminées</option><option value="processing">En cours</option><option value="error">En erreur</option>
           </select>
+          <select id="camp-client" class="lpx-select" onchange="campState.client=this.value;renderCampaignList()"><option value="">Tous les clients</option></select>
         </div>
         <div class="lpx-folders" id="camp-folders"></div>
         <div class="lpx-bulk" id="camp-bulk"></div>
@@ -4868,6 +4906,11 @@ nav { background: rgba(27,36,85,.9) !important; }
               <div class="form-group"><label class="form-label">Site web</label><input class="form-input" id="cm-website" placeholder="https://..." oninput="cmTryFetchColors(this.value)"></div>
             </div>
             <div class="form-group" style="margin-bottom:16px"><label class="form-label">Description de l'offre</label><textarea class="form-input" id="cm-desc" rows="3" placeholder="Décrivez l'offre en 3-5 phrases. L'IA s'en servira pour personnaliser chaque PDF..."></textarea></div>
+            <div class="form-group" style="margin-bottom:16px">
+              <label class="form-label">Client (optionnel)</label>
+              <select class="form-input" id="cm-client" style="font-size:13px"><option value="">Aucun client</option></select>
+              <div style="font-size:11px;color:var(--text3);margin-top:5px">Les campagnes lancées avec cette charte sont rattachées à ce client. Gérez vos clients dans l'onglet Clients.</div>
+            </div>
             <div class="form-group" style="margin-bottom:16px">
               <label class="form-label">Lien agenda (optionnel)</label>
               <input class="form-input" id="cm-calendly" placeholder="https://calendly.com/votre-lien ou cal.com/..." style="font-size:13px">
@@ -5091,6 +5134,19 @@ nav { background: rgba(27,36,85,.9) !important; }
     </div>
 
     <!-- PROFIL SECTION -->
+    <div id="section-clients" style="display:none">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:12px;flex-wrap:wrap">
+        <div><h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Clients</h1><p style="color:var(--text2);font-size:14px;margin-top:4px">Regroupez chartes et campagnes par client, et envoyez-lui un lien de suivi en lecture seule</p></div>
+        <button class="btn btn-primary" onclick="clNew()">+ Nouveau client</button>
+      </div>
+      <div id="cl-grid" class="lpc-grid"></div>
+    </div>
+
+    <div id="section-team" style="display:none">
+      <div style="margin-bottom:24px"><h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Équipe</h1><p style="color:var(--text2);font-size:14px;margin-top:4px">Invitez un associé ou un client sur votre espace, avec des droits limités</p></div>
+      <div id="tm-body"></div>
+    </div>
+
     <div id="section-profile" style="display:none">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:32px">
         <div><h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Mon profil client</h1><p style="color:var(--text2);font-size:14px;margin-top:4px">Informations utilisées dans tous vos PDFs</p></div>
@@ -6482,7 +6538,7 @@ async function startGeneration() {
 function showDashSection(section, el, pushState) {
   if (pushState === undefined) pushState = false;
   const generateIds = ['dash-kpi', 'dash-upload', 'dash-generate-header', 'progressCard', 'resultsCard'];
-  const sectionIds  = ['section-campaigns', 'section-stats', 'section-chartes', 'section-profile', 'section-abonnement', 'section-parametres'];
+  const sectionIds  = ['section-campaigns', 'section-stats', 'section-chartes', 'section-clients', 'section-team', 'section-profile', 'section-abonnement', 'section-parametres'];
 
   document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
   if (el) { el.classList.add('active'); }
@@ -6513,6 +6569,8 @@ function showDashSection(section, el, pushState) {
     if (section === 'abonnement') loadDashboardData();
     if (section === 'parametres') loadSettings();
     if (section === 'chartes') loadChartes();
+    if (section === 'clients') loadClients();
+    if (section === 'team') loadTeam();
   }
 
   if (pushState) {
@@ -6616,7 +6674,7 @@ function lpDialog(opts) {
 }
 
 // ── CAMPAGNES : liste, dossiers, recherche, sélection, suppression ────────────────────────
-let campState = { camps: [], folder: '*', q: '', status: '', sel: {}, menu: '' };
+let campState = { camps: [], folder: '*', q: '', status: '', sel: {}, menu: '', client: '' };
 
 function lpUserKey() { return (currentUser && (currentUser.email || currentUser.id)) || 'anon'; }
 function lpLocalGet(k, d) { try { const v = localStorage.getItem(k + '_' + lpUserKey()); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
@@ -6643,6 +6701,17 @@ async function campSetFolder(ids, folder) {
     else if (m[id]) { delete m[id]; lpLocalSet('lp_foldermap', m); }
   }
   if (local) showToast('Classement enregistré sur cet appareil', '#F59E0B');
+}
+
+async function campSetClient(id) {
+  await lpLoadClients();
+  const c = campState.camps.find(function(x) { return x.id === id; }); if (!c) return;
+  if (!lpClients.length) { showToast('Créez d\u2019abord un client dans l\u2019onglet Clients', '#F59E0B'); return; }
+  const opts = [{ value: '', label: 'Aucun client', selected: !c.client_id }].concat(lpClients.map(function(x) { return { value: x.id, label: x.name, selected: x.id === c.client_id }; }));
+  const v = await lpDialog({ title: 'Rattacher la campagne à un client', options: opts, confirmText: 'Enregistrer' });
+  if (v === null || v === undefined) return;
+  try { await apiCall('PATCH', '/api/campaigns/' + id, { client_id: v }, true); c.client_id = v || null; renderCampaignList(); showToast(v ? 'Rattachée à « ' + lpClientName(v) + ' »' : 'Détachée du client'); }
+  catch (e) { showToast(e.message, '#EF4444'); }
 }
 
 async function campNewFolder(moveIds) {
@@ -6720,6 +6789,7 @@ function campFiltered() {
     if (campState.folder === '' && f) return false;
     if (campState.folder !== '*' && campState.folder !== '' && f !== campState.folder) return false;
     if (campState.status && c.status !== campState.status) return false;
+    if (campState.client === '__none__' ? !!c.client_id : (campState.client && c.client_id !== campState.client)) return false;
     if (q && !(c.name || '').toLowerCase().includes(q)) return false;
     return true;
   });
@@ -6746,6 +6816,11 @@ function renderCampaignList() {
   const campCount = document.getElementById('camp-count');
   if (campCount) { campCount.style.opacity = '1'; campCount.textContent = camps.length + ' campagne' + (camps.length > 1 ? 's' : ''); }
 
+  const csel = document.getElementById('camp-client');
+  if (csel) {
+    csel.innerHTML = '<option value="">Tous les clients</option>' + (lpClients || []).map(function(c) { return '<option value="' + escHtml(c.id) + '">' + escHtml(c.name) + '</option>'; }).join('') + '<option value="__none__">Sans client</option>';
+    csel.value = campState.client || '';
+  }
   // Dossiers (puces)
   const names = campFolderNames();
   const cnt = function(f) { return camps.filter(function(c) { return campFolderOf(c) === f; }).length; };
@@ -6778,7 +6853,7 @@ function renderCampaignList() {
   }
   if (!list.length) {
     grid.innerHTML = '<div class="empty-state"><h3>Aucun résultat</h3><p>Aucune campagne ne correspond à ces filtres.</p>'
-      + '<button class="btn btn-ghost" onclick="campState.q=\'\';campState.status=\'\';campState.folder=\'*\';document.getElementById(\'camp-search\').value=\'\';document.getElementById(\'camp-status\').value=\'\';renderCampaignList()">Réinitialiser</button></div>';
+      + '<button class="btn btn-ghost" onclick="campState.q=\'\';campState.status=\'\';campState.client=\'\';campState.folder=\'*\';document.getElementById(\'camp-search\').value=\'\';document.getElementById(\'camp-status\').value=\'\';renderCampaignList()">Réinitialiser</button></div>';
     return;
   }
 
@@ -6798,6 +6873,7 @@ function renderCampaignList() {
       + (campState.menu === id ? '<div class="lpx-menu" onclick="event.stopPropagation()">'
         + '<button onclick="campState.menu=\'\';campRename(\'' + id + '\')">Renommer</button>'
         + '<button onclick="campState.menu=\'\';campMove([\'' + id + '\'])">Déplacer vers un dossier</button>'
+        + '<button onclick="campState.menu=\'\';campSetClient(\'' + id + '\')">Rattacher à un client</button>'
         + '<button class="danger" onclick="campState.menu=\'\';campDelete([\'' + id + '\'])">Supprimer</button></div>' : '')
       + '</div>';
     let meta = '<div class="camp-meta-item"><strong>' + date + '</strong></div><div class="camp-meta-item"><strong>' + total + '</strong> contacts</div>';
@@ -6805,7 +6881,7 @@ function renderCampaignList() {
     if (camp.status === 'done') meta += '<div class="camp-meta-item"><strong>' + dn + '</strong> générés</div>';
     if (camp.error_rows > 0) meta += '<div class="camp-meta-item" style="color:#EF4444">⚠ <strong>' + camp.error_rows + '</strong> erreurs</div>';
     const bar = camp.status === 'processing' ? '<div style="margin-top:10px;height:3px;background:var(--bg4);border-radius:3px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,var(--blue-light),var(--pink));transition:width .5s"></div></div>' : '';
-    const tags = (camp.generate_pdf !== false ? '<span class="lpx-tag">PDF</span>' : '') + (camp.generate_mail1 ? '<span class="lpx-tag">Mail</span>' : '')
+    const tags = (camp.client_id && lpClientName(camp.client_id) ? '<span class="lpx-client-tag">' + escHtml(lpClientName(camp.client_id)) + '</span>' : '') + (camp.generate_pdf !== false ? '<span class="lpx-tag">PDF</span>' : '') + (camp.generate_mail1 ? '<span class="lpx-tag">Mail</span>' : '')
       + (f ? '<span class="lpx-tag folder" onclick="campState.folder=' + JSON.stringify(f).replace(/"/g, '&quot;') + ';renderCampaignList()" title="Ouvrir le dossier">' + escHtml(f) + '</span>' : '');
     html += '<div class="camp-card status-' + st[1] + (campState.sel[id] ? ' selected' : '') + (campState.menu === id ? ' menu-open' : '') + '" style="grid-template-columns:auto 1fr auto;cursor:pointer" onclick="campCardClick(event, \'' + id + '\')">'
       + '<input type="checkbox" class="lpx-check" ' + (campState.sel[id] ? 'checked' : '') + ' onchange="campToggleSel(\'' + id + '\', this.checked);this.closest(\'.camp-card\').classList.toggle(\'selected\', this.checked)" aria-label="Sélectionner">'
@@ -7227,9 +7303,11 @@ function showServerWaking(on) {
   document.body.appendChild(el);
 }
 
+function lpWsGet() { try { return localStorage.getItem('lp_ws') || ''; } catch (e) { return ''; } }
 async function apiCall(method, path, body = null, auth = false) {
   const headers = { 'Content-Type': 'application/json' };
   if (auth && authToken) headers['Authorization'] = 'Bearer ' + authToken;
+  if (auth && authToken) { const w = lpWsGet(); if (w) headers['X-Workspace'] = w; }
   const opts = { method, headers };
   if (body) opts.body = JSON.stringify(body);
   // Les lectures sont rejouées automatiquement (le serveur gratuit peut mettre ~1 min à se réveiller)
@@ -7318,6 +7396,7 @@ async function handleLogin(btn) {
     updateNavForAuth();
     loadDashboardData();
     loadCharteSelector();
+    lpLoadWorkspaces(); lpLoadClients(); lpInviteProcess();
   } catch(e) {
     errEl.textContent = e.message;
     errEl.style.display = 'block';
@@ -7373,12 +7452,195 @@ async function handleRegister(btn) {
 function handleLogout() {
   authToken = null;
   currentUser = null;
+  try { localStorage.removeItem('lp_ws'); } catch (e) {}
   localStorage.removeItem('lp_token');
   localStorage.removeItem('lp_user');
   // Ne pas effacer lp_email/lp_remember → préservé pour reconnexion rapide
   updateNavForAuth();
   showScreen('landing');
   showToast('Deconnecte');
+}
+
+
+// ── Espaces de travail, clients, équipe ─────────────────────────────────────────────────
+let lpClients = [];
+let lpWsInfo = { workspaces: [], mine: [] };
+
+function lpCopy(txt, msg) {
+  const done = () => showToast(msg || 'Copié');
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, () => { prompt('Copiez ce lien :', txt); });
+  else prompt('Copiez ce lien :', txt);
+}
+function lpBaseUrl() { return location.origin + location.pathname; }
+function lpClientName(id) { const c = lpClients.find(x => x.id === id); return c ? c.name : ''; }
+
+async function lpLoadWorkspaces() {
+  if (!authToken) return;
+  const box = document.getElementById('lp-ws'), banner = document.getElementById('lp-ws-banner');
+  try {
+    const saved = lpWsGet();
+    // l'identité réelle est toujours utilisée ici (route équipe)
+    const t = await apiCall('GET', '/api/team/', null, true);
+    lpWsInfo = { workspaces: t.workspaces || [], mine: t.members || [] };
+    if (saved && !lpWsInfo.workspaces.some(w => w.owner_id === saved)) { try { localStorage.removeItem('lp_ws'); } catch (e) {} lpWsReload(); return; }
+  } catch (e) { return; }
+  if (!box) return;
+  const cur = lpWsGet();
+  if (!lpWsInfo.workspaces.length) { box.style.display = 'none'; if (banner) banner.style.display = 'none'; return; }
+  box.style.display = '';
+  box.innerHTML = '<label for="lp-ws-sel">Espace de travail</label><select id="lp-ws-sel" onchange="lpWsSwitch(this.value)"><option value="">Mon espace</option>'
+    + lpWsInfo.workspaces.map(w => '<option value="' + escHtml(w.owner_id) + '"' + (w.owner_id === cur ? ' selected' : '') + '>' + escHtml(w.name) + '</option>').join('') + '</select>';
+  const w = lpWsInfo.workspaces.find(x => x.owner_id === cur);
+  if (banner) {
+    if (w) { banner.style.display = ''; banner.innerHTML = 'Vous travaillez dans l’espace <b>' + escHtml(w.name) + '</b> · ' + (w.role === 'viewer' ? 'accès en lecture seule' : 'accès éditeur') + '. Les crédits et la facturation sont ceux du propriétaire.'; }
+    else banner.style.display = 'none';
+  }
+}
+function lpWsSwitch(v) { try { if (v) localStorage.setItem('lp_ws', v); else localStorage.removeItem('lp_ws'); } catch (e) {} lpWsReload(); }
+function lpWsReload() { try { location.hash = '#dashboard/' + (location.hash.split('/')[1] || 'generate'); } catch (e) {} location.reload(); }
+
+// Clients
+async function lpLoadClients() {
+  try { lpClients = await apiCall('GET', '/api/clients/', null, true); } catch (e) { lpClients = lpClients || []; }
+  const sel = document.getElementById('cm-client');
+  if (sel) { const v = sel.value; sel.innerHTML = '<option value="">Aucun client</option>' + lpClients.map(c => '<option value="' + escHtml(c.id) + '">' + escHtml(c.name) + '</option>').join(''); sel.value = v; }
+  return lpClients;
+}
+async function loadClients() {
+  const grid = document.getElementById('cl-grid'); if (!grid) return;
+  grid.innerHTML = '<div style="color:var(--text3);padding:20px">Chargement…</div>';
+  await lpLoadClients();
+  renderClients();
+}
+function renderClients() {
+  const grid = document.getElementById('cl-grid'); if (!grid) return;
+  if (!lpClients.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;border:2px dashed var(--border);border-radius:14px;padding:36px;text-align:center;color:var(--text2)"><div style="font-weight:700;margin-bottom:6px">Aucun client pour l’instant</div><div style="font-size:13px;margin-bottom:14px">Créez un client, rattachez-lui une charte : ses campagnes s’y regroupent automatiquement.</div><button class="btn btn-primary" onclick="clNew()">+ Nouveau client</button></div>';
+    return;
+  }
+  grid.innerHTML = lpClients.map(c => {
+    const link = c.share_token ? lpBaseUrl() + '#suivi/' + c.share_token : '';
+    return '<div class="lpc-card"><h3>' + escHtml(c.name) + '</h3>'
+      + '<div class="lpc-stats"><span><b>' + (c.campaigns || 0) + '</b> campagne' + (c.campaigns > 1 ? 's' : '') + '</span><span><b>' + (c.pdfs || 0) + '</b> PDF</span><span><b>' + (c.chartes || 0) + '</b> charte' + (c.chartes > 1 ? 's' : '') + '</span></div>'
+      + '<div class="lpc-act"><button class="btn btn-ghost lpx-sm" onclick="clOpenCampaigns(\'' + c.id + '\')">Voir les campagnes</button>'
+      + '<button class="btn btn-ghost lpx-sm" onclick="clShare(\'' + c.id + '\')">' + (link ? 'Renouveler le lien' : 'Lien de suivi') + '</button>'
+      + '<button class="btn btn-ghost lpx-sm" onclick="clRename(\'' + c.id + '\')">Renommer</button>'
+      + '<button class="btn btn-ghost lpx-sm" onclick="clDelete(\'' + c.id + '\')">Supprimer</button></div>'
+      + (link ? '<div class="lpc-link"><input class="form-input" readonly value="' + escHtml(link) + '" onclick="this.select()"><button class="btn btn-primary lpx-sm" onclick="lpCopy(\'' + escHtml(link) + '\',\'Lien copié\')">Copier</button><button class="btn btn-ghost lpx-sm" onclick="clRevoke(\'' + c.id + '\')">Révoquer</button></div>' : '')
+      + '</div>';
+  }).join('');
+}
+async function clNew() {
+  const n = await lpDialog({ title: 'Nouveau client', input: '', placeholder: 'Ex. Wakam', confirmText: 'Créer' });
+  if (!n) return;
+  try { await apiCall('POST', '/api/clients/', { name: n }, true); showToast('Client créé'); loadClients(); } catch (e) { showToast(e.message, '#EF4444'); }
+}
+async function clRename(id) {
+  const c = lpClients.find(x => x.id === id); if (!c) return;
+  const n = await lpDialog({ title: 'Renommer le client', input: c.name, confirmText: 'Renommer' });
+  if (!n || n === c.name) return;
+  try { await apiCall('PATCH', '/api/clients/' + id, { name: n }, true); loadClients(); } catch (e) { showToast(e.message, '#EF4444'); }
+}
+async function clDelete(id) {
+  const c = lpClients.find(x => x.id === id); if (!c) return;
+  const ok = await lpDialog({ title: 'Supprimer le client « ' + c.name + ' » ?', text: 'Ses chartes et campagnes ne sont pas supprimées : elles repassent « sans client ». Le lien de suivi cesse de fonctionner.', confirmText: 'Supprimer', danger: true });
+  if (!ok) return;
+  try { await apiCall('DELETE', '/api/clients/' + id, null, true); showToast('Client supprimé'); loadClients(); } catch (e) { showToast(e.message, '#EF4444'); }
+}
+async function clShare(id) {
+  const c = lpClients.find(x => x.id === id);
+  if (c && c.share_token) {
+    const ok = await lpDialog({ title: 'Renouveler le lien ?', text: 'L’ancien lien cessera de fonctionner immédiatement.', confirmText: 'Renouveler' });
+    if (!ok) return;
+  }
+  try { await apiCall('POST', '/api/clients/' + id + '/share', {}, true); await loadClients(); showToast('Lien de suivi créé'); } catch (e) { showToast(e.message, '#EF4444'); }
+}
+async function clRevoke(id) {
+  const ok = await lpDialog({ title: 'Révoquer le lien de suivi ?', text: 'Le client ne pourra plus consulter la page.', confirmText: 'Révoquer', danger: true });
+  if (!ok) return;
+  try { await apiCall('DELETE', '/api/clients/' + id + '/share', null, true); loadClients(); } catch (e) { showToast(e.message, '#EF4444'); }
+}
+function clOpenCampaigns(id) { campState.client = id; showDashSection('campaigns', null, true); }
+
+// Équipe
+async function loadTeam() {
+  const box = document.getElementById('tm-body'); if (!box) return;
+  box.innerHTML = '<div style="color:var(--text3)">Chargement…</div>';
+  let t;
+  try { t = await apiCall('GET', '/api/team/', null, true); } catch (e) { box.innerHTML = '<div style="color:#EF4444">' + escHtml(e.message) + '</div>'; return; }
+  const inWs = !!lpWsGet();
+  const roleLbl = { editor: 'Éditeur', viewer: 'Lecteur' };
+  let h = '';
+  if ((t.workspaces || []).length) {
+    h += '<div class="lpx-tpl" style="margin-bottom:18px"><h4>Espaces auxquels vous avez accès</h4>' + t.workspaces.map(w =>
+      '<div class="lpt-row"><span class="em"><b>' + escHtml(w.name) + '</b></span><span class="lpt-tag">' + (roleLbl[w.role] || w.role) + '</span><button class="btn btn-ghost lpx-sm" onclick="lpWsSwitch(\'' + w.owner_id + '\')">Ouvrir</button></div>').join('') + '</div>';
+  }
+  if (inWs) { box.innerHTML = h + '<div style="color:var(--text2);font-size:13px">La gestion de l’équipe est réservée au propriétaire. Repassez sur « Mon espace » pour inviter des membres.</div>'; return; }
+  h += '<div class="lpx-tpl"><h4>Inviter quelqu’un</h4><p>La personne crée un compte (ou se connecte) avec cette adresse email, puis ouvre le lien d’invitation. Éditeur : crée et modifie chartes, clients et campagnes. Lecteur : consultation uniquement. Les crédits sont ceux de votre compte.</p>'
+    + '<div class="lpx-tpl-row"><input class="form-input" id="tm-email" type="email" placeholder="email@exemple.fr" onkeydown="if(event.key===\'Enter\')tmInvite()"><select id="tm-role" class="form-input" style="max-width:150px"><option value="editor">Éditeur</option><option value="viewer">Lecteur</option></select><button class="btn btn-primary" onclick="tmInvite()">Inviter</button></div></div>';
+  h += '<div class="lpx-tpl"><h4>Membres et invitations</h4>' + ((t.members || []).length ? t.members.map(m => {
+    const link = m.token ? lpBaseUrl() + '#invite=' + m.token : '';
+    return '<div class="lpt-row"><span class="em">' + escHtml(m.email) + '</span>'
+      + '<span class="lpt-tag' + (m.status === 'pending' ? ' pend' : '') + '">' + (m.status === 'pending' ? 'Invitation en attente' : 'Actif') + '</span>'
+      + '<select onchange="tmRole(\'' + m.id + '\', this.value)"><option value="editor"' + (m.role === 'editor' ? ' selected' : '') + '>Éditeur</option><option value="viewer"' + (m.role === 'viewer' ? ' selected' : '') + '>Lecteur</option></select>'
+      + (link ? '<button class="btn btn-primary lpx-sm" onclick="lpCopy(\'' + escHtml(link) + '\',\'Lien d\\u2019invitation copié\')">Copier le lien</button>' : '')
+      + '<button class="btn btn-ghost lpx-sm" onclick="tmRemove(\'' + m.id + '\',\'' + escHtml(m.email).replace(/'/g, '') + '\')">' + (m.status === 'pending' ? 'Annuler' : 'Retirer') + '</button></div>';
+  }).join('') : '<p style="margin:0">Personne pour l’instant.</p>') + '</div>';
+  box.innerHTML = h;
+}
+async function tmInvite() {
+  const e = document.getElementById('tm-email'), r = document.getElementById('tm-role');
+  if (!e || !e.value.trim()) return;
+  try {
+    const res = await apiCall('POST', '/api/team/invite', { email: e.value.trim(), role: r.value }, true);
+    await loadTeam();
+    lpCopy(lpBaseUrl() + '#invite=' + res.token, 'Invitation créée, lien copié : envoyez-le à la personne');
+  } catch (er) { showToast(er.message, '#EF4444'); }
+}
+async function tmRole(id, role) { try { await apiCall('PATCH', '/api/team/' + id, { role }, true); showToast('Rôle mis à jour'); } catch (e) { showToast(e.message, '#EF4444'); loadTeam(); } }
+async function tmRemove(id, email) {
+  const ok = await lpDialog({ title: 'Retirer ' + email + ' ?', text: 'Cette personne perd immédiatement l’accès à votre espace.', confirmText: 'Retirer', danger: true });
+  if (!ok) return;
+  try { await apiCall('DELETE', '/api/team/' + id, null, true); loadTeam(); } catch (e) { showToast(e.message, '#EF4444'); }
+}
+
+// Invitation reçue (#invite=TOKEN)
+function lpInviteCapture() {
+  const m = location.hash.match(/#invite=([\w-]+)/);
+  if (m) { try { sessionStorage.setItem('lp_invite', m[1]); } catch (e) {} try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+}
+async function lpInviteProcess() {
+  let tok = ''; try { tok = sessionStorage.getItem('lp_invite') || ''; } catch (e) {}
+  if (!tok || !authToken) return false;
+  try { sessionStorage.removeItem('lp_invite'); } catch (e) {}
+  try {
+    const r = await apiCall('POST', '/api/team/accept', { token: tok }, true);
+    try { localStorage.setItem('lp_ws', r.owner_id); } catch (e) {}
+    showToast('Invitation acceptée, ouverture de l’espace…');
+    setTimeout(() => { location.hash = '#dashboard/generate'; location.reload(); }, 900);
+    return true;
+  } catch (e) { showToast(e.message, '#EF4444'); return false; }
+}
+
+// Page de suivi publique (#suivi/TOKEN), sans connexion
+async function lpRenderPublic(token) {
+  document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
+  const sc = document.getElementById('lp-public'); sc.classList.add('active');
+  const body = document.getElementById('lpp-body');
+  body.innerHTML = '<div style="color:var(--text2)">Chargement…</div>';
+  try {
+    const d = await apiCall('GET', '/api/public/client/' + encodeURIComponent(token));
+    const t = d.totals;
+    body.innerHTML = '<div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em">Suivi de campagnes' + (d.agency ? ' · ' + escHtml(d.agency) : '') + '</div>'
+      + '<h1 style="font-family:DM Sans,sans-serif;font-size:30px;font-weight:800;margin:6px 0 0">' + escHtml(d.client) + '</h1>'
+      + '<div class="lpp-kpis"><div class="lpp-kpi"><b>' + t.campaigns + '</b><span>campagne' + (t.campaigns > 1 ? 's' : '') + '</span></div><div class="lpp-kpi"><b>' + t.pdfs + '</b><span>documents personnalisés</span></div><div class="lpp-kpi"><b>' + t.opened + '</b><span>consultés</span></div><div class="lpp-kpi"><b>' + t.open_rate + ' %</b><span>taux de consultation</span></div></div>'
+      + (d.campaigns.length ? '<table class="lpp-table"><thead><tr><th>Campagne</th><th>Date</th><th>Documents</th><th>Consultés</th><th>Taux</th></tr></thead><tbody>'
+        + d.campaigns.map(c => '<tr><td>' + escHtml(c.name) + (c.status === 'processing' ? ' <span class="lpt-tag pend">en cours</span>' : '') + '</td><td>' + escHtml(c.date) + '</td><td>' + c.pdfs + '</td><td>' + c.opened + '</td><td>' + c.open_rate + ' %</td></tr>').join('') + '</tbody></table>'
+        : '<p style="color:var(--text2)">Aucune campagne pour le moment.</p>')
+      + '<p style="margin-top:22px;font-size:12px;color:var(--text3)">Page en lecture seule, mise à jour en direct. « Consulté » signifie que le prospect a ouvert son document.</p>';
+  } catch (e) {
+    body.innerHTML = '<h1 style="font-size:22px">Lien invalide ou révoqué</h1><p style="color:var(--text2)">Demandez un nouveau lien à votre contact.</p>';
+  }
 }
 
 // ---- AUTO LOGIN -------------------------
@@ -7826,6 +8088,7 @@ function openNewCharte() {
   document.getElementById('cm-website').value = '';
   document.getElementById('cm-desc').value = '';
   document.getElementById('cm-calendly').value = '';
+  lpLoadClients().then(() => { const cs = document.getElementById('cm-client'); if (cs) cs.value = ''; });
   document.getElementById('cm-logo-preview').innerHTML = '<div style="font-size:28px;margin-bottom:6px"></div><div style="font-size:12px;font-weight:700;margin-bottom:2px">Glissez votre logo</div><div style="font-size:11px;color:var(--text2)">PNG, SVG · Fond transparent</div>';
   document.getElementById('cm-logo-drop').style.borderStyle = 'dashed';
   cmApplyColors('#1B2D6B', '#E91E8C');
@@ -7845,6 +8108,7 @@ function openEditCharte(id, data) {
   document.getElementById('cm-website').value = data.website || '';
   document.getElementById('cm-desc').value    = data.offer_description || '';
   document.getElementById('cm-calendly').value = data.calendly_url || '';
+  lpLoadClients().then(() => { const cs = document.getElementById('cm-client'); if (cs) cs.value = data.client_id || ''; });
   cmApplyColors(cmColor1, cmColor2);
   // Recharger l'aperçu logo si présent
   if (data.logo_base64) {
@@ -8115,7 +8379,7 @@ function renderCartesGrid(chartes) {
       logoHtml +
       '<div style="height:4px;border-radius:2px;background:linear-gradient(90deg,' + (ch.color_primary||'#1B2D6B') + ',' + (ch.color_accent||'#E91E8C') + ');margin-bottom:10px"></div>' +
       '<div style="font-size:14px;font-weight:700;margin-bottom:3px">' + (ch.name||'Sans nom') + '</div>' +
-      '<div style="font-size:11px;color:var(--text2);margin-bottom:8px">' + (ch.sector||'Prospection') + ' · ' + (ch.blocs_count||5) + ' blocs</div>' +
+      '<div style="font-size:11px;color:var(--text2);margin-bottom:8px">' + (ch.sector||'Prospection') + ' · ' + (ch.blocs_count||5) + ' blocs' + (ch.client_id && lpClientName(ch.client_id) ? ' · <span class="lpx-client-tag">' + escHtml(lpClientName(ch.client_id)) + '</span>' : '') + (ch.custom_template ? ' · modèle sur mesure' : '') + '</div>' +
       '<div style="margin-bottom:12px">' + stylePill + emojiPill + '</div>' +
       '<div style="display:flex;gap:6px">' +
         '<button class="btn btn-ghost" style="font-size:11px;padding:4px 10px;flex:1" onclick="event.stopPropagation();loadAndEditCharte(&quot;' + editId + '&quot;)">Modifier</button>' +
@@ -8243,6 +8507,7 @@ async function cmSaveCharte() {
     writing_style:     cmCurrentStyle,
     emoji_level:       cmCurrentEmoji,
     logo_base64:       cmLogoBase64 || null,
+    client_id:         (document.getElementById('cm-client') || {}).value || '',
   };
   if (cmTemplate && !cmTplClear) payload.custom_template = cmTemplate;
   else if (cmEditId && cmTplClear) payload.custom_template_clear = true;
@@ -8323,6 +8588,9 @@ window.addEventListener('popstate', (e) => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
+  const pubM = location.hash.match(/^#suivi\/([\w-]+)/);
+  if (pubM) { lpRenderPublic(pubM[1]); return; }
+  lpInviteCapture();
   prefillLoginIfRemembered();
   updateNavForAuth();
   initLanding();
@@ -8347,6 +8615,7 @@ window.addEventListener('DOMContentLoaded', () => {
     showDashSection(section, null, false);
     loadDashboardData();
     loadCharteSelector();
+    lpLoadWorkspaces(); lpLoadClients(); lpInviteProcess();
 
     try { history.replaceState({ screen: 'dashboard', section: section }, '', '#dashboard/' + section); } catch(e) {}
   } else {
