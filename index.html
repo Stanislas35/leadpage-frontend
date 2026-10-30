@@ -5738,6 +5738,33 @@ function autoDetectMapping(headers) {
       if (i !== -1) { mapping[field.key] = headers[i]; used.add(headers[i]); break; }
     }
   }
+  // Passe 3 : correspondance approximative (l'en-tête contient un mot-clé du champ), colonnes encore libres seulement
+  const FUZZY = {
+    'Prénom': ['prenom', 'firstname', 'givenname'],
+    'Nom': ['lastname', 'surname', 'familyname', 'nomdefamille'],
+    'Entreprise': ['entreprise', 'company', 'societe', 'organisation', 'organization', 'employer'],
+    'Titre': ['poste', 'jobtitle', 'title', 'fonction', 'position', 'headline'],
+    "Secteurs d'activité": ['secteur', 'industry', 'sector', 'industrie'],
+    "Taille de l'entreprise": ['taille', 'effectif', 'employee', 'headcount', 'companysize'],
+    'Lieu': ['lieu', 'ville', 'city', 'location', 'localisation', 'region', 'pays', 'country'],
+    "Résumé du profil": ['resume', 'summary', 'bio', 'about'],
+    "Description de l'entreprise": ['descriptionentreprise', 'companydescription', 'descriptiondelentreprise'],
+    'Email': ['email', 'mail', 'courriel'],
+    'LinkedIn': ['linkedin', 'profileurl', 'profilurl'],
+    'Site web entreprise': ['siteweb', 'website', 'domain', 'domaine', 'companyurl', 'url'],
+    'Téléphone': ['telephone', 'phone', 'mobile', 'tel'],
+    'A commencé le': ['commencele', 'startdate', 'startedon', 'depuis'],
+  };
+  for (const field of LP_FIELDS) {
+    if (mapping[field.key]) continue;
+    const kws = FUZZY[field.key] || [];
+    const i = normHeaders.findIndex((nh, k) => !used.has(headers[k]) && nh && kws.some(kw => nh.includes(kw))
+      // évite les faux positifs : "Nom" ne doit pas capter "Nom de l'entreprise", "Email" pas "Email status"
+      && !(field.key === 'Nom' && /entreprise|company|societe/.test(nh))
+      && !(field.key === 'Email' && /status|statut|verif|valid/.test(nh))
+      && !(field.key === 'Site web entreprise' && /linkedin/.test(nh)));
+    if (i !== -1) { mapping[field.key] = headers[i]; used.add(headers[i]); }
+  }
   return mapping;
 }
 
@@ -6002,6 +6029,8 @@ async function startGeneration() {
 
   const pc = document.getElementById('progressCard');
   const rc = document.getElementById('resultsCard');
+  pc.style.display = '';
+  rc.style.display = '';
   pc.classList.add('visible');
   rc.classList.remove('visible');
   document.getElementById('progressBar').style.width = '0%'; document.getElementById('progressPct').textContent = '0%';
@@ -6113,12 +6142,13 @@ async function startGeneration() {
       await new Promise(r => setTimeout(r, 3000));
       try {
         const prog = await apiCall('GET', '/api/campaigns/' + campaignId + '/progress', null, true);
+        { const el = document.getElementById('progressTime'); if (el) el.textContent = 'Écoulé : ' + Math.round((Date.now() - startTime) / 1000) + 's'; }
         const isDone = prog.status === 'done' || prog.status === 'error';
         const pct = isDone ? 100 : Math.max(10, Math.min(95, prog.percent));
         document.getElementById('progressBar').style.width = pct + '%'; document.getElementById('progressPct').textContent = pct + '%';
         (function(){
           const genLabel = (document.getElementById('chk-pdf') && document.getElementById('chk-pdf').checked) ? 'PDFs' : 'Mails';
-          document.getElementById('progressText').textContent = prog.processed + ' / ' + prog.total + ' ' + genLabel + ' générés';
+          document.getElementById('progressText').textContent = prog.processed + ' / ' + prog.total + ' ' + genLabel + ' générés' + (prog.processed ? '' : ' · préparation du contenu en cours...');
         })();
 
         // Micro-animation : avance légèrement vers le prochain palier entre deux polls
@@ -6281,6 +6311,8 @@ function showDashSection(section, el, pushState) {
   sectionIds.forEach(id  => { const e = document.getElementById(id); if (e) e.style.display = 'none'; });
 
   if (section === 'generate') {
+    // La carte de progression et les résultats sont pilotés par la classe .visible : on retire le display:none posé plus haut
+    ['progressCard', 'resultsCard'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = ''; });
     const kpi = document.getElementById('dash-kpi');         if (kpi) kpi.style.display = 'grid';
     const upl = document.getElementById('dash-upload');      if (upl) upl.style.display = 'block';
     const hdr = document.getElementById('dash-generate-header'); if (hdr) hdr.style.display = 'flex';
