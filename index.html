@@ -8192,11 +8192,23 @@ async function cmTplDesign(isFeedback) {
     throw new Error('Délai dépassé, réessayez');
   } catch (e) { cmTplErr = e.message || 'La conception a échoué'; cmTplBusy = null; cmTplRender(); }
 }
-function cmTplValidate() { cmTemplate = cmTplDraft.template; cmTplDraft = null; cmTplClear = false; cmTplErr = ''; cmTplRender(); showToast('Modèle validé, il sera enregistré avec la charte'); }
+async function cmTplValidate() {
+  cmTemplate = cmTplDraft.template; cmTplDraft = null; cmTplClear = false; cmTplErr = ''; cmTplRender();
+  if (!cmEditId) { showToast('Modèle validé. Cliquez sur « Sauvegarder » pour créer la charte avec ce modèle.'); return; }
+  try {
+    await apiCall('PUT', '/api/chartes/' + cmEditId, { custom_template: cmTemplate }, true);
+    showToast('Modèle validé et enregistré sur la charte');
+    loadChartes();
+  } catch (e) { cmTplErr = 'Modèle validé mais non enregistré : ' + (e.message || 'erreur'); cmTplRender(); }
+}
 function cmTplDiscard() { cmTplDraft = null; cmTplErr = ''; cmTplRender(); }
 async function cmTplRemove() {
   if (!(await lpDialog({ title: 'Revenir aux blocs classiques ?', text: 'Le modèle sur mesure sera retiré de cette charte à l’enregistrement.', confirmText: 'Retirer', danger: true }))) return;
   cmTemplate = null; cmTplClear = true; cmTplRender();
+  if (cmEditId) {
+    try { await apiCall('PUT', '/api/chartes/' + cmEditId, { custom_template_clear: true }, true); cmTplClear = false; showToast('Modèle retiré'); loadChartes(); }
+    catch (e) { cmTplErr = 'Retrait non enregistré : ' + (e.message || 'erreur'); cmTplRender(); }
+  }
 }
 function cmTplReset(tpl) { cmTemplate = tpl || null; cmTplDraft = null; cmTplBusy = null; cmTplErr = ''; cmTplClear = false; cmTplRender(); }
 
