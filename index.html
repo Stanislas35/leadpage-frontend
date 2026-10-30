@@ -5689,6 +5689,7 @@ function handleDrop(e) {
 let selectedCsvFile = null;
 let csvHeaders      = [];
 let csvPreviewRows  = [];
+let csvTotal        = 0;
 let currentMapping  = {};  // { leadsField: csvColumn }
 
 // ── Champs LeadPage avec aliases et metadata ──────────────────
@@ -5829,11 +5830,21 @@ function escAttr(s) {
   return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
+// En-têtes en double ("Nom" deux fois) : on les distingue, sinon deux champs peuvent lire la même colonne
+function uniqueHeaders(headers) {
+  const seen = {};
+  return headers.map(h => {
+    const base = (h || '').trim() || 'Colonne';
+    seen[base] = (seen[base] || 0) + 1;
+    return seen[base] === 1 ? base : base + ' (' + seen[base] + ')';
+  });
+}
+
 function parseCsvHeaders(file) {
   return readCsvText(file).then(text => {
     const { rows, delim } = parseCsvText(text);
     if (!rows.length) throw 'CSV vide';
-    const headers = rows[0];
+    const headers = uniqueHeaders(rows[0]);
     const preview = rows.slice(1, 4);
     return { headers, preview, total: rows.length - 1, delim };
   });
@@ -5845,12 +5856,14 @@ async function openMappingModal(file) {
     const { headers, preview, total } = await parseCsvHeaders(file);
     csvHeaders     = headers;
     csvPreviewRows = preview;
+    csvTotal       = total;
     currentMapping = autoDetectMapping(headers);
 
     // Sauvegarder le mapping précédent si existant
     const savedMapping = JSON.parse(localStorage.getItem('lp_mapping') || '{}');
     for (const field of LP_FIELDS) {
-      if (!currentMapping[field.key] && savedMapping[field.key] && headers.includes(savedMapping[field.key])) {
+      if (!currentMapping[field.key] && savedMapping[field.key] && headers.includes(savedMapping[field.key])
+          && !Object.values(currentMapping).includes(savedMapping[field.key])) {
         currentMapping[field.key] = savedMapping[field.key];
       }
     }
@@ -5879,7 +5892,7 @@ function renderMappingRows(headers, total) {
   let html = '';
   let lastGroup = null;
 
-  for (const field of LP_FIELDS) {
+  for (const [fi, field] of LP_FIELDS.entries()) {
     if (field.group !== lastGroup) {
       const g = GROUPS[field.group];
       html += `<div style="font-size:11px;font-weight:700;color:${g.color};letter-spacing:0.08em;text-transform:uppercase;margin-top:${lastGroup ? '14px' : '0'};margin-bottom:4px">${g.label}</div>`;
@@ -5893,12 +5906,12 @@ function renderMappingRows(headers, total) {
     html += `
       <div style="display:grid;grid-template-columns:160px 1fr 150px;gap:8px;align-items:center;padding:8px 12px;background:${missing ? 'rgba(239,68,68,0.06)' : 'var(--bg3)'};border:1px solid ${missing ? '#EF4444' : 'var(--border)'};border-radius:8px">
         <div style="font-size:12px;font-weight:600;color:var(--text)">${field.label}${field.required ? ' <span style="color:#EF4444">*</span>' : ''}</div>
-        <select class="form-input" style="margin:0;font-size:12px" onchange="updateMapping('${field.key.replace(/[^a-zA-Z0-9_]/g,'_')}', this.value, this)">
+        <select class="form-input" style="margin:0;font-size:12px" onchange="updateMapping(${fi}, this.value, this)">
           ${['— Non mappé —', ...headers].map(h =>
             `<option value="${escAttr(h)}" ${h === (mapped || '— Non mappé —') ? 'selected' : ''}>${escAttr(h)}</option>`
           ).join('')}
         </select>
-        <div id="mp-preview-${field.key.replace(/[^a-z]/gi,'_')}" style="font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escAttr(preview)}">
+        <div id="mp-preview-${fi}" style="font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escAttr(preview)}">
           ${preview ? `<span style="color:#22C55E">✓</span> ${escAttr(preview)}` : '<span style="color:var(--text3)">—</span>'}
         </div>
       </div>`;
@@ -5918,16 +5931,24 @@ function getPreviewValue(col) {
   return csvPreviewRows[0]?.[idx] || '';
 }
 
-function updateMapping(fieldKey, colValue, sel) {
+function updateMapping(fieldIdx, colValue, sel) {
+  const fieldKey = LP_FIELDS[fieldIdx].key;
   if (colValue === '— Non mappé —') {
     delete currentMapping[fieldKey];
   } else {
+    // Une colonne ne peut alimenter qu'un seul champ : on la retire de l'autre et on le signale
+    const stolen = Object.keys(currentMapping).filter(k => k !== fieldKey && currentMapping[k] === colValue);
+    stolen.forEach(k => delete currentMapping[k]);
     currentMapping[fieldKey] = colValue;
+    if (stolen.length) {
+      showToast('« ' + colValue + ' » retirée de : ' + stolen.join(', '), '#F59E0B');
+      renderMappingRows(csvHeaders, csvTotal);
+      return;
+    }
   }
   // Mettre à jour l'aperçu
-  const safeKey = fieldKey.replace(/[^a-z]/gi,'_');
   const preview = colValue !== '— Non mappé —' ? getPreviewValue(colValue) : '';
-  const prevEl  = document.getElementById('mp-preview-' + safeKey);
+  const prevEl  = document.getElementById('mp-preview-' + fieldIdx);
   if (prevEl) prevEl.innerHTML = preview ? `<span style="color:#22C55E">✓</span> ${escAttr(preview)}` : '<span style="color:var(--text3)">—</span>';
 
   // Mettre à jour style de la ligne
@@ -6084,7 +6105,7 @@ async function startGeneration() {
       try {
         const text = await readCsvText(selectedCsvFile);
         const { rows } = parseCsvText(text);
-        const origHeaders = rows[0];
+        const origHeaders = uniqueHeaders(rows[0]);
         const lpHeaders   = LP_FIELDS.map(f => f.key);
         const mappedCols  = new Set(Object.values(currentMapping));
         const extraIdx    = origHeaders.map((h, i) => (mappedCols.has(h) || lpHeaders.includes(h)) ? -1 : i).filter(i => i !== -1);
