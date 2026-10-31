@@ -3733,7 +3733,7 @@ nav { background: rgba(27,36,85,.9) !important; }
         <h1 class="lp-h1">Un document préparé pour chaque prospect, depuis votre fichier de contacts.</h1>
 
         <p class="lp-sub">
-          LeadPage transforme votre export CSV en un PDF personnalisé par contact, avec le logo du prospect, votre charte graphique et une analyse adaptée à son poste et à son secteur. Le mail d'accompagnement est rédigé en même temps.
+          LeadPage transforme votre export CSV en un PDF personnalisé par contact, avec le logo du prospect, votre charte graphique et une analyse adaptée à son poste et à son secteur. Le mail d'accompagnement est rédigé en même temps, et vous voyez ensuite qui a réellement lu son document, combien de temps et sur quel lien il a cliqué.
         </p>
 
         <div class="lp-cta-row">
@@ -3845,7 +3845,7 @@ nav { background: rgba(27,36,85,.9) !important; }
           <li>Un texte identique pour tous les contacts, avec le prénom en variable</li>
           <li>Aucun élément visuel propre au destinataire</li>
           <li>Pas de support à relire, à transférer ou à faire circuler en interne</li>
-          <li>Un seul indicateur : la réponse</li>
+          <li>Des clics souvent faussés par les antivirus, et aucune mesure de lecture</li>
         </ul>
       </div>
       <div class="pro-compare-col pro-compare-accent">
@@ -3854,7 +3854,7 @@ nav { background: rgba(27,36,85,.9) !important; }
           <li>Un PDF rédigé à partir du poste, du secteur et de la taille de l'entreprise</li>
           <li>Le logo du prospect et votre charte sur chaque document</li>
           <li>Un support que le destinataire peut transmettre à son équipe</li>
-          <li>Un lien unique par contact : vous voyez qui a consulté son document</li>
+          <li>Un lien unique par contact : temps de lecture, page atteinte et lien cliqué, robots écartés</li>
         </ul>
       </div>
     </div>
@@ -3863,7 +3863,7 @@ nav { background: rgba(27,36,85,.9) !important; }
   <!-- ░░ COMMENT ÇA MARCHE — ANIMATION ░░ -->
   <div class="lp-section" id="lp-how">
     <div class="lp-section-label">Comment ça marche</div>
-    <h2 class="lp-h2">De l'export CSV aux documents prêts à envoyer en trois étapes</h2>
+    <h2 class="lp-h2">De l'export CSV au suivi de lecture, en quatre étapes</h2>
     <p class="lp-section-sub">Vous gardez la main à chaque étape : le mapping des colonnes, la charte et le ton se règlent avant le lancement.</p>
 
     <div class="lp-steps">
@@ -3909,11 +3909,28 @@ nav { background: rgba(27,36,85,.9) !important; }
             </div>
             <div class="lp-step-num">03</div>
           </div>
+          <div class="lp-step-connector"></div>
         </div>
         <div class="lp-step-content">
           <h3>Récupérez le fichier enrichi</h3>
           <p>Votre CSV d'origine, avec deux colonnes ajoutées : <code>pdf_url</code> (lien unique par contact) et <code>mail1_corps</code> (texte du mail). Prêt à importer dans Snov.io, Lemlist ou tout outil d'envoi.</p>
-          <div class="lp-step-tag">Suivi des clics par contact</div>
+          <div class="lp-step-tag">Un lien unique par contact</div>
+        </div>
+      </div>
+
+      <div class="lp-step lp-reveal">
+        <div class="lp-step-visual">
+          <div class="lp-step-icon-wrap">
+            <div class="lp-step-icon lp-step-icon-send">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M4 22V12M11 22V6M18 22v-8M25 22V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div class="lp-step-num">04</div>
+          </div>
+        </div>
+        <div class="lp-step-content">
+          <h3>Mesurez la lecture</h3>
+          <p>Après l'envoi, le tableau de bord indique pour chaque contact s'il a vraiment lu son document, pendant combien de temps, jusqu'à quelle page, et s'il a cliqué sur votre lien de rendez-vous. Vous savez qui relancer en priorité.</p>
+          <div class="lp-step-tag">Robots et antivirus écartés</div>
         </div>
       </div>
     </div>
@@ -4090,6 +4107,28 @@ nav { background: rgba(27,36,85,.9) !important; }
     <p class="pro-note">Le contenu est généré par une IA à partir des informations de votre fichier. Relisez un échantillon avant chaque envoi : plus le fichier est complet, plus le document est précis.</p>
   </div>
 
+  <!-- ░░ MESURE ░░ -->
+  <div class="lp-section lp-section-alt" id="lp-measure">
+    <div class="lp-section-label">Ce que vous mesurez</div>
+    <h2 class="lp-h2">Savoir qui a lu, pas seulement qui a cliqué</h2>
+    <p class="lp-section-sub">Un clic ne prouve rien : les antivirus et les aperçus de messagerie ouvrent les liens avant le destinataire. LeadPage affiche le document dans une page de lecture et ne compte une lecture que lorsqu'une personne l'a réellement consulté.</p>
+    <div class="lp-results-grid">
+      <div class="lp-result-card lp-reveal">
+        <div class="lp-result-label">Temps de lecture actif</div>
+        <div class="lp-result-source">Seul le temps passé onglet visible et page active est compté. Un contact qui ouvre et ferme aussitôt n'est pas une lecture.</div>
+      </div>
+      <div class="lp-result-card lp-reveal">
+        <div class="lp-result-label">Pages et liens</div>
+        <div class="lp-result-source">Vous voyez la page la plus lointaine atteinte, le nombre de visites, et si le prospect a cliqué sur votre lien de prise de rendez-vous.</div>
+      </div>
+      <div class="lp-result-card lp-reveal">
+        <div class="lp-result-label">Robots écartés</div>
+        <div class="lp-result-source">Les ouvertures par scanners de sécurité sont enregistrées à part et n'entrent pas dans vos taux. Cette détection réduit fortement le bruit, sans le supprimer à 100 %.</div>
+      </div>
+    </div>
+    <p class="pro-note">La mesure commence au premier envoi : elle ne s'applique qu'aux liens générés avec LeadPage, et ne dit pas si le mail lui-même a été ouvert.</p>
+  </div>
+
   <!-- ░░ CAS D'USAGE ░░ -->
   <div class="lp-section" id="lp-usecases">
     <div class="lp-section-label">Pour qui</div>
@@ -4097,7 +4136,7 @@ nav { background: rgba(27,36,85,.9) !important; }
     <div class="lp-results-grid">
       <div class="lp-result-card lp-reveal">
         <div class="lp-result-label">Agences et prestataires B2B</div>
-        <div class="lp-result-source">Une charte par client, un document par prospect. Vous préparez la campagne d'un client sans retravailler chaque fichier à la main.</div>
+        <div class="lp-result-source">Une charte et un espace par client, un document par prospect, et un lien de suivi en lecture seule à envoyer à votre client pour qu'il voie l'avancement sans accéder à votre compte. Vous pouvez aussi inviter un associé avec des droits limités.</div>
       </div>
       <div class="lp-result-card lp-reveal">
         <div class="lp-result-label">Équipes commerciales</div>
@@ -4220,7 +4259,19 @@ nav { background: rgba(27,36,85,.9) !important; }
       </div>
       <div class="lp-faq-item lp-reveal" onclick="toggleFaq(this)">
         <div class="lp-faq-q">Que mesure le suivi ? <span class="lp-faq-arrow">+</span></div>
-        <div class="lp-faq-a">Chaque PDF a un lien unique. Le tableau de bord indique quels contacts ont cliqué sur leur document, quand, et combien de fois. Il mesure le clic sur le lien, pas l'ouverture du mail.</div>
+        <div class="lp-faq-a">Chaque PDF a un lien unique qui ouvre le document dans une page de lecture. Le tableau de bord indique pour chaque contact le temps de lecture actif, la page atteinte, le nombre de visites et le clic sur vos liens. Il ne mesure pas l'ouverture du mail lui-même.</div>
+      </div>
+      <div class="lp-faq-item lp-reveal" onclick="toggleFaq(this)">
+        <div class="lp-faq-q">Les antivirus et les robots faussent-ils les statistiques ? <span class="lp-faq-arrow">+</span></div>
+        <div class="lp-faq-a">C'est le défaut classique du suivi par clic. LeadPage écarte les ouvertures de robots connus et ne valide une lecture qu'après quelques secondes de consultation active dans la page. La détection n'est pas infaillible, mais les lectures confirmées sont bien plus fiables qu'un simple compteur de clics.</div>
+      </div>
+      <div class="lp-faq-item lp-reveal" onclick="toggleFaq(this)">
+        <div class="lp-faq-q">Le prospect doit-il créer un compte ou installer quelque chose ? <span class="lp-faq-arrow">+</span></div>
+        <div class="lp-faq-a">Non. Il clique sur son lien et lit le document directement dans son navigateur, sur ordinateur comme sur mobile. Un bouton lui permet d'ouvrir le PDF seul.</div>
+      </div>
+      <div class="lp-faq-item lp-reveal" onclick="toggleFaq(this)">
+        <div class="lp-faq-q">Puis-je montrer l'avancement à mon client ? <span class="lp-faq-arrow">+</span></div>
+        <div class="lp-faq-a">Oui. Rattachez vos chartes et campagnes à un client, puis envoyez-lui un lien de suivi en lecture seule. Il y voit les chiffres globaux de ses campagnes, sans le détail nominatif des prospects, et vous pouvez révoquer le lien à tout moment.</div>
       </div>
       <div class="lp-faq-item lp-reveal" onclick="toggleFaq(this)">
         <div class="lp-faq-q">Que se passe-t-il si la génération échoue pour un contact ? <span class="lp-faq-arrow">+</span></div>
