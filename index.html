@@ -7602,14 +7602,14 @@ function showServerWaking(on) {
 }
 
 function lpWsGet() { try { return localStorage.getItem('lp_ws') || ''; } catch (e) { return ''; } }
-async function apiCall(method, path, body = null, auth = false) {
+async function apiCall(method, path, body = null, auth = false, quiet = false) {
   const headers = { 'Content-Type': 'application/json' };
   if (auth && authToken) headers['Authorization'] = 'Bearer ' + authToken;
   if (auth && authToken) { const w = lpWsGet(); if (w) headers['X-Workspace'] = w; }
   const opts = { method, headers };
   if (body) opts.body = JSON.stringify(body);
   // Les lectures sont rejouées automatiquement (le serveur gratuit peut mettre ~1 min à se réveiller)
-  const maxTry = method === 'GET' ? 4 : 1;
+  const maxTry = quiet ? 1 : (method === 'GET' ? 4 : 1);   // quiet : chargement secondaire, jamais de bandeau ni de rejeu
   let lastErr;
   for (let attempt = 0; attempt < maxTry; attempt++) {
     const ctrl = new AbortController();
@@ -7778,7 +7778,7 @@ async function lpLoadWorkspaces() {
   try {
     const saved = lpWsGet();
     // l'identité réelle est toujours utilisée ici (route équipe)
-    const t = await apiCall('GET', '/api/team/', null, true);
+    const t = await apiCall('GET', '/api/team/', null, true, true);
     lpWsInfo = { workspaces: t.workspaces || [], mine: t.members || [] };
     if (saved && !lpWsInfo.workspaces.some(w => w.owner_id === saved)) { try { localStorage.removeItem('lp_ws'); } catch (e) {} lpWsReload(); return; }
   } catch (e) { return; }
@@ -7799,7 +7799,7 @@ function lpWsReload() { try { location.hash = '#dashboard/' + (location.hash.spl
 
 // Clients
 async function lpLoadClients() {
-  try { const r = await apiCall('GET', '/api/clients/', null, true); lpClients = Array.isArray(r) ? r : []; } catch (e) { lpClients = lpClients || []; }
+  try { const r = await apiCall('GET', '/api/clients/', null, true, true); lpClients = Array.isArray(r) ? r : []; } catch (e) { lpClients = lpClients || []; }
   const sel = document.getElementById('cm-client');
   if (sel) { const v = sel.value; sel.innerHTML = '<option value="">Aucun client</option>' + lpClients.map(c => '<option value="' + escHtml(c.id) + '">' + escHtml(c.name) + '</option>').join(''); sel.value = v; }
   return lpClients;
