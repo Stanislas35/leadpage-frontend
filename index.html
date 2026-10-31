@@ -4062,7 +4062,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
   </div>
   <div class="nav-links" id="nav-links">
     <a href="demo/">Démo</a>
-    <a href="messages/">Messages</a>
+    <a href="messages/" class="lm-link">LeadMessage</a>
     <a href="#" onclick="lpGo('lp-how');return false">Fonctionnement</a>
     <a href="#" onclick="lpGo('lp-measure');return false">Mesure</a>
     <a href="cas/">Cas d'usage</a>
@@ -4578,12 +4578,12 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
     </div>
   </div>
 
-  <!-- ░░ MESSAGES ░░ -->
+  <!-- ░░ LEADMESSAGE ░░ -->
   <div class="lp-section" id="lp-messages">
-    <div class="lp-section-label">Nouveau</div>
-    <h2 class="lp-h2">Pas besoin d'un PDF ? Générez la séquence seule</h2>
-    <p class="lp-section-sub">Deux mails et deux messages LinkedIn rédigés pour chaque prospect, à partir du même fichier et de la même charte. Un crédit pour quatre contacts.</p>
-    <p style="text-align:center;margin-top:18px"><a class="lp-price-btn lp-price-btn-primary" href="messages/" style="display:inline-block;text-decoration:none;max-width:280px">Découvrir l'offre Messages</a></p>
+    <div class="lp-section-label">Nouveau : LeadMessage</div>
+    <h2 class="lp-h2">Pas besoin d'un PDF ? Générez le parcours de messages</h2>
+    <p class="lp-section-sub">Mails 1, 2 et 3, invitation et messages LinkedIn, rédigés pour chaque prospect. Vous choisissez le parcours, un crédit par contact.</p>
+    <p style="margin-top:22px"><a class="lm-go" href="messages/">Entrer dans LeadMessage</a></p>
   </div>
 
   <!-- ░░ PRICING ░░ -->
@@ -5152,11 +5152,28 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
         <!-- FORMAT -->
         <div id="gen-format" style="display:flex;gap:8px;margin:4px 0 14px;flex-wrap:wrap">
           <button type="button" class="btn btn-primary" id="fmt-pdf" onclick="setGenFormat('pdf')" style="flex:1;min-width:150px">PDF personnalisé</button>
-          <button type="button" class="btn btn-ghost" id="fmt-msg" onclick="setGenFormat('msg')" style="flex:1;min-width:150px">Messages (mails + LinkedIn)</button>
+          <button type="button" class="btn btn-ghost" id="fmt-msg" onclick="setGenFormat('msg')" style="flex:1;min-width:150px">LeadMessage (mails + LinkedIn)</button>
         </div>
-        <div id="gen-msg-info" style="display:none;margin-bottom:14px;padding:12px 14px;border:1px solid var(--border-active);border-radius:10px;font-size:13px;line-height:1.55">
-          <b>Séquence prête à envoyer par contact</b> : mail 1 et son objet, mail 2 de relance, note de connexion LinkedIn (280 caractères) et message LinkedIn (400 caractères). Pas de PDF. <b>1 crédit pour 4 contacts.</b>
-          <a href="messages/" target="_blank" rel="noopener" style="color:var(--pink)">En savoir plus</a>
+        <div id="gen-msg-info" style="display:none;margin-bottom:14px;padding:14px 16px;border:1px solid #E4332E;background:rgba(228,51,46,.06);border-radius:12px;font-size:13px;line-height:1.55">
+          <b style="color:#E4332E">LeadMessage : composez le parcours de chaque contact</b>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0">
+            <button type="button" class="btn btn-ghost" style="padding:4px 11px;font-size:12px" onclick="setMsgPreset('mail')">Séquence mail</button>
+            <button type="button" class="btn btn-ghost" style="padding:4px 11px;font-size:12px" onclick="setMsgPreset('li')">Séquence LinkedIn</button>
+            <button type="button" class="btn btn-ghost" style="padding:4px 11px;font-size:12px" onclick="setMsgPreset('full')">Parcours complet</button>
+          </div>
+          <div id="msg-steps" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:6px 14px">
+            <label><input type="checkbox" data-s="m1" checked onchange="validateGenOptions()"> Mail 1 et son objet</label>
+            <label><input type="checkbox" data-s="m2" checked onchange="validateGenOptions()"> Mail 2 (relance)</label>
+            <label><input type="checkbox" data-s="m3" onchange="validateGenOptions()"> Mail 3 (dernier message)</label>
+            <label><input type="checkbox" data-s="li0" checked onchange="validateGenOptions()"> Invitation LinkedIn</label>
+            <label><input type="checkbox" data-s="li1" checked onchange="validateGenOptions()"> Message LinkedIn 1</label>
+            <label><input type="checkbox" data-s="li2" onchange="validateGenOptions()"> Message LinkedIn 2</label>
+          </div>
+          <div style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">Limite de la note d'invitation :
+            <select id="msg-li-limit" style="padding:4px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text1);font-size:12px"><option value="300">300 caractères</option><option value="200">200 caractères</option></select>
+          </div>
+          <div style="margin-top:8px;color:var(--text3)">Un crédit par contact, quel que soit le parcours. Pas de PDF.
+            <a href="messages/" target="_blank" rel="noopener" style="color:#E4332E">En savoir plus</a></div>
         </div>
         <!-- OPTIONS -->
         <div class="generate-options" id="gen-options-pdf">
@@ -5176,7 +5193,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
             <p>Email personnalisé prêt à coller dans Snov.io ou Lemlist — inclus dans le CSV</p>
           </div>
         </div>
-        <div id="gen-opt-error" style="display:none;color:#EF4444;font-size:12px;margin-top:-12px;margin-bottom:8px">⚠ Sélectionnez au moins une option</div>
+        <div id="gen-opt-error" style="display:none;color:#EF4444;font-size:12px;margin-top:-12px;margin-bottom:8px">⚠ Sélectionnez au moins une option (ou un message du parcours)</div>
 
         <!-- CHARTE SELECTOR -->
         <div style="margin-top:12px">
@@ -6878,6 +6895,10 @@ async function startGeneration() {
     formData.append('generate_pdf',   doPdf);
     formData.append('generate_mail1', doMail1);
     formData.append('messages_only', lpMsgMode() ? '1' : '0');
+    if (lpMsgMode()) {
+      formData.append('msg_steps', lpMsgSteps().join(','));
+      formData.append('li_limit', (document.getElementById('msg-li-limit') || { value: '300' }).value);
+    }
     // Envoyer la charte sélectionnée si une est choisie
     const charteSel = document.getElementById('charte-selector');
     if (charteSel && charteSel.value && charteSel.value !== 'default') {
@@ -6978,7 +6999,7 @@ async function startGeneration() {
                   const ok = r.status === 'ok';
                   const tr = document.createElement('tr');
                   const mailId = 'mail_'+r.token;
-                  const hasMail = ok && r.mail1_corps && r.mail1_corps.trim();
+                  const hasMail = ok && ((r.mail1_corps && r.mail1_corps.trim()) || cdMsgs(r));
                   tr.innerHTML = '<td>'+escHtml(r.first_name)+' '+escHtml(r.last_name)+'</td>'
                     +'<td>'+escHtml(r.company)+'</td>'
                     +'<td>'+(ok ? '<a class="pdf-link" href="'+r.tracking_url+'" target="_blank">Voir le PDF</a>' : '<span style="color:#EF4444;font-size:12px">'+r.status+'</span>')+'</td>'
@@ -7397,7 +7418,15 @@ async function campDuplicate(id) {
   const ni = document.getElementById('campaign-name'); if (ni) ni.value = ((c.name || 'Campagne') + ' (copie)').slice(0, 120);
   const setChk = function(i, v) { const el = document.getElementById(i); if (el) el.checked = !!v; };
   setChk('chk-pdf', c.generate_pdf !== false); setChk('chk-mail', !!c.generate_mail1);
-  try { setGenFormat(c.mode === 'messages' ? 'msg' : 'pdf'); } catch (e) {}
+  try {
+    const isMsg = typeof c.mode === 'string' && c.mode.indexOf('messages') === 0;
+    if (isMsg) {
+      const m = c.mode.replace('messages:', '').split('|'), st = (m[0] || '').split(',');
+      Array.prototype.forEach.call(document.querySelectorAll('#msg-steps input'), function (i) { i.checked = st.indexOf(i.dataset.s) >= 0; });
+      const lim = document.getElementById('msg-li-limit'); if (lim && m[1]) lim.value = m[1];
+    }
+    setGenFormat(isMsg ? 'msg' : 'pdf');
+  } catch (e) {}
   const sel = document.getElementById('charte-selector');
   if (c.charte_id && sel && Array.prototype.some.call(sel.options, function(o) { return o.value === c.charte_id; })) {
     sel.value = c.charte_id; try { onCharteChange(c.charte_id); } catch (e) { window.selectedCharteId = c.charte_id; }
@@ -7509,7 +7538,7 @@ function renderCampaignList() {
       + '</span>';
     const tags = (showGroupTags && camp.client_id && lpClientName(camp.client_id) ? '<span class="lpx-client-tag">' + escHtml(lpClientName(camp.client_id)) + '</span> ' : '')
       + (showGroupTags === 'client' && camp.charte_id && lpCharteOf(camp.charte_id) ? '<span class="lpx-tag">' + escHtml(lpCharteOf(camp.charte_id).name || 'Charte') + '</span> ' : '')
-      + (camp.mode === 'messages' ? '<span class="lpx-tag">Messages</span> ' : (camp.generate_mail1 ? '<span class="lpx-tag">Mail</span> ' : ''))
+      + ((typeof camp.mode === 'string' && camp.mode.indexOf('messages') === 0) ? '<span class="lpx-tag" style="background:#E4332E;color:#fff">LeadMessage</span> ' : (camp.generate_mail1 ? '<span class="lpx-tag">Mail</span> ' : ''))
       + (f ? '<span class="lpx-tag folder" onclick="campState.folder=' + JSON.stringify(f).replace(/"/g, '&quot;') + ';renderCampaignList()" title="Ouvrir le dossier">' + escHtml(f) + '</span>' : '');
     return '<tr class="row' + (campState.sel[id] ? ' selected' : '') + '" draggable="true" ondragstart="campDragStart(event,\'' + id + '\')" ondragend="lpDragEnd()" onclick="campCardClick(event, \'' + id + '\')">'
       + '<td style="width:30px"><input type="checkbox" class="lpx-check" ' + (campState.sel[id] ? 'checked' : '') + ' onchange="campToggleSel(\'' + id + '\', this.checked);this.closest(\'tr\').classList.toggle(\'selected\', this.checked)" aria-label="Sélectionner"></td>'
@@ -7837,7 +7866,7 @@ function renderCampaignDetail() {
         + ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px;margin-left:4px" onclick="downloadOnePdf(' + idx + ')">⬇ PDF</button>'
         + (r.tracking_url ? ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px" onclick="copyText(\'' + escAttr(r.tracking_url) + '\')">Copier le lien</button>' : '')
         : (isErr(x) ? '<span style="color:#EF4444;cursor:help" title="' + escAttr(String(r.status || '').replace(/^error:\s*/, '')) + '">Erreur</span>' : '<span style="color:var(--text3)">—</span>'))
-      + ((r.mail1_corps || '').trim() ? ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px" onclick="cdShowMail(' + idx + ')">✉ Mail</button>' : '')
+      + (((r.mail1_corps || '').trim() || cdMsgs(r)) ? ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px" onclick="cdShowMail(' + idx + ')">✉ Mail</button>' : '')
       + '</td></tr>';
   });
   if (!shown.length) html += '<tr><td colspan="' + (cols.length + 2) + '" style="padding:24px;text-align:center;color:var(--text3)">Aucun contact</td></tr>';
@@ -7896,11 +7925,11 @@ function cdShowMail(idx) {
 }
 function cdMsgs(r) {
   if (!r || !r.raw_data) return null;
-  try { const d = typeof r.raw_data === 'string' ? JSON.parse(r.raw_data) : r.raw_data; return (d.mail2_corps || d.linkedin_1) ? d : null; } catch (e) { return null; }
+  try { const d = typeof r.raw_data === 'string' ? JSON.parse(r.raw_data) : r.raw_data; return (d.mail2_corps || d.mail3_corps || d.linkedin_1 || d.linkedin_2 || d.linkedin_3 || d.mail1_objet) ? d : null; } catch (e) { return null; }
 }
 function cdMsgsParts(r) {
   const d = cdMsgs(r) || {};
-  return [['Mail 1 · Objet : ' + (d.mail1_objet || ''), r.mail1_corps || ''], ['Mail 2 (relance)', d.mail2_corps || ''], ['LinkedIn 1 (note de connexion)', d.linkedin_1 || ''], ['LinkedIn 2 (après acceptation)', d.linkedin_2 || '']];
+  return [['Invitation LinkedIn', d.linkedin_1 || ''], ['Mail 1 · Objet : ' + (d.mail1_objet || ''), r.mail1_corps || ''], ['Mail 2 (relance)', d.mail2_corps || ''], ['Message LinkedIn 1 (après acceptation)', d.linkedin_2 || ''], ['Mail 3 (dernier message)', d.mail3_corps || ''], ['Message LinkedIn 2 (relance)', d.linkedin_3 || '']].filter(function (p) { return (p[1] || '').trim(); });
 }
 function cdMsgsHtml(r) {
   return cdMsgsParts(r).map(p => '<div style="margin-bottom:14px"><div style="font-size:11px;font-weight:700;color:var(--pink);margin-bottom:4px">' + escHtml(p[0]) + '</div><div style="white-space:pre-wrap;font-size:13px;line-height:1.6">' + escHtml(p[1]) + '</div></div>').join('');
@@ -9620,14 +9649,22 @@ function setGenFormat(f) {
   try { validateGenOptions(); } catch (e) {}
 }
 function lpMsgMode() { return window.__lpFmt === 'msg'; }
-function lpCredits(n) { return lpMsgMode() ? Math.ceil(n / 4) : n; }
+function lpCredits(n) { return n; }
+function lpMsgSteps() {
+  return Array.prototype.map.call(document.querySelectorAll('#msg-steps input:checked'), function (i) { return i.dataset.s; });
+}
+function setMsgPreset(p) {
+  const P = { mail: ['m1', 'm2', 'm3'], li: ['li0', 'li1', 'li2'], full: ['m1', 'm2', 'm3', 'li0', 'li1', 'li2'] }[p] || [];
+  Array.prototype.forEach.call(document.querySelectorAll('#msg-steps input'), function (i) { i.checked = P.indexOf(i.dataset.s) >= 0; });
+  validateGenOptions();
+}
 
 function validateGenOptions() {
   const pdf   = document.getElementById('chk-pdf');
   const mail  = document.getElementById('chk-mail');
   const err   = document.getElementById('gen-opt-error');
   const btn   = document.querySelector('[onclick="startGeneration()"]');
-  const valid = lpMsgMode() || (pdf && pdf.checked) || (mail && mail.checked);
+  const valid = lpMsgMode() ? lpMsgSteps().length > 0 : ((pdf && pdf.checked) || (mail && mail.checked));
   if (err) err.style.display = valid ? 'none' : 'block';
   if (btn) btn.disabled = !valid;
 }
@@ -9642,7 +9679,7 @@ function lpRenderEstimate(n) {
   const dur = mins >= 60 ? (Math.floor(mins / 60) + ' h ' + String(mins % 60).padStart(2, '0')) : (mins + ' min');
   const left = (typeof freeCredits !== 'undefined') ? freeCredits : null;
   const short = left !== null && need > left;
-  let h = '<div class="lpx-est-row"><div><b>' + need + ' crédit' + (need > 1 ? 's' : '') + '</b><span>' + (msgM ? '1 pour 4 contacts' : '1 par contact') + ', remboursé si un contact échoue</span></div>'
+  let h = '<div class="lpx-est-row"><div><b>' + need + ' crédit' + (need > 1 ? 's' : '') + '</b><span>1 par contact, remboursé si un contact échoue</span></div>'
     + '<div><b>≈ ' + dur + '</b><span>durée estimée, vous pouvez quitter la page</span></div>'
     + (left !== null ? '<div><b' + (short ? ' style="color:#EF4444"' : '') + '>' + left + '</b><span>crédits disponibles' + (short ? ' : insuffisant' : '') + '</span></div>' : '') + '</div>';
   if (n > 3) h += '<div class="lpx-est-test"><span>Pas encore sûr du rendu ? Testez la charte sur les 3 premiers contacts avant de lancer le reste.</span>'
@@ -9720,7 +9757,7 @@ function validateGenOptions() {
   var mail = document.getElementById('chk-mail');
   var err  = document.getElementById('gen-opt-error');
   var btn  = document.querySelector('[onclick="startGeneration()"]');
-  var valid = lpMsgMode() || (pdf && pdf.checked) || (mail && mail.checked);
+  var valid = lpMsgMode() ? lpMsgSteps().length > 0 : ((pdf && pdf.checked) || (mail && mail.checked));
   if (err) err.style.display = valid ? 'none' : 'block';
   if (btn) btn.disabled = !valid;
 }
@@ -9786,7 +9823,7 @@ async function lpAssistantSend(ev) {
 // Les anciens liens #/... sont redirigés vers ces pages.
 function lpRoutePages(){var p=location.hash.replace('#/','');if(!p){showScreen('landing',false);return}location.replace(p.replace(/\/?$/,'/'))}
 function lpGo(id){var go=function(){var e=document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth'})};var l=document.getElementById('landing');if(!l.classList.contains('active')){showScreen('landing');try{history.replaceState({screen:'landing'},'','#landing')}catch(e){}setTimeout(go,80)}else go()}
-function lpFooterHTML(){return '<footer class="pgf"><div class="pgf-in"><div><span class="pgl">Lead<i>Page</i></span><p style="margin-top:10px">Un document personnalisé par prospect, avec mesure de lecture.</p></div><div><b>Cas d\'usage</b><a href="cas/agences/">Agences et prestataires</a><a href="cas/commerciaux/">Équipes commerciales</a><a href="cas/consultants/">Consultants</a><a href="cas/recrutement/">Recrutement et événements</a></div><div><b>Ressources</b><a href="ressources/">Livres blancs</a><a href="templates/">Templates de mails</a><a href="outils/">Outils gratuits</a><a href="comparatif/">Comparatif</a></div><div><b>LeadPage</b><a onclick="lpGo(\'lp-pricing\')">Tarifs</a><a href="messages/">Offre Messages</a><a href="demo/">Démo en 60 s</a><a onclick="lpGo(\'lp-faq\')">FAQ</a><a onclick="showScreen(\'auth\')">Connexion</a></div><div><b>Confiance</b><a href="legal/mentions-legales/">Mentions légales</a><a href="legal/confidentialite/">Confidentialité</a><a href="legal/cgv/">CGV et CGU</a><a href="legal/cookies/">Cookies</a><a href="legal/donnees-et-securite/">Données et sécurité</a></div></div><small>© 2026 LeadPage · Édité par Devoleads, La Rochelle</small></footer>'}
+function lpFooterHTML(){return '<footer class="pgf"><div class="pgf-in"><div><span class="pgl">Lead<i>Page</i></span><p style="margin-top:10px">Un document personnalisé par prospect, avec mesure de lecture.</p></div><div><b>Cas d\'usage</b><a href="cas/agences/">Agences et prestataires</a><a href="cas/commerciaux/">Équipes commerciales</a><a href="cas/consultants/">Consultants</a><a href="cas/recrutement/">Recrutement et événements</a></div><div><b>Ressources</b><a href="ressources/">Livres blancs</a><a href="templates/">Templates de mails</a><a href="outils/">Outils gratuits</a><a href="comparatif/">Comparatif</a></div><div><b>LeadPage</b><a onclick="lpGo(\'lp-pricing\')">Tarifs</a><a href="messages/">LeadMessage</a><a href="demo/">Démo en 60 s</a><a onclick="lpGo(\'lp-faq\')">FAQ</a><a onclick="showScreen(\'auth\')">Connexion</a></div><div><b>Confiance</b><a href="legal/mentions-legales/">Mentions légales</a><a href="legal/confidentialite/">Confidentialité</a><a href="legal/cgv/">CGV et CGU</a><a href="legal/cookies/">Cookies</a><a href="legal/donnees-et-securite/">Données et sécurité</a></div></div><small>© 2026 LeadPage · Édité par Devoleads, La Rochelle</small></footer>'}
 function lpFooter(){var f=document.querySelector('#landing .lp-footer');if(f)f.outerHTML=lpFooterHTML()}
 addEventListener('hashchange',function(){if(location.hash.startsWith('#/'))lpRoutePages()});
 </script>

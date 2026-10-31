@@ -143,3 +143,12 @@ html[data-theme="light"] #landing #lp-why::before{background:radial-gradient(60%
 html[data-theme="light"] #landing #lp-tour::before,html[data-theme="light"] #landing #lp-resources::before{background:radial-gradient(55% 60% at 10% 0%,rgba(180,92,240,.10),transparent 70%),radial-gradient(45% 55% at 100% 100%,rgba(43,80,255,.09),transparent 70%),#FBFCFF}
 html[data-theme="light"] #landing #lp-usecases::before,html[data-theme="light"] #landing #lp-faq::before{background:radial-gradient(60% 60% at 100% 0%,rgba(255,170,110,.12),transparent 70%),#FFFDFB}
 html[data-theme="light"] #landing #lp-how,html[data-theme="light"] #landing #lp-measure,html[data-theme="light"] #landing #lp-pricing,html[data-theme="light"] #landing #lp-demo,html[data-theme="light"] #landing #lp-trust,html[data-theme="light"] #landing #lp-content{--panel:#FFFFFF}
+
+/* Lien vers l'univers LeadMessage */
+.nav-links a.lm-link{color:#E4332E!important;font-weight:700;position:relative}
+.nav-links a.lm-link:after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#FFC145;margin-left:5px;vertical-align:middle}
+#lp-messages{background:linear-gradient(135deg,#E4332E,#8E1512);color:#fff;border-radius:28px;margin:30px auto;max-width:1120px;padding:56px 32px;text-align:center}
+#lp-messages .lp-h2,#lp-messages .lp-section-label{color:#fff}
+#lp-messages .lp-section-sub{color:rgba(255,255,255,.88)}
+#lp-messages .lm-go{display:inline-block;background:#fff;color:#B3201C;border-radius:999px;padding:12px 26px;font-weight:700;text-decoration:none;margin-top:6px}
+@media(max-width:560px){#lp-messages{margin:20px 12px;padding:40px 20px;border-radius:22px}}
