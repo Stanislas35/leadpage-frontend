@@ -5874,6 +5874,8 @@ function initLanding() {
 // -- NAVIGATION --------------------------
 function showScreen(id, pushState) {
   if (pushState === undefined) pushState = true;
+  // Déjà connecté : l'écran de connexion n'a pas lieu d'être, on ouvre directement l'espace
+  if (id === 'auth' && authToken && currentUser) id = 'dashboard';
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
@@ -5882,6 +5884,7 @@ function showScreen(id, pushState) {
   try { lpAssistantVisible(id === 'dashboard'); } catch (e) {}
   document.getElementById('nav-login').style.display = isApp ? 'none' : '';
   document.getElementById('nav-signup').style.display = isApp ? 'none' : '';
+  lpNavLabels();
 
   // Reset de la zone de génération à chaque retour sur le dashboard
   if (id === 'dashboard') {
@@ -8263,6 +8266,15 @@ function onCharteChange(val) {
 }
 
 // Mettre à jour le bouton nav selon l'état de connexion
+// Connecté sur la landing : « Connexion » devient « Mon espace » (ouvre le tableau de bord sans redemander les identifiants)
+function lpNavLabels() {
+  const login = document.getElementById('nav-login'), signup = document.getElementById('nav-signup');
+  if (!login || !signup) return;
+  const on = !!(authToken && currentUser);
+  login.textContent = on ? 'Mon espace' : 'Connexion';
+  signup.style.display = on ? 'none' : signup.style.display;
+}
+
 function updateNavForAuth() {
   const login  = document.getElementById('nav-login');
   const signup = document.getElementById('nav-signup');
