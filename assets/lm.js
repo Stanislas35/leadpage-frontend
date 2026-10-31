@@ -54,3 +54,28 @@ document.addEventListener('click', function (ev) {
   function done() { b.textContent = 'Copié ✓'; setTimeout(function () { b.textContent = old; }, 1600); }
   if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, done); else done();
 });
+// menu mobile
+(function () {
+  var b = document.getElementById('lm-burger'), l = document.getElementById('lm-links');
+  if (!b || !l) return;
+  b.addEventListener('click', function () { var o = l.classList.toggle('open'); b.setAttribute('aria-expanded', o ? 'true' : 'false'); b.textContent = o ? '✕' : '☰'; });
+  l.addEventListener('click', function (e) { if (e.target.tagName === 'A') { l.classList.remove('open'); b.textContent = '☰'; } });
+})();
+// calculateur de crédits
+(function () {
+  var n = document.getElementById('lc-n'), r = document.getElementById('lc-r'), out = document.getElementById('lc-out');
+  if (!n || !out) return;
+  function fmt(x) { return x.toLocaleString('fr-FR'); }
+  function calc(v) {
+    v = Math.max(1, Math.min(100000, Math.round(+v || 0)));
+    var plan, price, per;
+    if (v <= 5) { plan = 'Gratuit'; price = 0; }
+    else if (v <= 500) { plan = 'Starter'; price = 29; }
+    else if (v <= 2000) { plan = 'Growth'; price = 79; }
+    else { plan = 'Forfait sur mesure'; price = null; }
+    out.innerHTML = '<b>' + fmt(v) + ' crédit' + (v > 1 ? 's' : '') + '</b><p>Parcours de 1 à 6 messages par contact, un crédit par contact.</p><p style="margin-top:10px"><b style="font-size:20px">' + plan + '</b>' + (price === null ? '</p><p>Au-delà de 2 000 contacts par mois, écrivez-nous pour un forfait adapté.' : (price === 0 ? '</p><p>Offert à l\'inscription, sans carte bancaire.' : ' · ' + price + ' € par mois</p><p>Soit environ ' + (price / (plan === 'Starter' ? 500 : 2000)).toFixed(3).replace('.', ',') + ' € par contact si vous utilisez tout votre forfait.')) + '</p>';
+  }
+  n.addEventListener('input', function () { r.value = Math.min(+n.value || 1, +r.max); calc(n.value); });
+  r.addEventListener('input', function () { n.value = r.value; calc(r.value); });
+  calc(n.value);
+})();

@@ -7,6 +7,12 @@ const faq = [
   ['LeadMessage envoie-t-il les messages ?', 'Non. Vous téléchargez le fichier enrichi et l\'importez dans votre outil d\'envoi de mails ou d\'automatisation LinkedIn. Vous gardez la main sur vos boîtes, vos volumes et votre délivrabilité.'],
   ['Quel est le lien avec LeadPage ?', 'Même plateforme, même compte, mêmes chartes et mêmes crédits. LeadPage produit un document personnalisé avec mesure de lecture ; LeadMessage produit la séquence de messages. Vous pouvez utiliser l\'un sur tout votre fichier et l\'autre sur vos comptes prioritaires.'],
   ['Puis-je choisir le ton ?', 'Oui. Le tutoiement ou le vouvoiement, le style et la signature viennent de la charte du client, comme pour les PDF.']
+  ,['Puis-je relire les messages avant de les envoyer ?', 'Oui, et nous le recommandons : relisez une dizaine de messages pris au hasard. Vous téléchargez un fichier, rien n\'est envoyé automatiquement.'],
+  ['Quels outils d\'envoi sont compatibles ?', 'Tout outil qui importe un CSV et accepte des colonnes comme variables : Lemlist, Snov.io, Waalaxy, HeyReach, Brevo ou votre messagerie en publipostage.'],
+  ['Que se passe-t-il si mon fichier est pauvre ?', 'Le texte reste général plutôt que faux. Plus le poste, le secteur et la description sont renseignés, plus le message est précis.'],
+  ['Puis-je régénérer un message qui ne me convient pas ?', 'Oui. Ajustez la charte ou le fichier, puis relancez les contacts concernés : les contacts en erreur ne sont pas débités.'],
+  ['Y a-t-il un engagement ?', 'Non. Cinq contacts sont offerts à l\'inscription, puis vous choisissez un forfait mensuel sans engagement.'],
+  ['Où sont stockées mes données ?', 'Les détails sont publics sur la page Données et sécurité. Vos fichiers ne servent qu\'à rédiger vos messages.']
 ];
 const pk = [['Gratuit', '0 €', 'offert à l\'inscription', '5 contacts', ['Parcours complet possible', 'Une charte', 'Sans carte bancaire'], 0, 'Créer un compte'], ['Starter', '29 €', 'par mois', '500 contacts', ['500 crédits par mois', 'Trois chartes', 'Export compatible Snov.io, Lemlist, HeyReach'], 0, 'Choisir Starter'], ['Growth', '79 €', 'par mois', '2 000 contacts', ['2 000 crédits par mois', 'Chartes illimitées, une par client', 'Support prioritaire'], 1, 'Choisir Growth']];
 const hdr = ['email', 'prénom', 'entreprise', 'mail1_objet', 'mail1_corps', 'mail2_corps', 'mail3_corps', 'linkedin_1', 'linkedin_2', 'linkedin_3'];
@@ -22,7 +28,7 @@ function shell(B, SITE, o) {
   const ld = (o.faq ? `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: o.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) })}</script>` : '') +
     (o.article ? `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Article', headline: o.t, description: o.d, inLanguage: 'fr', mainEntityOfPage: url, author: { '@type': 'Organization', name: 'Devoleads' }, publisher: { '@type': 'Organization', name: 'LeadMessage' } })}</script>` : '');
   const link = (href, label, key) => `<a href="${href}"${o.active === key ? ' class="cur" aria-current="page"' : ''}>${label}</a>`;
-  const nav = link(M + '#parcours', 'Parcours', 'home') + link(M + 'demo/', 'Démo', 'demo') + link(M + 'modeles/', 'Modèles', 'modeles') + link(M + 'cas/', 'Cas d\'usage', 'cas') + link(M + '#tarifs', 'Tarifs', 't') + link(M + '#faq', 'FAQ', 'f');
+  const nav = link(M + '#parcours', 'Parcours', 'home') + link(M + 'demo/', 'Démo', 'demo') + link(M + 'modeles/', 'Modèles', 'modeles') + link(M + 'cas/', 'Cas d\'usage', 'cas') + link(M + 'ressources/', 'Ressources', 'res') + link(M + '#tarifs', 'Tarifs', 't') + link(M + '#faq', 'FAQ', 'f');
   return `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -41,7 +47,8 @@ ${ld}
 ${o.curtain ? `<div class="lm-curtain" aria-hidden="true"><img src="${B}logo-lm.svg" alt=""></div>` : ''}
 <header class="lm-nav"><div class="lm-w">
   <a class="lm-brand" href="${M}" aria-label="LeadMessage, accueil"><img src="${B}logo-lm.svg" alt=""><span>Lead<b>Message</b></span></a>
-  <nav class="lm-links" aria-label="Sections">${nav}</nav>
+  <button class="lm-burger" id="lm-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="lm-links">☰</button>
+  <nav class="lm-links" id="lm-links" aria-label="Sections">${nav}</nav>
   <div class="lm-right">
     <div class="lm-uni" aria-label="Changer d'univers"><a href="${B}">LeadPage</a><span class="on">LeadMessage</span></div>
     <a class="lm-login" href="${B}?p=message#connexion">Connexion</a>
@@ -51,9 +58,10 @@ ${o.curtain ? `<div class="lm-curtain" aria-hidden="true"><img src="${B}logo-lm.
 <main>
 ${o.body}
 </main>
+<div class="lm-sticky"><span>5 contacts offerts</span><a class="lm-btn" href="${B}?p=message#connexion">Essayer</a></div>
 <footer class="lm-foot"><div class="lm-w">
   <div><a class="lm-brand" href="${M}"><img src="${B}logo-lm.svg" alt=""><span>Lead<b>Message</b></span></a><p style="max-width:300px;margin:10px 0 0">Un parcours de messages personnalisé par prospect.</p></div>
-  <div><b>LeadMessage</b><a href="${M}demo/">Démo guidée</a><a href="${M}modeles/">Modèles de séquences</a><a href="${M}cas/">Cas d'usage</a><a href="${M}#tarifs">Tarifs</a></div>
+  <div><b>LeadMessage</b><a href="${M}demo/">Démo guidée</a><a href="${M}modeles/">Modèles de séquences</a><a href="${M}cas/">Cas d'usage</a><a href="${M}ressources/">Ressources et outils</a><a href="${M}#tarifs">Tarifs</a></div>
   <div><b>Produits</b><a href="${B}">LeadPage, documents personnalisés</a><a href="${B}demo/">Démo LeadPage</a><a href="${B}outils/">Outils gratuits</a></div>
   <div><b>Confiance</b><a href="${B}legal/mentions-legales/">Mentions légales</a><a href="${B}legal/confidentialite/">Confidentialité</a><a href="${B}legal/cgv/">CGV et CGU</a><a href="${B}legal/cookies/">Cookies</a><a href="${B}legal/donnees-et-securite/">Données et sécurité</a></div>
   <small>© 2026 LeadMessage, un produit LeadPage · Édité par Devoleads, La Rochelle</small>
@@ -67,77 +75,8 @@ const sec = (k, h, sub, inner, id, alt) => `<section class="lm-sec${alt ? ' alt'
 const finalCta = (B, h, p) => `<section class="lm-final lm-rv"><h2>${h}</h2><p>${p}</p><a class="lm-btn" href="${B}?p=message#connexion">Essayer gratuitement</a></section>`;
 
 // ── Page d'accueil (landing) ─────────────────────────────────────────────────────────────
-function landingBody(B) {
-  return `
-<section class="lm-hero"><div class="lm-w">
-  <div>
-    <span class="lm-tag">Nouveau : le parcours de messages par prospect</span>
-    <h1>Un parcours de messages écrit pour <em>chaque prospect</em></h1>
-    <p class="lead">Mails 1, 2 et 3, invitation et messages LinkedIn : vous choisissez le parcours, LeadMessage rédige chaque texte à partir de votre fichier. Prêt à importer dans votre outil d'envoi.</p>
-    <div class="row"><a class="lm-btn wh" href="${B}?p=message#connexion">Essayer gratuitement</a><a class="lm-btn ghost" style="color:#fff;border-color:rgba(255,255,255,.7)" href="#parcours">Composer mon parcours</a></div>
-    <div class="meta"><span>1 crédit par contact</span><span>Aucun fait inventé</span><span>Cinq contacts offerts</span></div>
-  </div>
-  <div class="lm-conv" aria-hidden="true">
-    <div class="lm-bub a"><b>Mail 1 · J0</b>Bonjour Camille, pour une marque de mobilier avec trois boutiques, garder le même discours en magasin et en ligne…</div>
-    <div class="lm-bub b"><b>Invitation LinkedIn</b>Bonjour Camille, je travaille avec des marques de mobilier qui animent plusieurs points de vente…</div>
-    <div class="lm-bub c"><b>Mail 2 · J+3</b>Camille, une question plus concrète : comment adaptez-vous une campagne à chacune de vos trois boutiques ?</div>
-  </div>
-</div></section>
-
-<section class="lm-sec" id="parcours"><div class="lm-w">
-  <span class="lm-k">Votre parcours</span>
-  <h2>Composez la séquence, voyez le résultat</h2>
-  <p class="lm-sub">Choisissez les messages que vous voulez pour chaque contact. Le coût reste le même : un crédit par contact, du message seul au parcours complet.</p>
-  <div class="lm-sim lm-rv">
-    <div class="lm-panel">
-      <div class="lm-presets"><button class="lm-pre" data-p="mail" type="button">Séquence mail</button><button class="lm-pre" data-p="li" type="button">Séquence LinkedIn</button><button class="lm-pre" data-p="full" type="button">Parcours complet</button></div>
-      <div id="lm-chips"></div>
-      <div class="lm-sum" id="lm-sum"></div>
-    </div>
-    <div>
-      <div class="lm-data" aria-label="Données du fichier utilisées dans l'exemple"><span>Camille Roux</span><span>Directrice marketing</span><span>Atelier Nova</span><span>Mobilier, trois boutiques</span></div>
-      <ol class="lm-tl" id="lm-tl"></ol>
-      <p class="lm-note">Exemple fictif. Les textes ne s'appuient que sur les données du fichier ci-dessus : poste, entreprise, secteur et description.</p>
-    </div>
-  </div>
-</div></section>
-
-<section class="lm-sec alt" id="comment"><div class="lm-w">
-  <span class="lm-k">Fonctionnement</span>
-  <h2>Du CSV au parcours, en trois étapes</h2>
-  <div class="lm-grid3">${[['Importez votre CSV', 'Le même fichier que pour LeadPage : prénom, poste, entreprise, secteur. Doublons et lignes vides retirés avant la génération.'], ['Choisissez le parcours', 'Cochez les messages voulus, la charte du client et, pour LinkedIn, la limite de la note (200 ou 300 caractères). Le coût s\'affiche avant le lancement.'], ['Téléchargez le fichier', 'Chaque message arrive dans sa colonne. Importez le CSV dans Snov.io, Lemlist, HeyReach ou votre outil habituel.']].map((x, i) => `<div class="lm-card lm-rv"><span class="n">${i + 1}</span><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join('')}</div>
-</div></section>
-
-<section class="lm-sec" id="export"><div class="lm-w">
-  <span class="lm-k">Export</span>
-  <h2>Un fichier prêt pour votre outil d'envoi</h2>
-  <p class="lm-sub">Votre CSV d'origine, avec une colonne par message choisi. Utilisez-les comme variables dans vos séquences.</p>
-  <div class="lm-tbl lm-rv"><table><thead><tr>${hdr.map((h, i) => `<th${i > 2 ? ' class="hl"' : ''}>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((c, i) => `<td${i > 2 ? ' class="hl"' : ''}>${e(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
-  <div class="lm-grid3">${[['Aucun fait inventé', 'Les textes s\'appuient sur votre fichier. Sans information précise, ils restent généraux plutôt que faux.'], ['Limites respectées', 'Note d\'invitation de 200 ou 300 caractères, messages LinkedIn courts, mails de 25 à 90 mots.'], ['Ton de la charte', 'Tutoiement ou vouvoiement, style et signature viennent de la charte du client, comme pour les PDF.']].map(x => `<div class="lm-card lm-rv"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join('')}</div>
-</div></section>
-
-<section class="lm-sec alt" id="tarifs"><div class="lm-w">
-  <span class="lm-k">Tarifs</span>
-  <h2>Un contact, un crédit, quel que soit le parcours</h2>
-  <p class="lm-sub">Les crédits sont partagés avec LeadPage : un crédit couvre un parcours de messages complet ou un PDF. Sans engagement.</p>
-  <div class="lm-price">${pk.map(k => `<div class="lm-pk${k[5] ? ' feat' : ''} lm-rv">${k[5] ? '<span class="bd">Le plus choisi</span>' : ''}<h3>${k[0]}</h3><p class="amt">${k[1]} <small>${k[2]}</small></p><p class="ct">${k[3]}</p><ul>${k[4].map(x => `<li>${x}</li>`).join('')}</ul><a class="lm-btn${k[5] ? '' : ' ghost'}" style="text-align:center" href="${B}?p=message#connexion">${k[6]}</a></div>`).join('')}</div>
-  <p class="lm-note">Moins de 0,06 € le contact avec Starter, moins de 0,04 € avec Growth, pour un parcours de six messages. Besoin de plus de volume ? Écrivez-nous pour un forfait sur mesure.</p>
-</div></section>
-
-<section class="lm-sec" id="faq"><div class="lm-w">
-  <span class="lm-k">FAQ</span>
-  <h2>Questions fréquentes</h2>
-  <div class="lm-faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>
-</div></section>
-
-<section class="lm-final lm-rv">
-  <h2>Testez le parcours sur cinq contacts</h2>
-  <p>Cinq contacts offerts, sans carte bancaire. Relisez les textes, ajustez la charte, puis passez à l'échelle.</p>
-  <a class="lm-btn" href="${B}?p=message#connexion">Essayer gratuitement</a>
-</section>
-<p class="lm-cross">Vous préférez un document personnalisé avec mesure de lecture ? <a href="${B}">Découvrir LeadPage</a></p>
-`;
-}
+const landing = require('./lm-landing.js');
+function landingBody(B) { return landing(B, { faq, pk, hdr, rows, e }); }
 
 // ── Démo guidée ──────────────────────────────────────────────────────────────────────────
 function demoBody(B) {
@@ -226,4 +165,6 @@ const routes = [
   ...Object.entries(LMCAS).map(([k, v]) => ({ r: 'messages/cas/' + k, t: v.t + ' : parcours de messages personnalisés', d: v.s + ' ' + v.lead, active: 'cas', article: true, body: B => casBody(B, k), script: null }))
 ];
 
+const extra = require('./lm-extra.js')({ ROOT_URL, hero2, sec, finalCta, e });
+extra.routes.forEach(r => routes.push(r));
 module.exports = { routes, shell, faq };
