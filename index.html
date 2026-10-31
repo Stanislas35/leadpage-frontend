@@ -4062,6 +4062,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
   </div>
   <div class="nav-links" id="nav-links">
     <a href="demo/">Démo</a>
+    <a href="messages/">Messages</a>
     <a href="#" onclick="lpGo('lp-how');return false">Fonctionnement</a>
     <a href="#" onclick="lpGo('lp-measure');return false">Mesure</a>
     <a href="cas/">Cas d'usage</a>
@@ -4575,6 +4576,14 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
         <span class="lp-more">Essayer les outils →</span>
       </a>
     </div>
+  </div>
+
+  <!-- ░░ MESSAGES ░░ -->
+  <div class="lp-section" id="lp-messages">
+    <div class="lp-section-label">Nouveau</div>
+    <h2 class="lp-h2">Pas besoin d'un PDF ? Générez la séquence seule</h2>
+    <p class="lp-section-sub">Deux mails et deux messages LinkedIn rédigés pour chaque prospect, à partir du même fichier et de la même charte. Un crédit pour quatre contacts.</p>
+    <p style="text-align:center;margin-top:18px"><a class="lp-price-btn lp-price-btn-primary" href="messages/" style="display:inline-block;text-decoration:none;max-width:280px">Découvrir l'offre Messages</a></p>
   </div>
 
   <!-- ░░ PRICING ░░ -->
@@ -5140,8 +5149,17 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
           <div class="lpx-estimate" id="prev-estimate"></div>
         </div>
 
+        <!-- FORMAT -->
+        <div id="gen-format" style="display:flex;gap:8px;margin:4px 0 14px;flex-wrap:wrap">
+          <button type="button" class="btn btn-primary" id="fmt-pdf" onclick="setGenFormat('pdf')" style="flex:1;min-width:150px">PDF personnalisé</button>
+          <button type="button" class="btn btn-ghost" id="fmt-msg" onclick="setGenFormat('msg')" style="flex:1;min-width:150px">Messages (mails + LinkedIn)</button>
+        </div>
+        <div id="gen-msg-info" style="display:none;margin-bottom:14px;padding:12px 14px;border:1px solid var(--border-active);border-radius:10px;font-size:13px;line-height:1.55">
+          <b>Séquence prête à envoyer par contact</b> : mail 1 et son objet, mail 2 de relance, note de connexion LinkedIn (280 caractères) et message LinkedIn (400 caractères). Pas de PDF. <b>1 crédit pour 4 contacts.</b>
+          <a href="messages/" target="_blank" rel="noopener" style="color:var(--pink)">En savoir plus</a>
+        </div>
         <!-- OPTIONS -->
-        <div class="generate-options">
+        <div class="generate-options" id="gen-options-pdf">
           <div class="gen-option" id="opt-pdf" style="border:2px solid var(--border-active);position:relative">
             <span style="position:absolute;top:-1px;right:10px;background:var(--pink);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:0 0 6px 6px;letter-spacing:0.05em">Recommandé</span>
             <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
@@ -6859,6 +6877,7 @@ async function startGeneration() {
     const doMail1 = document.getElementById('chk-mail')  ? (document.getElementById('chk-mail').checked  ? '1' : '0') : '0';
     formData.append('generate_pdf',   doPdf);
     formData.append('generate_mail1', doMail1);
+    formData.append('messages_only', lpMsgMode() ? '1' : '0');
     // Envoyer la charte sélectionnée si une est choisie
     const charteSel = document.getElementById('charte-selector');
     if (charteSel && charteSel.value && charteSel.value !== 'default') {
@@ -6892,7 +6911,7 @@ async function startGeneration() {
         const pct = isDone ? 100 : Math.max(10, Math.min(95, prog.percent));
         document.getElementById('progressBar').style.width = pct + '%'; document.getElementById('progressPct').textContent = pct + '%';
         (function(){
-          const genLabel = (document.getElementById('chk-pdf') && document.getElementById('chk-pdf').checked) ? 'PDFs' : 'Mails';
+          const genLabel = lpMsgMode() ? 'séquences' : ((document.getElementById('chk-pdf') && document.getElementById('chk-pdf').checked) ? 'PDFs' : 'Mails');
           document.getElementById('progressText').textContent = prog.processed + ' / ' + prog.total + ' ' + genLabel + ' générés' + (prog.processed ? '' : ' · préparation du contenu en cours...');
         })();
 
@@ -6940,7 +6959,7 @@ async function startGeneration() {
           document.getElementById('progressBar').style.width = '100%';
           document.getElementById('progressPct').textContent = '100%';
           (function(){
-            const genLabel2 = (document.getElementById('chk-pdf') && document.getElementById('chk-pdf').checked) ? 'PDFs' : 'Mails';
+            const genLabel2 = lpMsgMode() ? 'séquences' : ((document.getElementById('chk-pdf') && document.getElementById('chk-pdf').checked) ? 'PDFs' : 'Mails');
             document.getElementById('progressText').textContent = prog.total + ' / ' + prog.total + ' ' + genLabel2 + ' traités';
           })();
           document.getElementById('progressTime').textContent = 'Terminé en ' + elapsed + 's';
@@ -6973,7 +6992,7 @@ async function startGeneration() {
                     const mailContent = document.createElement('td');
                     mailContent.setAttribute('colspan','4');
                     mailContent.style.cssText = 'background:var(--bg2);padding:16px;font-size:12px;white-space:pre-wrap;border-left:3px solid var(--pink);line-height:1.6';
-                    mailContent.textContent = r.mail1_corps || '';
+                    mailContent.textContent = (typeof cdMsgs === 'function' && cdMsgs(r)) ? cdMsgsText(r) : (r.mail1_corps || '');
                     mailRow.appendChild(mailContent);
                     tbody.appendChild(mailRow);
                   }
@@ -7378,7 +7397,7 @@ async function campDuplicate(id) {
   const ni = document.getElementById('campaign-name'); if (ni) ni.value = ((c.name || 'Campagne') + ' (copie)').slice(0, 120);
   const setChk = function(i, v) { const el = document.getElementById(i); if (el) el.checked = !!v; };
   setChk('chk-pdf', c.generate_pdf !== false); setChk('chk-mail', !!c.generate_mail1);
-  try { validateGenOptions(); } catch (e) {}
+  try { setGenFormat(c.mode === 'messages' ? 'msg' : 'pdf'); } catch (e) {}
   const sel = document.getElementById('charte-selector');
   if (c.charte_id && sel && Array.prototype.some.call(sel.options, function(o) { return o.value === c.charte_id; })) {
     sel.value = c.charte_id; try { onCharteChange(c.charte_id); } catch (e) { window.selectedCharteId = c.charte_id; }
@@ -7490,7 +7509,7 @@ function renderCampaignList() {
       + '</span>';
     const tags = (showGroupTags && camp.client_id && lpClientName(camp.client_id) ? '<span class="lpx-client-tag">' + escHtml(lpClientName(camp.client_id)) + '</span> ' : '')
       + (showGroupTags === 'client' && camp.charte_id && lpCharteOf(camp.charte_id) ? '<span class="lpx-tag">' + escHtml(lpCharteOf(camp.charte_id).name || 'Charte') + '</span> ' : '')
-      + (camp.generate_mail1 ? '<span class="lpx-tag">Mail</span> ' : '')
+      + (camp.mode === 'messages' ? '<span class="lpx-tag">Messages</span> ' : (camp.generate_mail1 ? '<span class="lpx-tag">Mail</span> ' : ''))
       + (f ? '<span class="lpx-tag folder" onclick="campState.folder=' + JSON.stringify(f).replace(/"/g, '&quot;') + ';renderCampaignList()" title="Ouvrir le dossier">' + escHtml(f) + '</span>' : '');
     return '<tr class="row' + (campState.sel[id] ? ' selected' : '') + '" draggable="true" ondragstart="campDragStart(event,\'' + id + '\')" ondragend="lpDragEnd()" onclick="campCardClick(event, \'' + id + '\')">'
       + '<td style="width:30px"><input type="checkbox" class="lpx-check" ' + (campState.sel[id] ? 'checked' : '') + ' onchange="campToggleSel(\'' + id + '\', this.checked);this.closest(\'tr\').classList.toggle(\'selected\', this.checked)" aria-label="Sélectionner"></td>'
@@ -7868,13 +7887,25 @@ function cdShowMail(idx) {
   o.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
   o.onclick = e => { if (e.target === o) o.remove(); };
   o.innerHTML = '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;max-width:620px;width:100%;max-height:80vh;overflow:auto;padding:24px">'
-    + '<div style="font-weight:700;margin-bottom:12px">Mail pour ' + escHtml((r.first_name || '') + ' ' + (r.last_name || '')) + '</div>'
-    + '<div style="white-space:pre-wrap;font-size:13px;line-height:1.6">' + escHtml(r.mail1_corps) + '</div>'
+    + '<div style="font-weight:700;margin-bottom:12px">' + (cdMsgs(r) ? 'Séquence pour ' : 'Mail pour ') + escHtml((r.first_name || '') + ' ' + (r.last_name || '')) + '</div>'
+    + (cdMsgs(r) ? cdMsgsHtml(r) : '<div style="white-space:pre-wrap;font-size:13px;line-height:1.6">' + escHtml(r.mail1_corps) + '</div>')
     + '<div style="margin-top:16px;display:flex;gap:8px"><button class="btn btn-primary" style="padding:7px 14px;font-size:12px" id="cd-mail-copy">Copier</button>'
     + '<button class="btn btn-ghost" style="padding:7px 14px;font-size:12px" onclick="this.closest(\'div[style*=fixed]\').remove()">Fermer</button></div></div>';
   document.body.appendChild(o);
-  document.getElementById('cd-mail-copy').onclick = () => copyText(r.mail1_corps);
+  document.getElementById('cd-mail-copy').onclick = () => copyText(cdMsgs(r) ? cdMsgsText(r) : r.mail1_corps);
 }
+function cdMsgs(r) {
+  if (!r || !r.raw_data) return null;
+  try { const d = typeof r.raw_data === 'string' ? JSON.parse(r.raw_data) : r.raw_data; return (d.mail2_corps || d.linkedin_1) ? d : null; } catch (e) { return null; }
+}
+function cdMsgsParts(r) {
+  const d = cdMsgs(r) || {};
+  return [['Mail 1 · Objet : ' + (d.mail1_objet || ''), r.mail1_corps || ''], ['Mail 2 (relance)', d.mail2_corps || ''], ['LinkedIn 1 (note de connexion)', d.linkedin_1 || ''], ['LinkedIn 2 (après acceptation)', d.linkedin_2 || '']];
+}
+function cdMsgsHtml(r) {
+  return cdMsgsParts(r).map(p => '<div style="margin-bottom:14px"><div style="font-size:11px;font-weight:700;color:var(--pink);margin-bottom:4px">' + escHtml(p[0]) + '</div><div style="white-space:pre-wrap;font-size:13px;line-height:1.6">' + escHtml(p[1]) + '</div></div>').join('');
+}
+function cdMsgsText(r) { return cdMsgsParts(r).map(p => p[0] + '\n' + p[1]).join('\n\n'); }
 
 async function cdFetchPdf(url) {
   const res = await fetch(url);
@@ -9578,12 +9609,25 @@ function showLowCreditsWarning() {
 }
 
 
+window.__lpFmt = window.__lpFmt || 'pdf';
+function setGenFormat(f) {
+  window.__lpFmt = f === 'msg' ? 'msg' : 'pdf';
+  const msg = window.__lpFmt === 'msg';
+  const set = (id, on) => { const b = document.getElementById(id); if (b) b.className = 'btn ' + (on ? 'btn-primary' : 'btn-ghost'); };
+  set('fmt-pdf', !msg); set('fmt-msg', msg);
+  const o = document.getElementById('gen-options-pdf'); if (o) o.style.display = msg ? 'none' : '';
+  const i = document.getElementById('gen-msg-info'); if (i) i.style.display = msg ? 'block' : 'none';
+  try { validateGenOptions(); } catch (e) {}
+}
+function lpMsgMode() { return window.__lpFmt === 'msg'; }
+function lpCredits(n) { return lpMsgMode() ? Math.ceil(n / 4) : n; }
+
 function validateGenOptions() {
   const pdf   = document.getElementById('chk-pdf');
   const mail  = document.getElementById('chk-mail');
   const err   = document.getElementById('gen-opt-error');
   const btn   = document.querySelector('[onclick="startGeneration()"]');
-  const valid = (pdf && pdf.checked) || (mail && mail.checked);
+  const valid = lpMsgMode() || (pdf && pdf.checked) || (mail && mail.checked);
   if (err) err.style.display = valid ? 'none' : 'block';
   if (btn) btn.disabled = !valid;
 }
@@ -9593,15 +9637,16 @@ function lpRenderEstimate(n) {
   window.__lpTotal = n;
   const doPdf = !document.getElementById('chk-pdf') || document.getElementById('chk-pdf').checked;
   const doMail = document.getElementById('chk-mail') && document.getElementById('chk-mail').checked;
-  const mins = Math.max(1, Math.round((45 + n * (doPdf ? 1.8 : 0.9)) / 60));
+  const msgM = lpMsgMode(), need = lpCredits(n);
+  const mins = Math.max(1, Math.round((45 + n * (msgM ? 0.9 : (doPdf ? 1.8 : 0.9))) / 60));
   const dur = mins >= 60 ? (Math.floor(mins / 60) + ' h ' + String(mins % 60).padStart(2, '0')) : (mins + ' min');
   const left = (typeof freeCredits !== 'undefined') ? freeCredits : null;
-  const short = left !== null && n > left;
-  let h = '<div class="lpx-est-row"><div><b>' + n + ' crédit' + (n > 1 ? 's' : '') + '</b><span>1 par contact, remboursé si un contact échoue</span></div>'
+  const short = left !== null && need > left;
+  let h = '<div class="lpx-est-row"><div><b>' + need + ' crédit' + (need > 1 ? 's' : '') + '</b><span>' + (msgM ? '1 pour 4 contacts' : '1 par contact') + ', remboursé si un contact échoue</span></div>'
     + '<div><b>≈ ' + dur + '</b><span>durée estimée, vous pouvez quitter la page</span></div>'
     + (left !== null ? '<div><b' + (short ? ' style="color:#EF4444"' : '') + '>' + left + '</b><span>crédits disponibles' + (short ? ' : insuffisant' : '') + '</span></div>' : '') + '</div>';
   if (n > 3) h += '<div class="lpx-est-test"><span>Pas encore sûr du rendu ? Testez la charte sur les 3 premiers contacts avant de lancer le reste.</span>'
-    + '<button class="btn btn-ghost" onclick="startGenerationTest()">Tester sur 3 contacts (3 crédits)</button></div>';
+    + '<button class="btn btn-ghost" onclick="startGenerationTest()">Tester sur 3 contacts (' + lpCredits(3) + ' crédit' + (lpCredits(3) > 1 ? 's' : '') + ')</button></div>';
   box.innerHTML = h;
 }
 
@@ -9675,7 +9720,7 @@ function validateGenOptions() {
   var mail = document.getElementById('chk-mail');
   var err  = document.getElementById('gen-opt-error');
   var btn  = document.querySelector('[onclick="startGeneration()"]');
-  var valid = (pdf && pdf.checked) || (mail && mail.checked);
+  var valid = lpMsgMode() || (pdf && pdf.checked) || (mail && mail.checked);
   if (err) err.style.display = valid ? 'none' : 'block';
   if (btn) btn.disabled = !valid;
 }
@@ -9741,7 +9786,7 @@ async function lpAssistantSend(ev) {
 // Les anciens liens #/... sont redirigés vers ces pages.
 function lpRoutePages(){var p=location.hash.replace('#/','');if(!p){showScreen('landing',false);return}location.replace(p.replace(/\/?$/,'/'))}
 function lpGo(id){var go=function(){var e=document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth'})};var l=document.getElementById('landing');if(!l.classList.contains('active')){showScreen('landing');try{history.replaceState({screen:'landing'},'','#landing')}catch(e){}setTimeout(go,80)}else go()}
-function lpFooterHTML(){return '<footer class="pgf"><div class="pgf-in"><div><span class="pgl">Lead<i>Page</i></span><p style="margin-top:10px">Un document personnalisé par prospect, avec mesure de lecture.</p></div><div><b>Cas d\'usage</b><a href="cas/agences/">Agences et prestataires</a><a href="cas/commerciaux/">Équipes commerciales</a><a href="cas/consultants/">Consultants</a><a href="cas/recrutement/">Recrutement et événements</a></div><div><b>Ressources</b><a href="ressources/">Livres blancs</a><a href="templates/">Templates de mails</a><a href="outils/">Outils gratuits</a><a href="comparatif/">Comparatif</a></div><div><b>LeadPage</b><a onclick="lpGo(\'lp-pricing\')">Tarifs</a><a href="demo/">Démo en 60 s</a><a onclick="lpGo(\'lp-faq\')">FAQ</a><a onclick="showScreen(\'auth\')">Connexion</a></div><div><b>Confiance</b><a href="legal/mentions-legales/">Mentions légales</a><a href="legal/confidentialite/">Confidentialité</a><a href="legal/cgv/">CGV et CGU</a><a href="legal/cookies/">Cookies</a><a href="legal/donnees-et-securite/">Données et sécurité</a></div></div><small>© 2026 LeadPage · Édité par Devoleads, La Rochelle</small></footer>'}
+function lpFooterHTML(){return '<footer class="pgf"><div class="pgf-in"><div><span class="pgl">Lead<i>Page</i></span><p style="margin-top:10px">Un document personnalisé par prospect, avec mesure de lecture.</p></div><div><b>Cas d\'usage</b><a href="cas/agences/">Agences et prestataires</a><a href="cas/commerciaux/">Équipes commerciales</a><a href="cas/consultants/">Consultants</a><a href="cas/recrutement/">Recrutement et événements</a></div><div><b>Ressources</b><a href="ressources/">Livres blancs</a><a href="templates/">Templates de mails</a><a href="outils/">Outils gratuits</a><a href="comparatif/">Comparatif</a></div><div><b>LeadPage</b><a onclick="lpGo(\'lp-pricing\')">Tarifs</a><a href="messages/">Offre Messages</a><a href="demo/">Démo en 60 s</a><a onclick="lpGo(\'lp-faq\')">FAQ</a><a onclick="showScreen(\'auth\')">Connexion</a></div><div><b>Confiance</b><a href="legal/mentions-legales/">Mentions légales</a><a href="legal/confidentialite/">Confidentialité</a><a href="legal/cgv/">CGV et CGU</a><a href="legal/cookies/">Cookies</a><a href="legal/donnees-et-securite/">Données et sécurité</a></div></div><small>© 2026 LeadPage · Édité par Devoleads, La Rochelle</small></footer>'}
 function lpFooter(){var f=document.querySelector('#landing .lp-footer');if(f)f.outerHTML=lpFooterHTML()}
 addEventListener('hashchange',function(){if(location.hash.startsWith('#/'))lpRoutePages()});
 </script>

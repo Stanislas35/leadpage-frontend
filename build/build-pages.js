@@ -16,7 +16,7 @@ const { routes } = require('./pages-content.js');
 const FOOTER = '<footer class="pgf"><div class="pgf-in"><div><span class="pgl">Lead<i>Page</i></span><p style="margin-top:10px">Un document personnalisé par prospect, avec mesure de lecture.</p></div>' +
   '<div><b>Cas d\'usage</b><a href="§B§cas/agences/">Agences et prestataires</a><a href="§B§cas/commerciaux/">Équipes commerciales</a><a href="§B§cas/consultants/">Consultants</a><a href="§B§cas/recrutement/">Recrutement et événements</a></div>' +
   '<div><b>Ressources</b><a href="§B§ressources/">Livres blancs</a><a href="§B§templates/">Templates de mails</a><a href="§B§outils/">Outils gratuits</a><a href="§B§comparatif/">Comparatif</a></div>' +
-  '<div><b>LeadPage</b><a href="§B§#lp-pricing">Tarifs</a><a href="§B§#lp-faq">FAQ</a><a href="§B§demo/">Démo en 60 s</a><a href="§B§#connexion">Connexion</a></div><div><b>Confiance</b><a href="§B§legal/mentions-legales/">Mentions légales</a><a href="§B§legal/confidentialite/">Confidentialité</a><a href="§B§legal/cgv/">CGV et CGU</a><a href="§B§legal/cookies/">Cookies</a><a href="§B§legal/donnees-et-securite/">Données et sécurité</a></div></div><small>© 2026 LeadPage · Édité par Devoleads, La Rochelle</small></footer>';
+  '<div><b>LeadPage</b><a href="§B§#lp-pricing">Tarifs</a><a href="§B§#lp-faq">FAQ</a><a href="§B§messages/">Offre Messages</a><a href="§B§demo/">Démo en 60 s</a><a href="§B§#connexion">Connexion</a></div><div><b>Confiance</b><a href="§B§legal/mentions-legales/">Mentions légales</a><a href="§B§legal/confidentialite/">Confidentialité</a><a href="§B§legal/cgv/">CGV et CGU</a><a href="§B§legal/cookies/">Cookies</a><a href="§B§legal/donnees-et-securite/">Données et sécurité</a></div></div><small>© 2026 LeadPage · Édité par Devoleads, La Rochelle</small></footer>';
 
 const brand = (html.match(/<div class="nav-logo"[^>]*>([\s\S]*?)<\/div>\s*<div class="nav-links"/) || [])[1] || 'LeadPage';
 const esc = s => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
@@ -53,7 +53,7 @@ ${ld}
 <nav>
   <a class="nav-logo" href="${B}" style="text-decoration:none;color:inherit">${brand}</a>
   <div class="nav-links" id="nav-links">
-    <a href="${B}demo/">Démo</a><a href="${B}#lp-how">Fonctionnement</a><a href="${B}#lp-measure">Mesure</a><a href="${B}cas/">Cas d'usage</a><a href="${B}ressources/">Ressources</a><a href="${B}#lp-pricing">Tarifs</a><a href="${B}#lp-faq">FAQ</a>
+    <a href="${B}demo/">Démo</a><a href="${B}messages/">Messages</a><a href="${B}#lp-how">Fonctionnement</a><a href="${B}#lp-measure">Mesure</a><a href="${B}cas/">Cas d'usage</a><a href="${B}ressources/">Ressources</a><a href="${B}#lp-pricing">Tarifs</a><a href="${B}#lp-faq">FAQ</a>
   </div>
   <div class="nav-right">
     <button id="theme-btn" aria-label="Changer de thème" title="Changer de thème">☾</button>
