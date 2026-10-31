@@ -7178,6 +7178,7 @@ function renderStatsPage(d) {
     + kpi('Mails rédigés', nf(t.mails), 'mails de prospection personnalisés')
     + kpi('Prospects ayant cliqué', nf(t.clicked), nf(t.clicks) + ' clic' + (t.clicks > 1 ? 's' : '') + ' au total')
     + kpi('Taux de consultation', t.ok ? t.click_rate + ' %' : '—', 'prospects ayant ouvert leur PDF')
+    + (t.read != null ? kpi('Lectures confirmées', nf(t.read), (t.ok ? Math.round(t.read / t.ok * 100) : 0) + ' % des PDF · lu en moyenne ' + (t.read ? lpFmtSecs(Math.round(t.read_secs / t.read)) : '—') + (t.cta ? ' · ' + nf(t.cta) + ' lien' + (t.cta > 1 ? 's' : '') + ' cliqué' + (t.cta > 1 ? 's' : '') : '')) : '')
     + '</div>';
 
   // Clics par jour
@@ -7331,7 +7332,7 @@ function renderCampaignDetail() {
   html += '<div style="overflow:auto;border:1px solid var(--border);border-radius:12px;background:var(--bg2)"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr>';
   const th = 'text-align:left;padding:10px 12px;font-size:11px;color:var(--text3);border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0;background:var(--bg2)';
   cols.forEach(c => { html += '<th style="' + th + '">' + escHtml(c) + '</th>'; });
-  html += '<th style="' + th + '">Document</th></tr></thead><tbody>';
+  html += '<th style="' + th + '" title="Lecture confirmée du PDF : temps actif, pages vues, clic sur un lien">Lecture</th><th style="' + th + '">Document</th></tr></thead><tbody>';
   shown.forEach((x, i) => {
     const r = x.r, idx = st.rows.indexOf(x);
     html += '<tr style="border-bottom:1px solid var(--border)">';
@@ -7341,6 +7342,7 @@ function renderCampaignDetail() {
       html += '<td style="padding:9px 12px;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + escAttr(full) + '">' + escHtml(v) + '</td>';
     });
     const hasPdf = !!r.dropbox_url;
+    html += '<td style="padding:9px 12px;white-space:nowrap">' + lpReadCell(r) + '</td>';
     html += '<td style="padding:9px 12px;white-space:nowrap">'
       + (hasPdf ? '<a class="pdf-link" href="' + escAttr(r.dropbox_url) + '" target="_blank" rel="noopener">Voir</a>'
         + ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px;margin-left:4px" onclick="downloadOnePdf(' + idx + ')">⬇ PDF</button>'
@@ -7349,7 +7351,7 @@ function renderCampaignDetail() {
       + ((r.mail1_corps || '').trim() ? ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px" onclick="cdShowMail(' + idx + ')">✉ Mail</button>' : '')
       + '</td></tr>';
   });
-  if (!shown.length) html += '<tr><td colspan="' + (cols.length + 1) + '" style="padding:24px;text-align:center;color:var(--text3)">Aucun contact</td></tr>';
+  if (!shown.length) html += '<tr><td colspan="' + (cols.length + 2) + '" style="padding:24px;text-align:center;color:var(--text3)">Aucun contact</td></tr>';
   html += '</tbody></table></div>';
   if (filtered.length > shown.length) {
     html += '<div style="text-align:center;margin-top:12px"><button class="btn btn-ghost" style="' + btn + '" onclick="cdState.limit+=200;renderCampaignDetail()">Afficher plus (' + (filtered.length - shown.length) + ' restants)</button></div>';
@@ -7370,6 +7372,18 @@ async function retryCampaignErrors() {
     showToast('Relance lancée : ' + n + ' contact' + (n > 1 ? 's' : ''));
     loadCampaigns();
   } catch (e) { showToast('Erreur : ' + e.message, '#EF4444'); if (b) { b.disabled = false; b.textContent = '↻ Relancer'; } }
+}
+
+function lpFmtSecs(s) { s = s || 0; return s < 60 ? s + ' s' : Math.floor(s / 60) + ' min ' + String(s % 60).padStart(2, '0') + ' s'; }
+function lpReadCell(r) {
+  if (r.human_views > 0) {
+    return '<span title="Lecture confirmée" style="color:#16A34A;font-weight:700">● ' + lpFmtSecs(r.read_seconds) + '</span>'
+      + ' <span style="color:var(--text3)">· page ' + (r.max_page || 1) + '</span>'
+      + (r.cta_clicks > 0 ? ' <span class="lpx-tag" style="background:#DCFCE7;color:#166534">lien cliqué</span>' : '')
+      + (r.human_views > 1 ? ' <span class="lpx-tag">' + r.human_views + ' visites</span>' : '');
+  }
+  if ((r.clicks || 0) > 0) return '<span style="color:var(--text3)" title="Le lien a été ouvert mais aucune lecture n\u2019a été confirmée (page fermée aussitôt ou robot)">ouvert, lecture non confirmée</span>';
+  return '<span style="color:var(--text3)">—</span>';
 }
 
 function copyText(t) {
@@ -7850,6 +7864,83 @@ async function lpInviteProcess() {
     setTimeout(() => { location.hash = '#dashboard/generate'; location.reload(); }, 900);
     return true;
   } catch (e) { showToast(e.message, '#EF4444'); return false; }
+}
+
+// Page de lecture du PDF (#lecture/TOKEN), sans connexion : mesure le temps actif, les pages vues et les clics sur les liens
+async function lpRenderReader(token) {
+  document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
+  const old = document.getElementById('lp-reader'); if (old) old.remove();
+  const root = document.createElement('div'); root.id = 'lp-reader';
+  root.style.cssText = 'position:fixed;inset:0;overflow:auto;background:#EEF0F5;font-family:DM Sans,system-ui,sans-serif;z-index:9999';
+  root.innerHTML = '<div style="position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #E2E5EC;padding:10px 16px;display:flex;align-items:center;gap:12px">'
+    + '<b style="font-size:14px;color:#1B2D6B;flex:1">Document préparé pour vous</b>'
+    + '<a id="lpr-open" target="_blank" rel="noopener" style="font-size:13px;color:#1B2D6B;text-decoration:none;border:1px solid #CBD2E0;border-radius:8px;padding:6px 12px">Ouvrir le PDF</a></div>'
+    + '<div id="lpr-pages" style="max-width:880px;margin:0 auto;padding:16px 12px 40px"><div style="text-align:center;color:#64748B;padding:40px">Chargement du document…</div></div>';
+  document.body.appendChild(root);
+  const box = root.querySelector('#lpr-pages');
+  let info;
+  try { info = await (await fetch(API_URL + '/api/public/view/' + encodeURIComponent(token))).json(); if (!info.pdf_url) throw 0; }
+  catch (e) { box.innerHTML = '<div style="text-align:center;padding:60px 10px"><h1 style="font-size:22px">Document introuvable</h1><p style="color:#64748B">Ce lien n’est plus valide.</p></div>'; return; }
+  root.querySelector('#lpr-open').href = info.pdf_url;
+
+  const st = { sid: Array.from(crypto.getRandomValues(new Uint8Array(10))).map(b => b.toString(16).padStart(2, '0')).join(''),
+    seconds: 0, page: 1, maxPage: 1, total: 0, pageSecs: {}, cta: 0, links: [], dl: false, sent: false, dirty: false, last: Date.now() };
+  const bump = () => { st.last = Date.now(); };
+  ['pointermove', 'pointerdown', 'scroll', 'keydown', 'touchstart', 'wheel'].forEach(ev => root.addEventListener(ev, bump, { passive: true }));
+  const payload = () => JSON.stringify({ sid: st.sid, seconds: st.seconds, page: st.page, max_page: st.maxPage, pages_total: st.total,
+    page_secs: st.pageSecs, cta: st.cta, links: st.links, dl: st.dl, w: window.innerWidth });
+  const send = (final) => {
+    if (!st.sent && st.seconds < 3) return;       // une ouverture éclair (aperçu, scanner) n'est pas une lecture
+    if (navigator.webdriver) return;
+    st.sent = true; st.dirty = false;
+    const url = API_URL + '/api/public/view/' + encodeURIComponent(token) + '/beat';
+    try {
+      if (final && navigator.sendBeacon) navigator.sendBeacon(url, new Blob([payload()], { type: 'text/plain' }));
+      else fetch(url, { method: 'POST', body: payload(), headers: { 'Content-Type': 'text/plain' }, keepalive: true }).catch(() => {});
+    } catch (e) {}
+  };
+  setInterval(() => {
+    if (document.visibilityState !== 'visible' || Date.now() - st.last > 60000) return;   // lecture active uniquement
+    st.seconds++; st.pageSecs[st.page] = (st.pageSecs[st.page] || 0) + 1; st.dirty = true;
+    if (st.seconds === 3 || st.seconds % 10 === 0) send(false);
+  }, 1000);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && st.dirty) send(true); });
+  window.addEventListener('pagehide', () => { if (st.dirty) send(true); });
+  const onLink = (url) => { st.cta++; try { const h = new URL(url).hostname.replace(/^www\./, ''); if (!st.links.includes(h)) st.links.push(h); } catch (e) {} bump(); st.dirty = true; send(false); };
+  root.querySelector('#lpr-open').addEventListener('click', () => { st.dl = true; st.dirty = true; send(false); });
+
+  const fallback = () => { box.innerHTML = '<iframe src="' + info.pdf_url.replace(/"/g, '') + '" style="width:100%;height:calc(100vh - 80px);border:0;background:#fff;border-radius:8px"></iframe>'; st.total = 1; };
+  try {
+    if (!window.pdfjsLib) await new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const doc = await pdfjsLib.getDocument(info.pdf_url).promise;
+    st.total = doc.numPages; box.innerHTML = '';
+    const width = Math.min(box.clientWidth - 24, 856), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const ratios = {};
+    const io = new IntersectionObserver(es => {
+      es.forEach(e => { ratios[e.target.dataset.n] = e.isIntersecting ? e.intersectionRatio : 0; });
+      let best = st.page, bv = -1; Object.keys(ratios).forEach(k => { if (ratios[k] > bv) { bv = ratios[k]; best = +k; } });
+      if (bv > 0) st.page = best;
+      Object.keys(ratios).forEach(k => { if (ratios[k] >= 0.25 && +k > st.maxPage) { st.maxPage = +k; st.dirty = true; } });
+    }, { root, threshold: [0, .25, .5, .75, 1] });
+    for (let n = 1; n <= doc.numPages; n++) {
+      const page = await doc.getPage(n);
+      const v1 = page.getViewport({ scale: 1 }), scale = width / v1.width, vp = page.getViewport({ scale });
+      const wrap = document.createElement('div'); wrap.dataset.n = n;
+      wrap.style.cssText = 'position:relative;margin:0 auto 16px;box-shadow:0 2px 14px rgba(15,23,42,.12);background:#fff;width:' + vp.width + 'px;height:' + vp.height + 'px';
+      const cv = document.createElement('canvas'); cv.width = vp.width * dpr; cv.height = vp.height * dpr; cv.style.cssText = 'width:100%;height:100%;display:block';
+      wrap.appendChild(cv); box.appendChild(wrap); io.observe(wrap);
+      await page.render({ canvasContext: cv.getContext('2d'), viewport: vp, transform: dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null }).promise;
+      try {
+        (await page.getAnnotations()).filter(a => a.subtype === 'Link' && a.url).forEach(a => {
+          const r = vp.convertToViewportRectangle(a.rect), x = Math.min(r[0], r[2]), y = Math.min(r[1], r[3]);
+          const l = document.createElement('a'); l.href = a.url; l.target = '_blank'; l.rel = 'noopener';
+          l.style.cssText = 'position:absolute;left:' + x + 'px;top:' + y + 'px;width:' + Math.abs(r[2] - r[0]) + 'px;height:' + Math.abs(r[3] - r[1]) + 'px;cursor:pointer';
+          l.addEventListener('click', () => onLink(a.url)); wrap.appendChild(l);
+        });
+      } catch (e) {}
+    }
+  } catch (e) { console.warn('Lecteur PDF:', e); fallback(); }
 }
 
 // Page de suivi publique (#suivi/TOKEN), sans connexion
@@ -8896,6 +8987,8 @@ window.addEventListener('popstate', (e) => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
+  const rdM = location.hash.match(/^#lecture\/([\w-]+)/);
+  if (rdM) { lpRenderReader(rdM[1]); return; }
   const pubM = location.hash.match(/^#suivi\/([\w-]+)/);
   if (pubM) { lpRenderPublic(pubM[1]); return; }
   lpInviteCapture();
