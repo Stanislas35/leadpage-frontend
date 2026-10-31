@@ -4830,6 +4830,7 @@ nav { background: rgba(27,36,85,.9) !important; }
           <select id="camp-client" class="lpx-select" onchange="campState.client=this.value;renderCampaignList()"><option value="">Tous les clients</option></select>
         </div>
         <div class="lpx-folders" id="camp-folders"></div>
+        <button class="lpx-chip" id="camp-arch" style="display:none;margin:0 0 10px" onclick="campToggleArch()"></button>
         <div class="lpx-bulk" id="camp-bulk"></div>
       </div>
 
@@ -6704,7 +6705,7 @@ function lpDialog(opts) {
 }
 
 // ── CAMPAGNES : liste, dossiers, recherche, sélection, suppression ────────────────────────
-let campState = { camps: [], folder: '*', q: '', status: '', sel: {}, menu: '', client: '', view: 'charte', sort: { key: 'date', dir: -1 } };
+let campState = { camps: [], folder: '*', q: '', status: '', sel: {}, menu: '', client: '', view: 'charte', arch: false, sort: { key: 'date', dir: -1 } };
 try { const v = localStorage.getItem('lp_campview'); if (v) campState.view = v; } catch (e) {}
 let lpChartes = [];
 async function lpLoadChartesCache() { try { const r = await apiCall('GET', '/api/chartes/', null, true); lpChartes = Array.isArray(r) ? r : []; window._chartesCache = lpChartes.length ? lpChartes : window._chartesCache; } catch (e) {} return lpChartes; }
@@ -6880,11 +6881,42 @@ function campFiltered() {
     const f = campFolderOf(c);
     if (campState.folder === '' && f) return false;
     if (campState.folder !== '*' && campState.folder !== '' && f !== campState.folder) return false;
+    if (!!c.archived !== !!campState.arch) return false;
     if (campState.status && c.status !== campState.status) return false;
     if (campState.client === '__none__' ? !!c.client_id : (campState.client && c.client_id !== campState.client)) return false;
     if (q && !(c.name || '').toLowerCase().includes(q)) return false;
     return true;
   });
+}
+
+async function campArchive(ids, on) {
+  let fail = 0, last = '';
+  for (const id of ids) {
+    try { await apiCall('PATCH', '/api/campaigns/' + id, { archived: !!on }, true); const c = campState.camps.find(function(x) { return x.id === id; }); if (c) c.archived = !!on; delete campState.sel[id]; }
+    catch (e) { fail++; last = (e && e.message) || ''; }
+  }
+  renderCampaignList();
+  if (fail) showToast(fail + ' non modifiée(s) : ' + last, '#EF4444');
+  else showToast(ids.length > 1 ? ids.length + (on ? ' campagnes archivées' : ' campagnes restaurées') : (on ? 'Campagne archivée' : 'Campagne restaurée'));
+}
+function campToggleArch() { campState.arch = !campState.arch; campState.sel = {}; renderCampaignList(); }
+
+async function campDuplicate(id) {
+  const c = campState.camps.find(function(x) { return x.id === id; }); if (!c) return;
+  showDashSection('generate', null);
+  try { if (typeof resetGeneration === 'function') resetGeneration(); } catch (e) {}
+  const ni = document.getElementById('campaign-name'); if (ni) ni.value = ((c.name || 'Campagne') + ' (copie)').slice(0, 120);
+  const setChk = function(i, v) { const el = document.getElementById(i); if (el) el.checked = !!v; };
+  setChk('chk-pdf', c.generate_pdf !== false); setChk('chk-mail', !!c.generate_mail1);
+  try { validateGenOptions(); } catch (e) {}
+  const sel = document.getElementById('charte-selector');
+  if (c.charte_id && sel && Array.prototype.some.call(sel.options, function(o) { return o.value === c.charte_id; })) {
+    sel.value = c.charte_id; try { onCharteChange(c.charte_id); } catch (e) { window.selectedCharteId = c.charte_id; }
+  } else if (c.charte_id) {
+    window.selectedCharteId = c.charte_id;
+    showToast('Charte d\u2019origine introuvable : vérifiez la charte choisie', '#F59E0B');
+  }
+  showToast('Réglages repris de « ' + (c.name || 'campagne') + ' » : importez votre nouvelle liste CSV');
 }
 
 function campToggleMenu(id, ev) { if (ev) ev.stopPropagation(); campState.menu = campState.menu === id ? '' : id; renderCampaignList(); }
@@ -6898,6 +6930,7 @@ function renderCampaignBulk() {
   el.innerHTML = '<span><b>' + ids.length + '</b> sélectionnée' + (ids.length > 1 ? 's' : '') + '</span>'
     + '<span style="flex:1"></span>'
     + '<button class="btn btn-ghost" onclick="campMove(campSelIds())">Déplacer vers…</button>'
+    + '<button class="btn btn-ghost" onclick="campArchive(campSelIds(),' + (campState.arch ? 'false' : 'true') + ')">' + (campState.arch ? 'Désarchiver' : 'Archiver') + '</button>'
     + '<button class="btn lpx-danger" onclick="campDelete(campSelIds())">Supprimer</button>'
     + '<button class="btn btn-ghost" onclick="campState.sel={};renderCampaignList()">Annuler</button>';
 }
@@ -6923,6 +6956,13 @@ function renderCampaignList() {
       + (val !== '*' && val !== '' ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>' : '')
       + escHtml(label) + ' <span class="n">' + n + '</span></button>';
   };
+  const nArch = camps.filter(function(c) { return c.archived; }).length;
+  const ab = document.getElementById('camp-arch');
+  if (ab) {
+    ab.style.display = (nArch || campState.arch) ? '' : 'none';
+    ab.className = 'lpx-chip' + (campState.arch ? ' active' : '');
+    ab.innerHTML = (campState.arch ? 'Retour aux campagnes' : 'Archivées <span class="n">' + nArch + '</span>');
+  }
   const tb = document.getElementById('camp-folders');
   if (tb && !names.length) { tb.innerHTML = ''; tb.style.display = 'none'; }
   else if (tb) {
@@ -6971,9 +7011,11 @@ function renderCampaignList() {
     else if (camp.status === 'processing') acts += '<button class="btn btn-ghost lpx-sm" onclick="showDashSection(\'generate\',null)">Voir</button> ';
     acts += '<span class="lpx-menu-wrap" style="display:inline-block;position:relative"><button class="btn btn-ghost lpx-sm lpx-dots" aria-label="Plus d\'actions" onclick="campToggleMenu(\'' + id + '\', event)">⋯</button>'
       + (campState.menu === id ? '<div class="lpx-menu" onclick="event.stopPropagation()" style="text-align:left">'
+        + '<button onclick="campState.menu=\'\';campDuplicate(\'' + id + '\')">Dupliquer (nouvelle liste)</button>'
         + '<button onclick="campState.menu=\'\';campRename(\'' + id + '\')">Renommer</button>'
         + '<button onclick="campState.menu=\'\';campSetClient(\'' + id + '\')">Rattacher à un client</button>'
         + (campFolderNames().length || f ? '<button onclick="campState.menu=\'\';campMove([\'' + id + '\'])">Déplacer vers un dossier</button>' : '')
+        + '<button onclick="campState.menu=\'\';campArchive([\'' + id + '\'],' + (camp.archived ? 'false' : 'true') + ')">' + (camp.archived ? 'Désarchiver' : 'Archiver') + '</button>'
         + '<button class="danger" onclick="campState.menu=\'\';campDelete([\'' + id + '\'])">Supprimer</button></div>' : '')
       + '</span>';
     const tags = (showGroupTags && camp.client_id && lpClientName(camp.client_id) ? '<span class="lpx-client-tag">' + escHtml(lpClientName(camp.client_id)) + '</span> ' : '')
