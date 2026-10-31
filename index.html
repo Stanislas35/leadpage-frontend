@@ -2771,6 +2771,36 @@ tr:hover td { background: var(--card-hover); }
 .lpx-ai-box { border: 1px solid var(--pink); background: linear-gradient(135deg, rgba(233,30,140,.08), rgba(91,128,255,.08)); border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; }
 .lpx-ai-title { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
 .lpx-ai-desc { font-size: 12px; color: var(--text2); line-height: 1.5; margin-bottom: 12px; }
+.lpg-views { display: inline-flex; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.lpg-views button { background: var(--bg2); color: var(--text2); border: 0; padding: 7px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.lpg-views button.on { background: var(--pink); color: #fff; }
+.lpg-group { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 14px; }
+.lpg-group.over { border-color: var(--pink); box-shadow: 0 0 0 2px rgba(233,30,140,.25); }
+.lpg-head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; flex-wrap: wrap; }
+.lpg-bar { width: 6px; align-self: stretch; border-radius: 3px; flex: none; }
+.lpg-head h3 { margin: 0; font-size: 14.5px; font-weight: 700; }
+.lpg-kpis { display: flex; gap: 16px; font-size: 12px; color: var(--text2); flex: 1; flex-wrap: wrap; }
+.lpg-kpis b { color: var(--text); }
+.lpg-chev { color: var(--text3); transition: transform .15s; font-size: 12px; }
+.lpg-group.closed .lpg-chev { transform: rotate(-90deg); }
+.lpg-group.closed .lpg-body { display: none; }
+.lpg-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.lpg-table th { text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--text3); padding: 8px 10px; border-top: 1px solid var(--border); cursor: pointer; white-space: nowrap; user-select: none; }
+.lpg-table td { padding: 10px; border-top: 1px solid var(--border); vertical-align: middle; }
+.lpg-table tr.row { cursor: pointer; }
+.lpg-table tr.row:hover td { background: var(--bg3); }
+.lpg-table tr.row.selected td { background: rgba(233,30,140,.06); }
+.lpg-table tr.row.dragging { opacity: .45; }
+.lpg-table td.act { text-align: right; white-space: nowrap; }
+.lpg-table .mini { display: block; height: 3px; background: var(--bg4); border-radius: 3px; margin-top: 5px; overflow: hidden; min-width: 70px; }
+.lpg-table .mini i { display: block; height: 100%; background: linear-gradient(90deg, var(--blue-light), var(--pink)); }
+.lpg-drop { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 700; background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; box-shadow: 0 12px 40px rgba(0,0,0,.35); display: none; max-width: 92vw; }
+.lpg-drop small { display: block; font-size: 11px; color: var(--text3); margin-bottom: 8px; text-align: center; }
+.lpg-drop .chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.lpg-drop .chip { padding: 9px 14px; border: 1.5px dashed var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; background: var(--bg3); }
+.lpg-drop .chip.over { border-color: var(--pink); background: rgba(233,30,140,.12); color: var(--pink); }
+.cm-bloc.dragover { outline: 2px dashed var(--pink); outline-offset: 2px; }
+@media (max-width: 800px) { .lpg-table .hide-s { display: none; } }
 .lpw-box { margin: 0 0 14px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg3); }
 .lpw-box label { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text3); margin-bottom: 6px; }
 .lpw-box select { width: 100%; background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 7px 8px; font-size: 12.5px; }
@@ -4768,11 +4798,10 @@ nav { background: rgba(27,36,85,.9) !important; }
       <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:12px;flex-wrap:wrap">
         <div>
           <h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Campagnes</h1>
-          <p style="color:var(--text2);font-size:14px;margin-top:4px">Historique de vos générations, classées par dossier</p>
+          <p style="color:var(--text2);font-size:14px;margin-top:4px">Historique de vos générations, classées par charte ou par client</p>
         </div>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <span id="camp-count" style="font-size:13px;color:var(--text3);padding:6px 14px;background:var(--bg3);border-radius:100px;border:1px solid var(--border)">0 campagnes</span>
-          <button class="btn btn-ghost" onclick="campNewFolder()">+ Nouveau dossier</button>
           <button class="btn btn-primary" onclick="showDashSection('generate', document.querySelector('.sidebar-item'))">+ Nouvelle campagne</button>
         </div>
       </div>
@@ -4793,6 +4822,7 @@ nav { background: rgba(27,36,85,.9) !important; }
       <!-- Barre d'outils -->
       <div id="camp-toolbar">
         <div class="lpx-toolbar">
+          <div class="lpg-views" id="camp-views"></div>
           <input id="camp-search" class="lpx-search" type="search" placeholder="Rechercher une campagne…" oninput="campState.q=this.value;renderCampaignList()">
           <select id="camp-status" class="lpx-select" onchange="campState.status=this.value;renderCampaignList()">
             <option value="">Tous les statuts</option><option value="done">Terminées</option><option value="processing">En cours</option><option value="error">En erreur</option>
@@ -6674,7 +6704,69 @@ function lpDialog(opts) {
 }
 
 // ── CAMPAGNES : liste, dossiers, recherche, sélection, suppression ────────────────────────
-let campState = { camps: [], folder: '*', q: '', status: '', sel: {}, menu: '', client: '' };
+let campState = { camps: [], folder: '*', q: '', status: '', sel: {}, menu: '', client: '', view: 'charte', sort: { key: 'date', dir: -1 } };
+try { const v = localStorage.getItem('lp_campview'); if (v) campState.view = v; } catch (e) {}
+let lpChartes = [];
+async function lpLoadChartesCache() { try { const r = await apiCall('GET', '/api/chartes/', null, true); lpChartes = Array.isArray(r) ? r : []; window._chartesCache = lpChartes.length ? lpChartes : window._chartesCache; } catch (e) {} return lpChartes; }
+function lpCharteOf(id) { return lpChartes.find(function(c) { return c.id === id; }); }
+function campSetView(v) { campState.view = v; campState.sel = {}; try { localStorage.setItem('lp_campview', v); } catch (e) {} renderCampaignList(); }
+function campClosedGet() { return lpLocalGet('lp_camp_closed', {}); }
+function campToggleGroup(key) { const m = campClosedGet(); if (m[key]) delete m[key]; else m[key] = 1; lpLocalSet('lp_camp_closed', m); renderCampaignList(); }
+function campSortBy(k) { campState.sort = { key: k, dir: campState.sort.key === k ? -campState.sort.dir : (k === 'name' ? 1 : -1) }; renderCampaignList(); }
+function campSortVal(c, k) {
+  if (k === 'name') return (c.name || '').toLowerCase();
+  if (k === 'pdf') return c.processed || 0;
+  if (k === 'rate') return (c.processed || 0) ? (c.opened_count || 0) / c.processed : -1;
+  if (k === 'err') return c.error_rows || 0;
+  return c.created_at || '';
+}
+function campStartWithCharte(id) {
+  const sel = document.getElementById('charte-selector');
+  if (sel && id && id !== '__none__') { sel.value = id; if (typeof onCharteChange === 'function') onCharteChange(id); }
+  showDashSection('generate', document.querySelector('.sidebar-item'), true);
+}
+
+// ── Glisser-déposer : barre de dépôt « clients » ─────────────────────────────────────────
+let lpDrag = null;   // { kind: 'camp'|'charte', ids: [...] }
+function lpDragStart(ev, kind, ids) {
+  lpDrag = { kind: kind, ids: ids };
+  try { ev.dataTransfer.effectAllowed = 'move'; ev.dataTransfer.setData('text/plain', kind); } catch (e) {}
+  lpDropBar(true);
+}
+function lpDragEnd() { lpDrag = null; lpDropBar(false); document.querySelectorAll('.lpg-table tr.dragging').forEach(function(r) { r.classList.remove('dragging'); }); }
+function lpDropBar(on) {
+  let bar = document.getElementById('lp-dropbar');
+  if (!bar) { bar = document.createElement('div'); bar.id = 'lp-dropbar'; bar.className = 'lpg-drop'; document.body.appendChild(bar); }
+  if (!on) { bar.style.display = 'none'; return; }
+  const chips = (lpClients || []).map(function(c) { return '<div class="chip" data-cid="' + escHtml(c.id) + '">' + escHtml(c.name) + '</div>'; }).join('') + '<div class="chip" data-cid="">Sans client</div>';
+  bar.innerHTML = '<small>Déposez ici pour rattacher à un client</small><div class="chips">' + chips + '</div>';
+  bar.querySelectorAll('.chip').forEach(function(ch) {
+    ch.ondragover = function(e) { e.preventDefault(); ch.classList.add('over'); };
+    ch.ondragleave = function() { ch.classList.remove('over'); };
+    ch.ondrop = function(e) { e.preventDefault(); ch.classList.remove('over'); lpDropOnClient(ch.dataset.cid); };
+  });
+  if (!(lpClients || []).length) bar.innerHTML = '<small>Créez d\u2019abord un client dans l\u2019onglet Clients pour y déposer des éléments</small>';
+  bar.style.display = 'block';
+}
+async function lpDropOnClient(cid) {
+  const d = lpDrag; lpDragEnd(); if (!d || !d.ids.length) return;
+  const name = cid ? lpClientName(cid) : '';
+  let fail = 0;
+  for (const id of d.ids) {
+    try {
+      if (d.kind === 'camp') { await apiCall('PATCH', '/api/campaigns/' + id, { client_id: cid }, true); const c = campState.camps.find(function(x) { return x.id === id; }); if (c) c.client_id = cid || null; }
+      else { await apiCall('PUT', '/api/chartes/' + id, { client_id: cid }, true); const c = lpChartes.find(function(x) { return x.id === id; }); if (c) c.client_id = cid || null; }
+    } catch (e) { fail++; }
+  }
+  if (d.kind === 'camp') { campState.sel = {}; renderCampaignList(); } else { try { renderCartesGrid(lpChartes); } catch (e) {} }
+  if (fail) showToast(fail + ' élément(s) non déplacé(s)', '#EF4444');
+  else showToast((d.ids.length > 1 ? d.ids.length + ' éléments rattachés' : 'Rattaché') + (name ? ' à « ' + name + ' »' : ' : aucun client'));
+}
+function campDragStart(ev, id) {
+  const ids = campState.sel[id] ? campSelIds() : [id];
+  const row = ev.target.closest('tr'); if (row) row.classList.add('dragging');
+  lpDragStart(ev, 'camp', ids);
+}
 
 function lpUserKey() { return (currentUser && (currentUser.email || currentUser.id)) || 'anon'; }
 function lpLocalGet(k, d) { try { const v = localStorage.getItem(k + '_' + lpUserKey()); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
@@ -6832,16 +6924,20 @@ function renderCampaignList() {
       + escHtml(label) + ' <span class="n">' + n + '</span></button>';
   };
   const tb = document.getElementById('camp-folders');
-  if (tb) {
+  if (tb && !names.length) { tb.innerHTML = ''; tb.style.display = 'none'; }
+  else if (tb) {
+    tb.style.display = '';
     let h = chip('*', 'Toutes', camps.length) + chip('', 'Sans dossier', noF);
     names.forEach(function(n) { h += chip(n, n, cnt(n)); });
-    h += '<button class="lpx-chip add" onclick="campNewFolder()">+ Dossier</button>';
     if (campState.folder && campState.folder !== '*') {
       const q = JSON.stringify(campState.folder).replace(/"/g, '&quot;');
       h += '<span class="lpx-folder-tools"><button title="Renommer le dossier" onclick="campRenameFolder(' + q + ')">Renommer</button><button title="Supprimer le dossier" onclick="campDeleteFolder(' + q + ')">Supprimer</button></span>';
     }
     tb.innerHTML = h;
   }
+
+  const vw = document.getElementById('camp-views');
+  if (vw) vw.innerHTML = [['charte', 'Par charte'], ['client', 'Par client'], ['list', 'Liste']].map(function(v) { return '<button class="' + (campState.view === v[0] ? 'on' : '') + '" onclick="campSetView(\'' + v[0] + '\')">' + v[1] + '</button>'; }).join('');
 
   const list = campFiltered();
   renderCampaignBulk();
@@ -6857,40 +6953,92 @@ function renderCampaignList() {
     return;
   }
 
-  const allSel = list.every(function(c) { return campState.sel[c.id]; });
-  let html = '<div class="lpx-listhead"><label><input type="checkbox" ' + (allSel ? 'checked' : '') + ' onchange="campSelAll(this.checked)"> Tout sélectionner</label><span>' + list.length + ' affichée' + (list.length > 1 ? 's' : '') + '</span></div>';
+  const sk = campState.sort.key, sd = campState.sort.dir;
+  const sorted = list.slice().sort(function(a, b) { const x = campSortVal(a, sk), y = campSortVal(b, sk); return (x < y ? -1 : x > y ? 1 : 0) * sd; });
   const statusMap = { done: ['Terminé', 'done'], processing: ['En cours', 'processing'], error: ['Erreur', 'error'] };
-  list.forEach(function(camp) {
+  const th = function(label, k, cls) { return '<th class="' + (cls || '') + '" onclick="campSortBy(\'' + k + '\')">' + label + (sk === k ? (sd > 0 ? ' ▲' : ' ▼') : '') + '</th>'; };
+  const allSel = sorted.every(function(c) { return campState.sel[c.id]; });
+
+  const rowHtml = function(camp, showGroupTags) {
+    const id = camp.id;
     const date = new Date(camp.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
     const st = statusMap[camp.status] || ['En attente', 'pending'];
     const total = camp.total || 0, dn = camp.processed || 0, pct = total > 0 ? Math.round(dn / total * 100) : 0;
     const f = campFolderOf(camp);
-    const id = camp.id;
+    const op = camp.opened_count, rate = dn > 0 && op != null ? Math.round(op / dn * 100) : null;
     let acts = '';
-    if (camp.status === 'done') acts += '<button class="btn btn-ghost lpx-sm" onclick="openCampaignDetail(\'' + id + '\')">Ouvrir</button><button class="btn btn-primary lpx-sm" onclick="downloadCampaignCsv(\'' + id + '\')">CSV</button>';
-    else if (camp.status === 'processing') acts += '<button class="btn btn-ghost lpx-sm" onclick="showDashSection(\'generate\',null)">Voir</button>';
-    acts += '<div class="lpx-menu-wrap"><button class="btn btn-ghost lpx-sm lpx-dots" aria-label="Plus d\'actions" onclick="campToggleMenu(\'' + id + '\', event)">⋯</button>'
-      + (campState.menu === id ? '<div class="lpx-menu" onclick="event.stopPropagation()">'
+    if (camp.status === 'done') acts += '<button class="btn btn-ghost lpx-sm" onclick="openCampaignDetail(\'' + id + '\')">Ouvrir</button> <button class="btn btn-primary lpx-sm" onclick="downloadCampaignCsv(\'' + id + '\')">CSV</button> ';
+    else if (camp.status === 'processing') acts += '<button class="btn btn-ghost lpx-sm" onclick="showDashSection(\'generate\',null)">Voir</button> ';
+    acts += '<span class="lpx-menu-wrap" style="display:inline-block;position:relative"><button class="btn btn-ghost lpx-sm lpx-dots" aria-label="Plus d\'actions" onclick="campToggleMenu(\'' + id + '\', event)">⋯</button>'
+      + (campState.menu === id ? '<div class="lpx-menu" onclick="event.stopPropagation()" style="text-align:left">'
         + '<button onclick="campState.menu=\'\';campRename(\'' + id + '\')">Renommer</button>'
-        + '<button onclick="campState.menu=\'\';campMove([\'' + id + '\'])">Déplacer vers un dossier</button>'
         + '<button onclick="campState.menu=\'\';campSetClient(\'' + id + '\')">Rattacher à un client</button>'
+        + (campFolderNames().length || f ? '<button onclick="campState.menu=\'\';campMove([\'' + id + '\'])">Déplacer vers un dossier</button>' : '')
         + '<button class="danger" onclick="campState.menu=\'\';campDelete([\'' + id + '\'])">Supprimer</button></div>' : '')
-      + '</div>';
-    let meta = '<div class="camp-meta-item"><strong>' + date + '</strong></div><div class="camp-meta-item"><strong>' + total + '</strong> contacts</div>';
-    if (camp.status === 'processing') meta += '<div class="camp-meta-item"><strong>' + dn + '/' + total + '</strong> traités (' + pct + '%)</div>';
-    if (camp.status === 'done') meta += '<div class="camp-meta-item"><strong>' + dn + '</strong> générés</div>';
-    if (camp.error_rows > 0) meta += '<div class="camp-meta-item" style="color:#EF4444">⚠ <strong>' + camp.error_rows + '</strong> erreurs</div>';
-    const bar = camp.status === 'processing' ? '<div style="margin-top:10px;height:3px;background:var(--bg4);border-radius:3px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,var(--blue-light),var(--pink));transition:width .5s"></div></div>' : '';
-    const tags = (camp.client_id && lpClientName(camp.client_id) ? '<span class="lpx-client-tag">' + escHtml(lpClientName(camp.client_id)) + '</span>' : '') + (camp.generate_pdf !== false ? '<span class="lpx-tag">PDF</span>' : '') + (camp.generate_mail1 ? '<span class="lpx-tag">Mail</span>' : '')
+      + '</span>';
+    const tags = (showGroupTags && camp.client_id && lpClientName(camp.client_id) ? '<span class="lpx-client-tag">' + escHtml(lpClientName(camp.client_id)) + '</span> ' : '')
+      + (showGroupTags === 'client' && camp.charte_id && lpCharteOf(camp.charte_id) ? '<span class="lpx-tag">' + escHtml(lpCharteOf(camp.charte_id).name || 'Charte') + '</span> ' : '')
+      + (camp.generate_mail1 ? '<span class="lpx-tag">Mail</span> ' : '')
       + (f ? '<span class="lpx-tag folder" onclick="campState.folder=' + JSON.stringify(f).replace(/"/g, '&quot;') + ';renderCampaignList()" title="Ouvrir le dossier">' + escHtml(f) + '</span>' : '');
-    html += '<div class="camp-card status-' + st[1] + (campState.sel[id] ? ' selected' : '') + (campState.menu === id ? ' menu-open' : '') + '" style="grid-template-columns:auto 1fr auto;cursor:pointer" onclick="campCardClick(event, \'' + id + '\')">'
-      + '<input type="checkbox" class="lpx-check" ' + (campState.sel[id] ? 'checked' : '') + ' onchange="campToggleSel(\'' + id + '\', this.checked);this.closest(\'.camp-card\').classList.toggle(\'selected\', this.checked)" aria-label="Sélectionner">'
-      + '<div style="min-width:0"><div class="camp-card-title"><span class="lpx-name" title="Double-clic pour renommer" ondblclick="campCardCancel();campRename(\'' + id + '\')">' + (escHtml(camp.name) || 'Campagne sans nom') + '</span>'
-      + '<span class="camp-badge camp-badge-' + st[1] + '"><span class="camp-badge-dot"></span>' + st[0] + '</span>' + tags + '</div>'
-      + '<div class="camp-card-meta">' + meta + '</div>' + bar + '</div>'
-      + '<div class="camp-actions" style="display:flex;gap:6px;align-items:center">' + acts + '</div></div>';
-  });
+    return '<tr class="row' + (campState.sel[id] ? ' selected' : '') + '" draggable="true" ondragstart="campDragStart(event,\'' + id + '\')" ondragend="lpDragEnd()" onclick="campCardClick(event, \'' + id + '\')">'
+      + '<td style="width:30px"><input type="checkbox" class="lpx-check" ' + (campState.sel[id] ? 'checked' : '') + ' onchange="campToggleSel(\'' + id + '\', this.checked);this.closest(\'tr\').classList.toggle(\'selected\', this.checked)" aria-label="Sélectionner"></td>'
+      + '<td><span class="lpx-name" title="Double-clic pour renommer" ondblclick="campCardCancel();campRename(\'' + id + '\')">' + (escHtml(camp.name) || 'Campagne sans nom') + '</span> <span class="camp-badge camp-badge-' + st[1] + '"><span class="camp-badge-dot"></span>' + st[0] + '</span> ' + tags
+      + (camp.status === 'processing' ? '<span class="mini"><i style="width:' + pct + '%"></i></span>' : '') + '</td>'
+      + '<td class="hide-s">' + date + '</td>'
+      + '<td>' + (camp.status === 'processing' ? dn + '/' + total : dn) + '</td>'
+      + '<td>' + (rate == null ? '<span style="color:var(--text3)">—</span>' : '<b>' + rate + ' %</b> <span style="color:var(--text3)">(' + op + ')</span>') + '</td>'
+      + '<td class="hide-s">' + (camp.error_rows > 0 ? '<span style="color:#EF4444">⚠ ' + camp.error_rows + '</span>' : '<span style="color:var(--text3)">0</span>') + '</td>'
+      + '<td class="act">' + acts + '</td></tr>';
+  };
+  const tableHtml = function(items, tagMode) {
+    return '<table class="lpg-table"><thead><tr><th style="width:30px"></th>' + th('Campagne', 'name') + th('Date', 'date', 'hide-s') + th('PDF', 'pdf') + th('Consultés', 'rate') + th('Erreurs', 'err', 'hide-s') + '<th></th></tr></thead><tbody>'
+      + items.map(function(c) { return rowHtml(c, tagMode); }).join('') + '</tbody></table>';
+  };
+
+  let html = '<div class="lpx-listhead"><label><input type="checkbox" ' + (allSel ? 'checked' : '') + ' onchange="campSelAll(this.checked)"> Tout sélectionner</label><span>' + sorted.length + ' affichée' + (sorted.length > 1 ? 's' : '') + ' · glissez une ligne vers un client pour la rattacher</span></div>';
+
+  if (campState.view === 'list') {
+    html += '<div class="lpg-group">' + tableHtml(sorted, true) + '</div>';
+  } else {
+    const byClient = campState.view === 'client';
+    const groups = {}, order = [];
+    sorted.forEach(function(c) { const k = (byClient ? c.client_id : c.charte_id) || '__none__'; if (!groups[k]) { groups[k] = []; order.push(k); } groups[k].push(c); });
+    // groupes vides inclus (chartes ou clients sans campagne visible) : on ne les affiche que sans filtre
+    const noFilter = !campState.q && !campState.status && !campState.client && campState.folder === '*';
+    if (noFilter) (byClient ? lpClients : lpChartes).forEach(function(x) { if (!groups[x.id]) { groups[x.id] = []; order.push(x.id); } });
+    order.sort(function(a, b) {
+      const la = groups[a].length ? groups[a][0].created_at || '' : '', lb = groups[b].length ? groups[b][0].created_at || '' : '';
+      if (a === '__none__') return 1; if (b === '__none__') return -1;
+      return lb < la ? -1 : lb > la ? 1 : 0;
+    });
+    const closed = campClosedGet();
+    order.forEach(function(k) {
+      const items = groups[k];
+      const ent = byClient ? lpClients.find(function(x) { return x.id === k; }) : lpCharteOf(k);
+      const label = k === '__none__' ? (byClient ? 'Sans client' : 'Sans charte (ancienne campagne)') : (ent ? ent.name : 'Inconnu');
+      const color = !byClient && ent ? (ent.color_primary || '#1B2D6B') : 'var(--border)';
+      const pdfs = items.reduce(function(a, c) { return a + (c.processed || 0); }, 0);
+      const opened = items.reduce(function(a, c) { return a + (c.opened_count || 0); }, 0);
+      const rate = pdfs ? Math.round(opened / pdfs * 100) : null;
+      const key = campState.view + ':' + k;
+      const last = items.length ? new Date(items[0].created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' }) : '';
+      const clientTag = !byClient && ent && ent.client_id && lpClientName(ent.client_id) ? '<span class="lpx-client-tag">' + escHtml(lpClientName(ent.client_id)) + '</span>' : '';
+      html += '<div class="lpg-group' + (closed[key] ? ' closed' : '') + '" data-gkey="' + escHtml(k) + '">'
+        + '<div class="lpg-head" onclick="campToggleGroup(\'' + escHtml(key) + '\')"><span class="lpg-chev">▼</span><span class="lpg-bar" style="background:' + color + '"></span>'
+        + '<div><h3>' + escHtml(label) + '</h3></div>' + clientTag
+        + '<div class="lpg-kpis"><span><b>' + items.length + '</b> campagne' + (items.length > 1 ? 's' : '') + '</span><span><b>' + pdfs + '</b> PDF</span><span><b>' + (rate == null ? '—' : rate + ' %') + '</b> consultés</span>' + (last ? '<span>dernière : ' + last + '</span>' : '') + '</div>'
+        + (!byClient && k !== '__none__' ? '<button class="btn btn-ghost lpx-sm" onclick="event.stopPropagation();campStartWithCharte(\'' + escHtml(k) + '\')">+ Campagne</button>' : '')
+        + '</div><div class="lpg-body">' + (items.length ? tableHtml(items, byClient ? 'client' : true) : '<div style="padding:14px 18px;font-size:13px;color:var(--text3);border-top:1px solid var(--border)">Aucune campagne pour l’instant.</div>') + '</div></div>';
+    });
+  }
   grid.innerHTML = html;
+  if (campState.view === 'client') {   // dépôt direct sur un groupe client
+    grid.querySelectorAll('.lpg-group[data-gkey]').forEach(function(g) {
+      g.ondragover = function(e) { if (lpDrag && lpDrag.kind === 'camp') { e.preventDefault(); g.classList.add('over'); } };
+      g.ondragleave = function() { g.classList.remove('over'); };
+      g.ondrop = function(e) { e.preventDefault(); g.classList.remove('over'); lpDropOnClient(g.dataset.gkey === '__none__' ? '' : g.dataset.gkey); };
+    });
+  }
 }
 
 let _campClickT = null;
@@ -6917,6 +7065,7 @@ async function loadCampaigns() {
   if (grid && !campState.camps.length) grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Chargement...</div>';
   try {
     const campaigns = await apiCall('GET', '/api/campaigns/', null, true);
+    await Promise.all([lpLoadChartesCache(), lpLoadClients()]);
     campState.camps = campaigns;
     campState.sel = {};
     const set = function(id, v) { const e = document.getElementById(id); if (e) e.textContent = v; };
@@ -8251,9 +8400,21 @@ function cmMoveBloc(ev, btn, dir) {
   if (!sib || sib.classList.contains('locked') || sib.style.display === 'none') return;
   if (dir < 0) list.insertBefore(row, sib); else list.insertBefore(sib, row);
 }
+let cmDragRow = null;
 function cmInitBlocMoves() {
   document.querySelectorAll('#cm-blocs-list .cm-bloc:not(.locked)').forEach(row => {
     if (row.querySelector('.cm-move')) return;
+    row.draggable = true;
+    row.ondragstart = e => { cmDragRow = row; try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', row.dataset.bloc); } catch (x) {} };
+    row.ondragend = () => { cmDragRow = null; document.querySelectorAll('#cm-blocs-list .cm-bloc.dragover').forEach(r => r.classList.remove('dragover')); };
+    row.ondragover = e => { if (cmDragRow && cmDragRow !== row) { e.preventDefault(); row.classList.add('dragover'); } };
+    row.ondragleave = () => row.classList.remove('dragover');
+    row.ondrop = e => {
+      e.preventDefault(); row.classList.remove('dragover');
+      if (!cmDragRow || cmDragRow === row) return;
+      const rect = row.getBoundingClientRect();
+      row.parentNode.insertBefore(cmDragRow, (e.clientY - rect.top) < rect.height / 2 ? row : row.nextSibling);
+    };
     const box = document.createElement('span');
     box.className = 'cm-move'; box.style.cssText = 'display:inline-flex;flex-direction:column;gap:2px;flex-shrink:0';
     const mk = (t, d, label) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.setAttribute('aria-label', label); b.title = label;
@@ -8393,6 +8554,7 @@ async function loadChartes() {
   ).join('');
   try {
     const chartes = await apiCall('GET', '/api/chartes/', null, true);
+    lpChartes = chartes; await lpLoadClients();
     renderCartesGrid(chartes);
     updateCharteSelector(chartes);
   } catch(e) {
@@ -8408,6 +8570,9 @@ function renderCartesGrid(chartes) {
   chartes.forEach((ch) => {
     const card = document.createElement('div');
     card.style.cssText = 'background:var(--bg2);border:2px solid ' + (ch.is_default ? 'var(--pink)' : 'var(--border)') + ';border-radius:14px;padding:20px;cursor:pointer;transition:all 0.2s;position:relative';
+    card.draggable = true;
+    card.ondragstart = (e) => lpDragStart(e, 'charte', [ch.id]);
+    card.ondragend = lpDragEnd;
     card.onmouseover = () => { card.style.transform = 'translateY(-2px)'; card.style.boxShadow = '0 8px 24px rgba(0,0,0,0.1)'; };
     card.onmouseout  = () => { card.style.transform = ''; card.style.boxShadow = ''; };
 
@@ -8425,7 +8590,12 @@ function renderCartesGrid(chartes) {
       '<div style="height:4px;border-radius:2px;background:linear-gradient(90deg,' + (ch.color_primary||'#1B2D6B') + ',' + (ch.color_accent||'#E91E8C') + ');margin-bottom:10px"></div>' +
       '<div style="font-size:14px;font-weight:700;margin-bottom:3px">' + (ch.name||'Sans nom') + '</div>' +
       '<div style="font-size:11px;color:var(--text2);margin-bottom:8px">' + (ch.sector||'Prospection') + ' · ' + (ch.blocs_count||5) + ' blocs' + (ch.client_id && lpClientName(ch.client_id) ? ' · <span class="lpx-client-tag">' + escHtml(lpClientName(ch.client_id)) + '</span>' : '') + (ch.custom_template ? ' · modèle sur mesure' : '') + '</div>' +
-      '<div style="margin-bottom:12px">' + stylePill + emojiPill + '</div>' +
+      '<div style="margin-bottom:10px">' + stylePill + emojiPill + '</div>' +
+      (function() { const st = ch.stats; if (!st) return ''; const rate = st.pdfs ? Math.round((st.opened || 0) / st.pdfs * 100) : null;
+        return '<div style="display:flex;gap:12px;font-size:11px;color:var(--text2);margin-bottom:12px;flex-wrap:wrap"><span><b style="color:var(--text)">' + st.campaigns + '</b> campagne' + (st.campaigns > 1 ? 's' : '') + '</span><span><b style="color:var(--text)">' + st.pdfs + '</b> PDF</span><span><b style="color:var(--text)">' + (rate == null ? '—' : rate + ' %') + '</b> consultés</span>'
+          + (st.last_used ? '<span>dernière : ' + new Date(st.last_used).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' }) + '</span>' : '') + '</div>'; })() +
+      '<div style="display:flex;gap:6px;margin-bottom:6px"><button class="btn btn-primary" style="font-size:11px;padding:5px 10px;flex:1" onclick="event.stopPropagation();campStartWithCharte(&quot;' + editId + '&quot;)">Lancer une campagne</button>' +
+        '<button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" title="Dupliquer cette charte" onclick="event.stopPropagation();duplicateCharte(&quot;' + editId + '&quot;)">Dupliquer</button></div>' +
       '<div style="display:flex;gap:6px">' +
         '<button class="btn btn-ghost" style="font-size:11px;padding:4px 10px;flex:1" onclick="event.stopPropagation();loadAndEditCharte(&quot;' + editId + '&quot;)">Modifier</button>' +
         (!ch.is_default ? '<button class="btn btn-ghost" style="font-size:11px;padding:4px 10px;flex:1" onclick="event.stopPropagation();setDefaultCharte(&quot;' + editId + '&quot;)">Activer</button>' : '') +
@@ -8433,6 +8603,18 @@ function renderCartesGrid(chartes) {
     grid.appendChild(card);
   });
   grid.appendChild(createAddCharteCard());
+}
+
+async function duplicateCharte(id) {
+  const ch = (lpChartes || []).find(c => c.id === id); if (!ch) return;
+  const name = await lpDialog({ title: 'Dupliquer la charte', input: (ch.name || 'Charte') + ' (copie)', confirmText: 'Dupliquer' });
+  if (!name) return;
+  const payload = { name: name, website: ch.website, offer_description: ch.offer_description, color_primary: ch.color_primary, color_accent: ch.color_accent,
+    sector: ch.sector, blocs: ch.blocs, logo_base64: ch.logo_base64, writing_style: ch.writing_style, emoji_level: ch.emoji_level, calendly_url: ch.calendly_url };
+  if (ch.custom_template) payload.custom_template = ch.custom_template;
+  if (ch.client_id) payload.client_id = ch.client_id;
+  try { await apiCall('POST', '/api/chartes/', payload, true); showToast('Charte dupliquée'); loadChartes(); loadCharteSelector(); }
+  catch (e) { showToast(e.message, '#EF4444'); }
 }
 
 function createAddCharteCard() {
