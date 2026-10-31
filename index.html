@@ -8999,12 +8999,16 @@ window.addEventListener('DOMContentLoaded', () => {
   if (authToken && currentUser) {
     // Vérifier expiration token (30 jours)
     try {
-      const payload = JSON.parse(atob(authToken.split('.')[1]));
+      // Un JWT est en base64url (- et _ à la place de + et /) : atob() échoue dessus. On normalise, et une
+      // lecture impossible ne déconnecte plus (seul le serveur peut invalider la session via un 401).
+      let b64 = authToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      while (b64.length % 4) b64 += '=';
+      const payload = JSON.parse(decodeURIComponent(escape(atob(b64))));
       if (payload.exp && payload.exp * 1000 < Date.now()) {
         handleLogout();
         return;
       }
-    } catch(e) { handleLogout(); return; }
+    } catch(e) { console.warn('Lecture du jeton impossible, session conservée', e); }
     freeCredits = currentUser.credits || 5;
     updateFreeCredits();
 
