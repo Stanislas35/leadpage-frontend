@@ -9049,11 +9049,28 @@ window.addEventListener('popstate', (e) => {
   }
 });
 
+// Réveille le serveur gratuit dès l'arrivée sur le site, pendant que la personne lit la page
+function lpWakeServer() { try { fetch(API_URL + '/health', { mode: 'no-cors', cache: 'no-store' }).catch(function() {}); } catch (e) {} }
+
+// Session glissante : si le jeton a moins de 20 jours devant lui, on le renouvelle en silence
+async function lpRenewSession() {
+  try {
+    let b64 = authToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'); while (b64.length % 4) b64 += '=';
+    const exp = JSON.parse(atob(b64)).exp * 1000;
+    if (!exp || exp - Date.now() > 20 * 86400000) return;
+    const r = await fetch(API_URL + '/api/auth/refresh', { method: 'POST', headers: { 'Authorization': 'Bearer ' + authToken } });
+    if (!r.ok) return;
+    const d = await r.json();
+    if (d && d.access_token) { authToken = d.access_token; localStorage.setItem('lp_token', authToken); }
+  } catch (e) {}
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const rdM = location.hash.match(/^#lecture\/([\w-]+)/);
   if (rdM) { lpRenderReader(rdM[1]); return; }
   const pubM = location.hash.match(/^#suivi\/([\w-]+)/);
   if (pubM) { lpRenderPublic(pubM[1]); return; }
+  lpWakeServer();
   lpInviteCapture();
   prefillLoginIfRemembered();
   updateNavForAuth();
@@ -9074,6 +9091,7 @@ window.addEventListener('DOMContentLoaded', () => {
     } catch(e) { console.warn('Lecture du jeton impossible, session conservée', e); }
     freeCredits = currentUser.credits || 5;
     updateFreeCredits();
+    lpRenewSession();
 
     // Restaurer la section depuis le hash
     const hash = window.location.hash;
