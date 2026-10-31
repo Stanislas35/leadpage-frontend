@@ -4995,6 +4995,12 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
         <div class="sidebar-item" onclick="showDashSection('parametres', this, true)">
           <span class="sidebar-icon">⚙️</span> Paramètres
         </div>
+        <div class="sidebar-item" id="sb-unlock" onclick="lpUnlockLeadPage()" style="display:none">
+          <span class="sidebar-icon">📄</span> Activer LeadPage (PDF)
+        </div>
+        <div class="sidebar-item" id="sb-discover" onclick="window.open('messages/','_blank')" style="display:none">
+          <span class="sidebar-icon">✉</span> Découvrir LeadMessage
+        </div>
         <div class="sidebar-item" onclick="handleLogout()" style="margin-top:auto;color:var(--text3)">
           <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></span> Déconnexion
         </div>
@@ -6327,6 +6333,7 @@ function showScreen(id, pushState) {
   const isApp = ['dashboard','onboarding'].includes(id);
   try { lpAssistantVisible(id === 'dashboard'); } catch (e) {}
   document.body.classList.toggle('in-app', isApp);
+  try { lpSyncUniverse(id); } catch (e) {}
   document.getElementById('nav-login').style.display = isApp ? 'none' : '';
   document.getElementById('nav-signup').style.display = isApp ? 'none' : '';
   lpNavLabels();
@@ -8193,7 +8200,9 @@ async function handleRegister(btn) {
   if (!btn.dataset.label) btn.dataset.label = btn.textContent;
   setLoading(btn, true);
   try {
-    const data = await apiCall('POST', '/api/auth/register', { email, password, full_name: name, plan });
+    const entryProd = lpEntryProduct();
+    const data = await apiCall('POST', '/api/auth/register', { email, password, full_name: name, plan, product: entryProd });
+    try { localStorage.setItem('lp_product', entryProd); } catch (e) {}
     authToken = data.access_token;
     currentUser = data;
     localStorage.setItem('lp_token', authToken);
@@ -8223,12 +8232,59 @@ async function handleRegister(btn) {
 }
 
 // ---- LOGOUT -----------------------------
+// ════════════════════════════════════════
+// UNIVERS : LeadPage / LeadMessage (même plateforme, deux entrées)
+// ════════════════════════════════════════
+(function () {   // ?p=message : arrivée depuis la page LeadMessage
+  try { if (/[?&]p=message\b/.test(location.search)) sessionStorage.setItem('lp_entry', 'leadmessage'); } catch (e) {}
+})();
+function lpEntryProduct() { try { return sessionStorage.getItem('lp_entry') === 'leadmessage' ? 'leadmessage' : 'leadpage'; } catch (e) { return 'leadpage'; } }
+function lpProduct() {
+  try { if (authToken && currentUser) return localStorage.getItem('lp_product') || 'leadpage'; } catch (e) {}
+  return lpEntryProduct();
+}
+function lpSwap(el, html) { if (!el) return; if (el.__lpO == null) el.__lpO = el.innerHTML; el.innerHTML = html; }
+function lpRestore(el) { if (el && el.__lpO != null) { el.innerHTML = el.__lpO; el.__lpO = null; } }
+function lpSetProduct(p) {
+  try { localStorage.setItem('lp_product', p || 'leadpage'); } catch (e) {}
+  lpSyncUniverse(document.querySelector('.screen.active') ? document.querySelector('.screen.active').id : '');
+}
+function lpSyncUniverse(screenId) {
+  const prod = lpProduct();
+  const on = prod === 'leadmessage' && ['auth', 'dashboard', 'onboarding'].indexOf(screenId) >= 0;
+  document.body.classList.toggle('lm-app', on);
+  const mark = '<img src="logo-lm.svg" alt="" style="width:30px;height:30px;vertical-align:middle;margin-right:8px">';
+  document.querySelectorAll('.nav-logo').forEach(function (el) { if (on) lpSwap(el, mark + '<span class="brand-word">Lead<span style="color:#E4332E">Message</span></span>'); else lpRestore(el); });
+  document.querySelectorAll('.auth-logo').forEach(function (el) { if (on) lpSwap(el, mark + '<span>Lead<span style="color:#E4332E">Message</span></span>'); else lpRestore(el); });
+  const sub = document.querySelector('.auth-subtitle'); if (sub) { if (on) lpSwap(sub, 'Un parcours de messages écrit pour chaque prospect'); else lpRestore(sub); }
+  const t = document.querySelector('#dash-generate-header .dash-title p'); if (t) { if (on) lpSwap(t, 'Importez votre CSV et générez le parcours de messages de chaque contact'); else lpRestore(t); }
+  const gb = document.querySelector('#dash-generate-header button[onclick="startGeneration()"]'); if (gb) { if (on) lpSwap(gb, 'Générer les parcours'); else lpRestore(gb); }
+  const lg = document.querySelector('#dash-kpi .kpi-card:nth-child(2) .kpi-label'); if (lg) { if (on) lpSwap(lg, 'Parcours générés'); else lpRestore(lg); }
+  const un = document.getElementById('sb-unlock'), di = document.getElementById('sb-discover');
+  if (un) un.style.display = on ? '' : 'none';
+  if (di) di.style.display = (!on && prod === 'leadpage' && screenId === 'dashboard') ? '' : 'none';
+  try { updateFreeCredits(); } catch (e) {}
+  if (on) { try { setGenFormat('msg'); } catch (e) {} }
+  else if (document.getElementById('gen-format') && window.__lpFmt === 'msg' && prod !== 'leadmessage' && !window.__lpUserPickedMsg) { /* l'utilisateur LeadPage garde son choix */ }
+}
+async function lpUnlockLeadPage() {
+  if (!confirm('Activer LeadPage sur ce compte ? Vous pourrez générer des PDF personnalisés avec les mêmes crédits.')) return;
+  try {
+    await apiCall('POST', '/api/auth/unlock-product', {}, true);
+    try { sessionStorage.removeItem('lp_entry'); } catch (e) {}
+    lpSetProduct('both');
+    try { setGenFormat('pdf'); } catch (e) {}
+    showToast('LeadPage activé : PDF disponibles');
+  } catch (e) { showToast('Activation impossible : ' + e.message, '#EF4444'); }
+}
+
 function handleLogout() {
   authToken = null;
   currentUser = null;
   try { localStorage.removeItem('lp_ws'); } catch (e) {}
   localStorage.removeItem('lp_token');
   localStorage.removeItem('lp_user');
+  try { localStorage.removeItem('lp_product'); sessionStorage.removeItem('lp_entry'); } catch (e) {}
   // Ne pas effacer lp_email/lp_remember → préservé pour reconnexion rapide
   updateNavForAuth();
   showScreen('landing');
@@ -8513,6 +8569,7 @@ async function loadDashboardData() {
       apiCall('GET', '/api/campaigns/', null, true)
     ]);
 
+    try { lpSetProduct(user.product || 'leadpage'); } catch (e) {}
     // Credits
     const creditsLeft = user.credits - (user.credits_used || 0);
     const creditsUsed = user.credits_used || 0;
@@ -9616,7 +9673,7 @@ function updateFreeCredits(used) {
   const fill = document.getElementById('creditsFill');
   const count = document.getElementById('creditsCount');
   if (fill) fill.style.width = pct + '%';
-  if (count) count.innerHTML = freeCredits + ' <span>/ 5 PDFs gratuits</span>';
+  if (count) count.innerHTML = freeCredits + ' <span>/ 5 ' + (document.body.classList.contains('lm-app') ? 'contacts gratuits' : 'PDFs gratuits') + '</span>';
 
   if (freeCredits === 0) {
     setTimeout(showUpgradeModal, 1500);
@@ -9640,6 +9697,7 @@ function showLowCreditsWarning() {
 
 window.__lpFmt = window.__lpFmt || 'pdf';
 function setGenFormat(f) {
+  if (f === 'msg') window.__lpUserPickedMsg = true;
   window.__lpFmt = f === 'msg' ? 'msg' : 'pdf';
   const msg = window.__lpFmt === 'msg';
   const set = (id, on) => { const b = document.getElementById(id); if (b) b.className = 'btn ' + (on ? 'btn-primary' : 'btn-ghost'); };

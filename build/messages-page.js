@@ -40,8 +40,8 @@ ${ld}
   <nav class="lm-links" aria-label="Sections">${navLinks}</nav>
   <div class="lm-right">
     <div class="lm-uni" aria-label="Changer d'univers"><a href="${B}">LeadPage</a><span class="on">LeadMessage</span></div>
-    <a class="lm-login" href="${B}#connexion">Connexion</a>
-    <a class="lm-btn sm" href="${B}#connexion">Essayer</a>
+    <a class="lm-login" href="${B}?p=message#connexion">Connexion</a>
+    <a class="lm-btn sm" href="${B}?p=message#connexion">Essayer</a>
   </div>
 </div></header>
 
@@ -51,7 +51,7 @@ ${ld}
     <span class="lm-tag">Nouveau : le parcours de messages par prospect</span>
     <h1>Un parcours de messages écrit pour <em>chaque prospect</em></h1>
     <p class="lead">Mails 1, 2 et 3, invitation et messages LinkedIn : vous choisissez le parcours, LeadMessage rédige chaque texte à partir de votre fichier. Prêt à importer dans votre outil d'envoi.</p>
-    <div class="row"><a class="lm-btn wh" href="${B}#connexion">Essayer gratuitement</a><a class="lm-btn ghost" style="color:#fff;border-color:rgba(255,255,255,.7)" href="#parcours">Composer mon parcours</a></div>
+    <div class="row"><a class="lm-btn wh" href="${B}?p=message#connexion">Essayer gratuitement</a><a class="lm-btn ghost" style="color:#fff;border-color:rgba(255,255,255,.7)" href="#parcours">Composer mon parcours</a></div>
     <div class="meta"><span>1 crédit par contact</span><span>Aucun fait inventé</span><span>Cinq contacts offerts</span></div>
   </div>
   <div class="lm-conv" aria-hidden="true">
@@ -97,7 +97,7 @@ ${ld}
   <span class="lm-k">Tarifs</span>
   <h2>Un contact, un crédit, quel que soit le parcours</h2>
   <p class="lm-sub">Les crédits sont partagés avec LeadPage : un crédit couvre un parcours de messages complet ou un PDF. Sans engagement.</p>
-  <div class="lm-price">${pk.map(k => `<div class="lm-pk${k[5] ? ' feat' : ''} lm-rv">${k[5] ? '<span class="bd">Le plus choisi</span>' : ''}<h3>${k[0]}</h3><p class="amt">${k[1]} <small>${k[2]}</small></p><p class="ct">${k[3]}</p><ul>${k[4].map(x => `<li>${x}</li>`).join('')}</ul><a class="lm-btn${k[5] ? '' : ' ghost'}" style="text-align:center" href="${B}#connexion">${k[6]}</a></div>`).join('')}</div>
+  <div class="lm-price">${pk.map(k => `<div class="lm-pk${k[5] ? ' feat' : ''} lm-rv">${k[5] ? '<span class="bd">Le plus choisi</span>' : ''}<h3>${k[0]}</h3><p class="amt">${k[1]} <small>${k[2]}</small></p><p class="ct">${k[3]}</p><ul>${k[4].map(x => `<li>${x}</li>`).join('')}</ul><a class="lm-btn${k[5] ? '' : ' ghost'}" style="text-align:center" href="${B}?p=message#connexion">${k[6]}</a></div>`).join('')}</div>
   <p class="lm-note">Moins de 0,06 € le contact avec Starter, moins de 0,04 € avec Growth, pour un parcours de six messages. Besoin de plus de volume ? Écrivez-nous pour un forfait sur mesure.</p>
 </div></section>
 
@@ -110,7 +110,7 @@ ${ld}
 <section class="lm-final lm-rv">
   <h2>Testez le parcours sur cinq contacts</h2>
   <p>Cinq contacts offerts, sans carte bancaire. Relisez les textes, ajustez la charte, puis passez à l'échelle.</p>
-  <a class="lm-btn" href="${B}#connexion">Essayer gratuitement</a>
+  <a class="lm-btn" href="${B}?p=message#connexion">Essayer gratuitement</a>
 </section>
 <p class="lm-cross">Vous préférez un document personnalisé avec mesure de lecture ? <a href="${B}">Découvrir LeadPage</a></p>
 </main>
