@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://stanislas35.github.io/leadpage-frontend/sitemap.xml
