@@ -4050,6 +4050,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
 
 .mk code{background:transparent!important;color:#1D3BDB!important;padding:0!important}
 </style>
+<link rel="stylesheet" href="assets/fx.css">
 </head>
 <body>
 
@@ -4498,14 +4499,17 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
       <div class="lp-result-card lp-reveal">
         <div class="lp-result-label">Agences et prestataires B2B</div>
         <div class="lp-result-source">Une charte et un espace par client, un document par prospect, et un lien de suivi en lecture seule à envoyer à votre client pour qu'il voie l'avancement sans accéder à votre compte. Vous pouvez aussi inviter un associé avec des droits limités.</div>
+        <a class="lp-more" href="cas/agences/">Lire le cas d'usage →</a>
       </div>
       <div class="lp-result-card lp-reveal">
         <div class="lp-result-label">Équipes commerciales</div>
         <div class="lp-result-source">Vos comptes cibles reçoivent un document qui parle de leur entreprise, avant le premier appel ou le premier rendez-vous.</div>
+        <a class="lp-more" href="cas/commerciaux/">Lire le cas d'usage →</a>
       </div>
       <div class="lp-result-card lp-reveal">
         <div class="lp-result-label">Consultants et indépendants</div>
         <div class="lp-result-source">Une présentation soignée et personnalisée sans passer des heures sur chaque dossier.</div>
+        <a class="lp-more" href="cas/consultants/">Lire le cas d'usage →</a>
       </div>
     </div>
   </div>
@@ -4527,6 +4531,30 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
         <div class="lp-result-label">Traitement en arrière-plan</div>
         <div class="lp-result-source">Vous pouvez fermer la page pendant la génération et retrouver la campagne terminée dans votre tableau de bord.</div>
       </div>
+    </div>
+  </div>
+
+  <!-- ░░ RESSOURCES ░░ -->
+  <div class="lp-section" id="lp-resources">
+    <div class="lp-section-label">Ressources</div>
+    <h2 class="lp-h2">Apprenez à mieux prospecter</h2>
+    <p class="lp-section-sub">Guides pratiques, modèles de mails et outils gratuits, en lecture libre.</p>
+    <div class="lp-results-grid">
+      <a class="lp-result-card lp-reveal lp-linkcard" href="ressources/personnalisation/">
+        <div class="lp-result-label">Personnaliser à l'échelle</div>
+        <div class="lp-result-source">Quatre niveaux de personnalisation, ce qu'on automatise et ce qu'on relit avant d'envoyer.</div>
+        <span class="lp-more">Lire le guide →</span>
+      </a>
+      <a class="lp-result-card lp-reveal lp-linkcard" href="ressources/mesure/">
+        <div class="lp-result-label">Mesurer une campagne</div>
+        <div class="lp-result-source">Pourquoi le taux d'ouverture trompe, et les signaux de lecture qui comptent vraiment.</div>
+        <span class="lp-more">Lire le guide →</span>
+      </a>
+      <a class="lp-result-card lp-reveal lp-linkcard" href="outils/">
+        <div class="lp-result-label">Quatre outils gratuits</div>
+        <div class="lp-result-source">Vérificateur de CSV, calculateur de montée en charge, objets de mail, checklist de délivrabilité.</div>
+        <span class="lp-more">Essayer les outils →</span>
+      </a>
     </div>
   </div>
 
@@ -9714,10 +9742,11 @@ function init(){
 document.querySelectorAll('.lp-step-visual').forEach(function(v,i){if(M[i]&&!v.querySelector('.mk'))v.insertAdjacentHTML('beforeend',M[i])});
 var me=document.getElementById('lp-measure');
 if(me&&!me.querySelector('.mz')){var g=me.querySelector('.lp-results-grid');var z=document.createElement('div');z.className='mz';
-z.innerHTML='<div><h3>Votre tableau de lecture, contact par contact</h3><p>Qui a lu, combien de temps, jusqu\u2019où, et qui a cliqué sur votre lien de rendez-vous. Les robots sont écartés pour ne pas gonfler vos chiffres.</p></div><div class="mk"><div class="kp"><div><b>46 %</b><span>lectures confirmées</span></div><div><b>1 min 20</b><span>temps moyen</span></div><div><b>18</b><span>liens cliqués</span></div></div><div class="r"><span class="dot"></span><b>Marie D.</b><em>1 min 35 s · p.2</em><span class="tg">lien cliqué</span></div><div class="r"><span class="dot"></span><b>Julie M.</b><em>48 s · p.1</em></div><div class="r"><span class="dot g"></span><b>Thomas R.</b><em>ouvert, non lu</em></div></div>';
+z.innerHTML='<div><h3>Votre tableau de lecture, contact par contact</h3><p>Qui a lu, combien de temps, jusqu\u2019où, et qui a cliqué sur votre lien de rendez-vous. Les robots sont écartés pour ne pas gonfler vos chiffres.</p></div><div class="mk"><div class="kp"><div><b data-count="46" data-suffix=" %">46 %</b><span>lectures confirmées</span></div><div><b data-secs="80">1 min 20</b><span>temps moyen</span></div><div><b data-count="18">18</b><span>liens cliqués</span></div></div><div class="r"><span class="dot"></span><b>Marie D.</b><em>1 min 35 s · p.2</em><span class="tg">lien cliqué</span></div><div class="r"><span class="dot"></span><b>Julie M.</b><em>48 s · p.1</em></div><div class="r"><span class="dot g"></span><b>Thomas R.</b><em>ouvert, non lu</em></div></div>';
 if(g)me.insertBefore(z,g)}
 }
 if(document.readyState!=='loading')init();else document.addEventListener('DOMContentLoaded',init)})();
 </script>
+<script src="assets/fx.js" defer></script>
 </body>
 </html>

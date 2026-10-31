@@ -4,16 +4,17 @@
 <script>try{var t=localStorage.getItem("lp_theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Templates de mails de prospection | LeadPage</title>
-<meta name="description" content="Quatre modèles de mails à copier pour accompagner un document personnalisé : premier contact, relances, invitation.">
+<meta name="description" content="Huit modèles de mails à copier pour accompagner un document personnalisé : premier contact, relances, invitation, recrutement.">
 <link rel="canonical" href="https://stanislas35.github.io/leadpage-frontend/templates/">
 <meta name="theme-color" content="#2B50FF"><meta name="color-scheme" content="light dark">
-<meta property="og:type" content="website"><meta property="og:title" content="Templates de mails de prospection | LeadPage"><meta property="og:description" content="Quatre modèles de mails à copier pour accompagner un document personnalisé : premier contact, relances, invitation."><meta property="og:url" content="https://stanislas35.github.io/leadpage-frontend/templates/"><meta property="og:image" content="https://stanislas35.github.io/leadpage-frontend/icon-512.png">
+<meta property="og:type" content="website"><meta property="og:title" content="Templates de mails de prospection | LeadPage"><meta property="og:description" content="Huit modèles de mails à copier pour accompagner un document personnalisé : premier contact, relances, invitation, recrutement."><meta property="og:url" content="https://stanislas35.github.io/leadpage-frontend/templates/"><meta property="og:image" content="https://stanislas35.github.io/leadpage-frontend/icon-512.png">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="../assets/site.css"><link rel="stylesheet" href="../assets/fx.css">
 
 </head>
 <body>
+<div id="proProgress" aria-hidden="true"></div>
 <nav>
   <a class="nav-logo" href="../" style="text-decoration:none;color:inherit">
     <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" style="fill:var(--mk1)"/><path d="M9.5 5.5h8.8l6.2 6.2V25.5a1.5 1.5 0 0 1-1.5 1.5H9.5A1.5 1.5 0 0 1 8 25.5v-18A1.5 1.5 0 0 1 9.5 5.5z" fill="#fff"/><path d="M18.3 5.5v4.7a1.5 1.5 0 0 0 1.5 1.5h4.7z" style="fill:var(--mk2)"/><rect x="11.4" y="13" width="2.7" height="10.2" rx=".7" style="fill:var(--mk1)"/><rect x="11.4" y="20.5" width="8.4" height="2.7" rx=".7" style="fill:var(--mk1)"/><circle cx="19.2" cy="16.6" r="1.8" style="fill:var(--mk3)"/></svg><span class="brand-word">Lead<span>Page</span></span>
@@ -27,9 +28,7 @@
     <a class="btn btn-primary" id="nav-signup" href="../#connexion" style="text-decoration:none">Essayer gratuitement</a>
   </div>
 </nav>
-<div id="pages" class="screen active"><div id="pg-body"><div class="pgw pghero"><span class="pgtag">Templates</span><h1>Templates de mails prêts à copier</h1><p>Quatre modèles pour accompagner votre document. Les variables entre accolades se remplacent par les colonnes de votre fichier.</p></div><div class="pgw"><div class="pggrid pgtwo"><div class="pgcard c1"><h3>Premier contact avec document</h3><pre>Objet : Une analyse courte pour {{entreprise}}
-
-Bonjour {{prénom}},
+<div id="pages" class="screen active"><div id="pg-body"><section class="pgpanel solo"><div class="pgw"><div><span class="pgtag">Templates</span><h1>Huit mails prêts à copier</h1><p>Les variables entre accolades correspondent aux colonnes de votre fichier : remplacez-les dans votre outil d'envoi.</p></div></div></section><section class="pgsec"><div class="pgw"><h2>Choisissez un modèle</h2><div class="pgfilters"><button class="pgchip on" data-f="*">Tous</button><button class="pgchip" data-f="premier">Premier contact</button><button class="pgchip" data-f="relance">Relances</button><button class="pgchip" data-f="evenement">Événement</button><button class="pgchip" data-f="recrutement">Recrutement</button></div><div class="pggrid pgtwo"><div class="pgcard c1 pgtpl" data-cat="premier"><h3>Premier contact avec document</h3><small style="color:var(--text2)">Objet : <b id="o0">Une analyse courte pour {{entreprise}}</b></small><pre id="t0">Bonjour {{prénom}},
 
 J'ai préparé un document de deux pages sur {{entreprise}} : un point fort, une opportunité et un plan d'action sur 90 jours.
 
@@ -37,30 +36,49 @@ Il se lit en trois minutes : {{pdf_url}}
 
 Si c'est utile, on en parle 15 minutes cette semaine ?
 
-{{signature}}</pre><a class="pgbtn" style="align-self:flex-start" href="#" onclick="navigator.clipboard&&navigator.clipboard.writeText(this.previousElementSibling.textContent);this.textContent='Copié ✓';return false">Copier le modèle</a></div><div class="pgcard c2"><h3>Relance après lecture</h3><pre>Objet : Une question sur la page 2
+{{signature}}</pre><button class="pgbtn" data-copy="t0" style="align-self:flex-start">Copier le corps du mail</button></div><div class="pgcard c2 pgtpl" data-cat="premier"><h3>Premier contact très court</h3><small style="color:var(--text2)">Objet : <b id="o1">{{prénom}}, une idée pour {{sujet}}</b></small><pre id="t1">Bonjour {{prénom}},
 
-Bonjour {{prénom}},
+En regardant {{entreprise}}, une piste m'a semblé utile sur {{sujet}}. Je l'ai résumée ici : {{pdf_url}}
+
+Dites-moi si cela vous parle.
+
+{{signature}}</pre><button class="pgbtn" data-copy="t1" style="align-self:flex-start">Copier le corps du mail</button></div><div class="pgcard c3 pgtpl" data-cat="relance"><h3>Relance après lecture</h3><small style="color:var(--text2)">Objet : <b id="o2">Une question sur la page 2</b></small><pre id="t2">Bonjour {{prénom}},
 
 Mon document évoquait {{sujet}} en page 2. Est-ce un sujet pour vous en ce moment ?
 
 Je peux vous proposer un créneau court : {{lien_rdv}}
 
-{{signature}}</pre><a class="pgbtn" style="align-self:flex-start" href="#" onclick="navigator.clipboard&&navigator.clipboard.writeText(this.previousElementSibling.textContent);this.textContent='Copié ✓';return false">Copier le modèle</a></div><div class="pgcard c3"><h3>Relance sans ouverture</h3><pre>Objet : Re : {{entreprise}}
+{{signature}}</pre><button class="pgbtn" data-copy="t2" style="align-self:flex-start">Copier le corps du mail</button></div><div class="pgcard c4 pgtpl" data-cat="relance"><h3>Relance sans ouverture</h3><small style="color:var(--text2)">Objet : <b id="o3">Re : {{entreprise}}</b></small><pre id="t3">Bonjour {{prénom}},
 
-Bonjour {{prénom}},
-
-Je me permets de remonter mon message. Le document tient en deux pages : {{pdf_url}}
+Je remonte mon message. Le document tient en deux pages : {{pdf_url}}
 
 Si ce n'est pas le bon moment, dites-le moi simplement.
 
-{{signature}}</pre><a class="pgbtn" style="align-self:flex-start" href="#" onclick="navigator.clipboard&&navigator.clipboard.writeText(this.previousElementSibling.textContent);this.textContent='Copié ✓';return false">Copier le modèle</a></div><div class="pgcard c4"><h3>Invitation événement</h3><pre>Objet : {{événement}} : le programme pour votre métier
+{{signature}}</pre><button class="pgbtn" data-copy="t3" style="align-self:flex-start">Copier le corps du mail</button></div><div class="pgcard c5 pgtpl" data-cat="relance"><h3>Message de clôture</h3><small style="color:var(--text2)">Objet : <b id="o4">Je clos le dossier ?</b></small><pre id="t4">Bonjour {{prénom}},
 
-Bonjour {{prénom}},
+Je n'ai pas eu de retour, je ne vous relancerai donc plus sur {{sujet}}. Le document reste disponible : {{pdf_url}}
+
+Si la situation change, je reste à votre disposition.
+
+{{signature}}</pre><button class="pgbtn" data-copy="t4" style="align-self:flex-start">Copier le corps du mail</button></div><div class="pgcard c6 pgtpl" data-cat="evenement"><h3>Invitation à un événement</h3><small style="color:var(--text2)">Objet : <b id="o5">{{événement}} : le programme pour votre métier</b></small><pre id="t5">Bonjour {{prénom}},
 
 Voici le programme de {{événement}} filtré pour {{poste}} : {{pdf_url}}
 
 L'inscription est gratuite : {{lien_inscription}}
 
-{{signature}}</pre><a class="pgbtn" style="align-self:flex-start" href="#" onclick="navigator.clipboard&&navigator.clipboard.writeText(this.previousElementSibling.textContent);this.textContent='Copié ✓';return false">Copier le modèle</a></div></div></div><footer class="pgf"><div class="pgf-in"><div><span class="pgl">Lead<i>Page</i></span><p style="margin-top:10px">Un document personnalisé par prospect, avec mesure de lecture.</p></div><div><b>Cas d'usage</b><a href="../cas/agences/">Agences et prestataires</a><a href="../cas/commerciaux/">Équipes commerciales</a><a href="../cas/consultants/">Consultants</a><a href="../cas/recrutement/">Recrutement et événements</a></div><div><b>Ressources</b><a href="../ressources/">Livres blancs</a><a href="../templates/">Templates de mails</a><a href="../outils/">Outils gratuits</a><a href="../comparatif/">Comparatif</a></div><div><b>LeadPage</b><a href="../#lp-pricing">Tarifs</a><a href="../#lp-faq">FAQ</a><a href="../#connexion">Connexion</a></div></div><small>© 2026 LeadPage · Édité par Devoleads, La Rochelle</small></footer></div></div>
+{{signature}}</pre><button class="pgbtn" data-copy="t5" style="align-self:flex-start">Copier le corps du mail</button></div><div class="pgcard c1 pgtpl" data-cat="evenement"><h3>Invitation à un webinaire</h3><small style="color:var(--text2)">Objet : <b id="o6">Webinaire du {{date}} : {{sujet}}</b></small><pre id="t6">Bonjour {{prénom}},
+
+Nous parlerons de {{sujet}} le {{date}}, avec un focus sur {{entreprise}} et les entreprises de votre secteur. Le résumé est ici : {{pdf_url}}
+
+Pour vous inscrire : {{lien_inscription}}
+
+{{signature}}</pre><button class="pgbtn" data-copy="t6" style="align-self:flex-start">Copier le corps du mail</button></div><div class="pgcard c2 pgtpl" data-cat="recrutement"><h3>Approche d'un candidat</h3><small style="color:var(--text2)">Objet : <b id="o7">Un poste qui peut vous intéresser, {{prénom}}</b></small><pre id="t7">Bonjour {{prénom}},
+
+Votre parcours chez {{entreprise}} a retenu mon attention pour un poste de {{poste_propose}}. J'ai résumé le contexte et les missions ici : {{pdf_url}}
+
+Si vous êtes ouvert à un échange, voici mon agenda : {{lien_rdv}}
+
+{{signature}}</pre><button class="pgbtn" data-copy="t7" style="align-self:flex-start">Copier le corps du mail</button></div></div></div></section><section class="pgsec"><div class="pgw"><h2>Bonnes pratiques</h2><div class="pgbento"><div class="pgb"><i>01</i><h3>Court</h3><p>Cinq à huit lignes. Le détail est dans le document, le mail sert à donner envie de l'ouvrir.</p></div><div class="pgb"><i>02</i><h3>Un seul lien</h3><p>Un lien vers le document. Évitez de multiplier les liens et les pièces jointes.</p></div><div class="pgb"><i>03</i><h3>Une seule question</h3><p>Terminez par une question simple, à laquelle on peut répondre en une ligne.</p></div><div class="pgb"><i>04</i><h3>Un objet sobre</h3><p>Moins de 50 caractères, sans majuscules ni points d'exclamation. Testez deux variantes.</p></div><div class="pgb"><i>05</i><h3>Du naturel</h3><p>Relisez à voix haute. Si une phrase ne ressemble pas à ce que vous diriez, réécrivez-la.</p></div><div class="pgb"><i>06</i><h3>Un test</h3><p>Envoyez-vous le mail avant, et relisez-le sur mobile.</p></div></div></div></section><section class="pgsec"><div class="pgw"><h2>Pour aller plus loin</h2><div class="pgrel"><a class="pgcard c4" href="../ressources/sequence/" data-cat="methode"><span class="pgmeta">Guide · 8 min</span><h3>Structurer une séquence de relances en quatre messages</h3><p>Quand relancer, avec quel angle, et comment utiliser la lecture pour prioriser.</p><span class="pggo">Lire →</span></a><a class="pgcard c1" href="../ressources/personnalisation/" data-cat="personnalisation"><span class="pgmeta">Guide · 9 min</span><h3>Personnaliser sa prospection B2B à l'échelle</h3><p>Une méthode en quatre niveaux, ce qu'on peut automatiser et ce qu'il faut relire.</p><span class="pggo">Lire →</span></a></div></div></section><section class="pgsec"><div class="pgw"><div class="pgcta"><div><h2>Générez les documents qui vont avec ces mails</h2><p>Cinq crédits offerts, sans carte bancaire.</p></div><a class="pgbtn" href="../#connexion">Essayer gratuitement</a></div></div></section><footer class="pgf"><div class="pgf-in"><div><span class="pgl">Lead<i>Page</i></span><p style="margin-top:10px">Un document personnalisé par prospect, avec mesure de lecture.</p></div><div><b>Cas d'usage</b><a href="../cas/agences/">Agences et prestataires</a><a href="../cas/commerciaux/">Équipes commerciales</a><a href="../cas/consultants/">Consultants</a><a href="../cas/recrutement/">Recrutement et événements</a></div><div><b>Ressources</b><a href="../ressources/">Livres blancs</a><a href="../templates/">Templates de mails</a><a href="../outils/">Outils gratuits</a><a href="../comparatif/">Comparatif</a></div><div><b>LeadPage</b><a href="../#lp-pricing">Tarifs</a><a href="../#lp-faq">FAQ</a><a href="../#connexion">Connexion</a></div></div><small>© 2026 LeadPage · Édité par Devoleads, La Rochelle</small></footer></div></div>
 <script>(function(){var b=document.getElementById('theme-btn'),r=document.documentElement;function i(){b.textContent=r.getAttribute('data-theme')==='dark'?'☀':'☾'}i();b.onclick=function(){var n=r.getAttribute('data-theme')==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('lp_theme',n)}catch(e){}i()}})()</script>
+<script src="../assets/fx.js" defer></script>
 </body></html>
