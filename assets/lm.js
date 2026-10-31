@@ -46,3 +46,11 @@
   var cu = document.querySelector('.lm-curtain');
   if (cu) setTimeout(function () { cu.remove(); }, 1500);
 })();
+// boutons « Copier »
+document.addEventListener('click', function (ev) {
+  var b = ev.target.closest && ev.target.closest('[data-copy]'); if (!b) return;
+  var el = document.getElementById(b.getAttribute('data-copy')); if (!el) return;
+  var txt = el.textContent, old = b.textContent;
+  function done() { b.textContent = 'Copié ✓'; setTimeout(function () { b.textContent = old; }, 1600); }
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, done); else done();
+});

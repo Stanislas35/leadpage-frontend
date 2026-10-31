@@ -225,9 +225,6 @@ routes.push({ r: 'comparatif', t: 'LeadPage et votre outil d\'envoi : complémen
 
 
 
-// Messages : univers LeadMessage, page autonome (voir build/messages-page.js)
-routes.push({ r: 'messages', lm: true, t: 'LeadMessage', d: 'Parcours de mails et de messages LinkedIn par prospect.', faq: require('./messages-page.js').faq, body: '' });
-
 // Démo
 routes.push({ r: 'demo', t: 'Visite guidée de LeadPage en 60 secondes', d: 'De l\'import du CSV au suivi de lecture : la visite guidée interactive de LeadPage, avec des données d\'exemple.', demo: true,
   body: panel({ tag: 'Démo', h: 'LeadPage en 60 secondes', p: 'Un fichier de contacts devient un document personnalisé par prospect, puis une lecture mesurée. Six étapes, des données d\'exemple, sans inscription.', btns: false }) +

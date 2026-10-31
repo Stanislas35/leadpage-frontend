@@ -13,6 +13,8 @@ fs.writeFileSync(path.join(ROOT, 'assets/site.css'), css);
 
 // 2. Contenu des pages
 const { routes } = require('./pages-content.js');
+const LM = require('./lm-site.js');
+LM.routes.forEach(r => routes.push({ ...r, lm: true }));
 const FOOTER = '<footer class="pgf"><div class="pgf-in"><div><span class="pgl">Lead<i>Page</i></span><p style="margin-top:10px">Un document personnalisé par prospect, avec mesure de lecture.</p></div>' +
   '<div><b>Cas d\'usage</b><a href="§B§cas/agences/">Agences et prestataires</a><a href="§B§cas/commerciaux/">Équipes commerciales</a><a href="§B§cas/consultants/">Consultants</a><a href="§B§cas/recrutement/">Recrutement et événements</a></div>' +
   '<div><b>Ressources</b><a href="§B§ressources/">Livres blancs</a><a href="§B§templates/">Templates de mails</a><a href="§B§outils/">Outils gratuits</a><a href="§B§comparatif/">Comparatif</a></div>' +
@@ -31,7 +33,7 @@ for (const o of routes) {
   const depth = o.r.split('/').length, B = '../'.repeat(depth);
   if (o.lm) {   // univers LeadMessage : page autonome, avec son propre habillage
     const dirm = path.join(ROOT, o.r); fs.mkdirSync(dirm, { recursive: true });
-    fs.writeFileSync(path.join(dirm, 'index.html'), require('./messages-page.js')(B, SITE));
+    fs.writeFileSync(path.join(dirm, 'index.html'), LM.shell(B, SITE, { ...o, body: o.body(B) }));
     continue;
   }
   const body = fix(o.body + FOOTER, B);
