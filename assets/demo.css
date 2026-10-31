@@ -66,3 +66,4 @@
 .dm.static .dm-a{opacity:1;animation:none}
 @media(max-width:900px){.dm{grid-template-columns:1fr}.dm-stage{min-height:0;padding:16px}.dm-body{height:420px}.dm .doc{grid-template-columns:1fr}.dm .call{display:none}.dm-steps p{display:none}}
 @media(prefers-reduced-motion:reduce){.dm-a{opacity:1!important;animation:none!important}.dm-steps li.on{transform:none}}
+@media(max-width:900px){.dm-stage{order:-1}.dm-steps{grid-template-columns:1fr 1fr}.dm-steps button{grid-template-columns:28px 1fr;padding:10px;gap:8px}.dm-steps b{width:28px;height:28px;font-size:11px}.dm-steps h4{font-size:13.5px}.dm-steps li.on button{transform:none}}
