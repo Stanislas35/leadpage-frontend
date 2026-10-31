@@ -4835,7 +4835,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
         <div class="progress-dot">2</div>
         <span>Votre offre</span>
       </div>
-      <div class="progress-line"></div>
+      <div class="progress-line" id="pl3"></div>
       <div class="progress-step" id="ps3">
         <div class="progress-dot">3</div>
         <span>Votre charte</span>
@@ -4899,7 +4899,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
 
       <div class="onboarding-nav">
         <button class="btn btn-ghost" onclick="goToObStep(1)">← Retour</button>
-        <button class="btn btn-primary" onclick="goToObStep(3)">Continuer →</button>
+        <button class="btn btn-primary" id="ob-next2" onclick="goToObStep(3)">Continuer →</button>
       </div>
     </div>
 
@@ -5443,7 +5443,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
               <select class="form-input" id="cm-client" style="font-size:13px"><option value="">Aucun client</option></select>
               <div style="font-size:11px;color:var(--text3);margin-top:5px">Les campagnes lancées avec cette charte sont rattachées à ce client. Gérez vos clients dans l'onglet Clients.</div>
             </div>
-            <div class="form-group" style="margin-bottom:16px">
+            <div class="form-group" id="cm-agenda-grp" style="margin-bottom:16px">
               <label class="form-label">Lien agenda (optionnel)</label>
               <input class="form-input" id="cm-calendly" placeholder="https://calendly.com/votre-lien ou cal.com/..." style="font-size:13px">
               <div style="font-size:11px;color:var(--text3);margin-top:5px">Apparaît en lien cliquable dans le CTA du PDF · Compatible Calendly, Cal.com, HubSpot...</div>
@@ -6390,6 +6390,7 @@ function selectPlan(el) {
 
 // -- ONBOARDING ---------------------------
 function goToObStep(step) {
+  if (step === 3 && document.body.classList.contains('lm-app')) { const b = document.getElementById('ob-next2'); finishOnboarding(b); return; }
   for (let i = 1; i <= 3; i++) {
     document.getElementById(`ob-step${i}`).style.display = i === step ? 'block' : 'none';
     const ps = document.getElementById(`ps${i}`);
@@ -7553,12 +7554,13 @@ function renderCampaignList() {
       + (camp.status === 'processing' ? '<span class="mini"><i style="width:' + pct + '%"></i></span>' : '') + '</td>'
       + '<td class="hide-s">' + date + '</td>'
       + '<td>' + (camp.status === 'processing' ? dn + '/' + total : dn) + '</td>'
-      + '<td>' + (rate == null ? '<span style="color:var(--text3)">—</span>' : '<b>' + rate + ' %</b> <span style="color:var(--text3)">(' + op + ')</span>') + '</td>'
+      + (document.body.classList.contains('lm-app') ? '' : ('<td>' + (rate == null ? '<span style="color:var(--text3)">—</span>' : '<b>' + rate + ' %</b> <span style="color:var(--text3)">(' + op + ')</span>') + '</td>'))
       + '<td class="hide-s">' + (camp.error_rows > 0 ? '<span style="color:#EF4444">⚠ ' + camp.error_rows + '</span>' : '<span style="color:var(--text3)">0</span>') + '</td>'
       + '<td class="act">' + acts + '</td></tr>';
   };
+  const lmA = document.body.classList.contains('lm-app');
   const tableHtml = function(items, tagMode) {
-    return '<table class="lpg-table"><thead><tr><th style="width:30px"></th>' + th('Campagne', 'name') + th('Date', 'date', 'hide-s') + th('PDF', 'pdf') + th('Consultés', 'rate') + th('Erreurs', 'err', 'hide-s') + '<th></th></tr></thead><tbody>'
+    return '<table class="lpg-table"><thead><tr><th style="width:30px"></th>' + th('Campagne', 'name') + th('Date', 'date', 'hide-s') + th(lmA ? 'Contacts' : 'PDF', 'pdf') + (lmA ? '' : th('Consultés', 'rate')) + th('Erreurs', 'err', 'hide-s') + '<th></th></tr></thead><tbody>'
       + items.map(function(c) { return rowHtml(c, tagMode); }).join('') + '</tbody></table>';
   };
 
@@ -7593,7 +7595,7 @@ function renderCampaignList() {
       html += '<div class="lpg-group' + (closed[key] ? ' closed' : '') + '" data-gkey="' + escHtml(k) + '">'
         + '<div class="lpg-head" onclick="campToggleGroup(\'' + escHtml(key) + '\')"><span class="lpg-chev">▼</span><span class="lpg-bar" style="background:' + color + '"></span>'
         + '<div><h3>' + escHtml(label) + '</h3></div>' + clientTag
-        + '<div class="lpg-kpis"><span><b>' + items.length + '</b> campagne' + (items.length > 1 ? 's' : '') + '</span><span><b>' + pdfs + '</b> PDF</span><span><b>' + (rate == null ? '—' : rate + ' %') + '</b> consultés</span>' + (last ? '<span>dernière : ' + last + '</span>' : '') + '</div>'
+        + '<div class="lpg-kpis"><span><b>' + items.length + '</b> campagne' + (items.length > 1 ? 's' : '') + '</span><span><b>' + pdfs + '</b> ' + (document.body.classList.contains('lm-app') ? 'contacts' : 'PDF') + '</span>' + (document.body.classList.contains('lm-app') ? '' : '<span><b>' + (rate == null ? '—' : rate + ' %') + '</b> consultés</span>') + (last ? '<span>dernière : ' + last + '</span>' : '') + '</div>'
         + (!byClient && k !== '__none__' ? '<button class="btn btn-ghost lpx-sm" onclick="event.stopPropagation();campStartWithCharte(\'' + escHtml(k) + '\')">+ Campagne</button>' : '')
         + '</div><div class="lpg-body">' + (items.length ? tableHtml(items, byClient ? 'client' : true) : '<div style="padding:14px 18px;font-size:13px;color:var(--text3);border-top:1px solid var(--border)">Aucune campagne pour l’instant.</div>') + '</div></div>';
     });
@@ -8249,10 +8251,57 @@ function lpSetProduct(p) {
   try { localStorage.setItem('lp_product', p || 'leadpage'); } catch (e) {}
   lpSyncUniverse(document.querySelector('.screen.active') ? document.querySelector('.screen.active').id : '');
 }
+
+// Univers LeadMessage : vocabulaire sans PDF dans tous les écrans de l'application
+const LP_LM_TXT = [
+  [/Un crédit par contact, quel que soit le parcours\. Pas de PDF\./g, 'Un crédit par contact, quel que soit le parcours.'],
+  [/(\d[\d\s  ]*) PDFs\/mois/g, '$1 contacts/mois'],
+  [/PDFs générés/g, 'Parcours générés'], [/PDFs disponibles/g, 'Contacts disponibles'], [/PDFs utilisés/g, 'Contacts traités'],
+  [/Stockage des PDFs/g, 'Stockage des fichiers'],
+  [/Logo, couleurs et blocs PDF/g, 'Logo, offre et ton'],
+  [/personnaliser les PDFs dans votre ton et avec votre identité/g, 'rédiger les messages dans votre ton et avec votre identité'],
+  [/rédiger des PDFs ultra-pertinents/g, 'rédiger des messages ultra-pertinents'],
+  [/ \(affiché dans le PDF\)/g, ''],
+  [/les clics sur vos liens PDF/g, 'les parcours générés'],
+  [/L'IA lit votre site et propose le logo, les couleurs, l'offre, le ton et les blocs adaptés\./g, "L'IA lit votre site et propose le logo, l'offre et le ton adaptés."],
+  [/Vous avez utilisé (\d+) de vos (\d+) PDFs gratuits/g, 'Vous avez utilisé $1 de vos $2 contacts gratuits'],
+  [/rédige les PDFs pour cette charte/g, 'rédige les messages pour cette charte'],
+  [/PDFs gratuits/g, 'contacts gratuits']
+];
+function lpTextSwap(on) {
+  const roots = ['onboarding', 'dashboard'].map(function (i) { return document.getElementById(i); }).filter(Boolean);
+  window.__lpTxtBusy = true;
+  roots.forEach(function (r) {
+    const w = document.createTreeWalker(r, NodeFilter.SHOW_TEXT); let n;
+    while ((n = w.nextNode())) {
+      const par = n.parentElement; if (!par || par.tagName === 'SCRIPT' || par.tagName === 'STYLE') continue;
+      if (on) {
+        const cur = n.nodeValue; if (!/PDF|couleurs, l'offre/.test(cur) && n.__lpT == null) continue;
+        const base = (n.__lpT != null && n.__lpV === cur) ? n.__lpT : cur;
+        let out = base; LP_LM_TXT.forEach(function (x) { out = out.replace(x[0], x[1]); });
+        if (out !== base || n.__lpT != null) { if (n.__lpT == null || n.__lpV !== cur) n.__lpT = base; n.nodeValue = out; n.__lpV = out; }
+      } else if (n.__lpT != null) { n.nodeValue = n.__lpT; n.__lpT = null; n.__lpV = null; }
+    }
+  });
+  window.__lpTxtBusy = false;
+}
+(function () {
+  let t = null;
+  const mo = new MutationObserver(function () {
+    if (window.__lpTxtBusy || !document.body.classList.contains('lm-app')) return;
+    clearTimeout(t); t = setTimeout(function () { lpTextSwap(true); }, 60);
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    ['onboarding', 'dashboard'].forEach(function (i) { const r = document.getElementById(i); if (r) mo.observe(r, { childList: true, subtree: true, characterData: true }); });
+  });
+})();
 function lpSyncUniverse(screenId) {
   const prod = lpProduct();
   const on = prod === 'leadmessage' && ['auth', 'dashboard', 'onboarding'].indexOf(screenId) >= 0;
   document.body.classList.toggle('lm-app', on);
+  try { lpTextSwap(on); } catch (e) {}
+  const ps3 = document.getElementById('ps3'), pl3 = document.getElementById('pl3'), o2 = document.getElementById('ob-next2');
+  if (ps3) ps3.style.display = on ? 'none' : ''; if (pl3) pl3.style.display = on ? 'none' : ''; if (o2) o2.textContent = on ? 'Accéder au dashboard →' : 'Continuer →';
   const mark = '<img src="logo-lm.svg" alt="" style="width:30px;height:30px;vertical-align:middle;margin-right:8px">';
   document.querySelectorAll('.nav-logo').forEach(function (el) { if (on) lpSwap(el, mark + '<span class="brand-word">Lead<span style="color:#E4332E">Message</span></span>'); else lpRestore(el); });
   document.querySelectorAll('.auth-logo').forEach(function (el) { if (on) lpSwap(el, mark + '<span>Lead<span style="color:#E4332E">Message</span></span>'); else lpRestore(el); });
@@ -9074,7 +9123,7 @@ function cmRenderStep(step) {
     content.style.display = isActive ? 'block' : 'none';
   });
   document.getElementById('cm-btn-back').style.display = step > 1 ? '' : 'none';
-  document.getElementById('cm-btn-next').textContent = step === 3 ? 'Sauvegarder ✓' : 'Suivant →';
+  document.getElementById('cm-btn-next').textContent = (step === 3 || (step === 2 && document.body.classList.contains('lm-app'))) ? 'Sauvegarder ✓' : 'Suivant →';
 }
 
 function cmNextStep() {
@@ -9100,6 +9149,7 @@ function cmNextStep() {
       cmUpdateBlocsCount();
       cmPendingBlocs = null;
     }
+    if (document.body.classList.contains('lm-app')) { cmSaveCharte(); return; }
     cmRenderStep(3);
   } else {
     cmSaveCharte();
