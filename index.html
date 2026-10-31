@@ -4050,7 +4050,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
 
 .mk code{background:transparent!important;color:#1D3BDB!important;padding:0!important}
 </style>
-<link rel="stylesheet" href="assets/fx.css">
+<link rel="stylesheet" href="assets/fx.css"><link rel="stylesheet" href="assets/demo.css">
 </head>
 <body>
 
@@ -4061,6 +4061,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
     <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" style="fill:var(--mk1)"/><path d="M9.5 5.5h8.8l6.2 6.2V25.5a1.5 1.5 0 0 1-1.5 1.5H9.5A1.5 1.5 0 0 1 8 25.5v-18A1.5 1.5 0 0 1 9.5 5.5z" fill="#fff"/><path d="M18.3 5.5v4.7a1.5 1.5 0 0 0 1.5 1.5h4.7z" style="fill:var(--mk2)"/><rect x="11.4" y="13" width="2.7" height="10.2" rx=".7" style="fill:var(--mk1)"/><rect x="11.4" y="20.5" width="8.4" height="2.7" rx=".7" style="fill:var(--mk1)"/><circle cx="19.2" cy="16.6" r="1.8" style="fill:var(--mk3)"/></svg><span class="brand-word">Lead<span>Page</span></span>
   </div>
   <div class="nav-links" id="nav-links">
+    <a href="demo/">Démo</a>
     <a href="#" onclick="lpGo('lp-how');return false">Fonctionnement</a>
     <a href="#" onclick="lpGo('lp-measure');return false">Mesure</a>
     <a href="cas/">Cas d'usage</a>
@@ -4298,6 +4299,15 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
     </div>
   </div>
 
+
+  <!-- ░░ VISITE GUIDÉE 60 s ░░ -->
+  <div class="lp-section" id="lp-tour">
+    <div class="lp-section-label">Visite guidée</div>
+    <h2 class="lp-h2">LeadPage en 60 secondes</h2>
+    <p class="lp-section-sub">Du fichier CSV au suivi de lecture, avec des données d'exemple. Cliquez sur une étape pour y aller, ou laissez défiler.</p>
+    <div data-demo></div>
+    <p style="text-align:center;margin-top:18px"><a href="demo/" style="color:var(--accent,#2B50FF);font-weight:600">Ouvrir la démo en page dédiée →</a></p>
+  </div>
 
   <!-- ░░ SECTION DÉMO ANIMÉE ░░ -->
   <div class="lp-section lp-demo-section" id="lp-demo">
@@ -4793,6 +4803,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
           </div>
         </div>
       </div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--text2);margin:0 0 12px">En créant un compte, vous acceptez les <a href="legal/cgv/" target="_blank" rel="noopener">CGV et CGU</a> et reconnaissez avoir lu la <a href="legal/confidentialite/" target="_blank" rel="noopener">politique de confidentialité</a>.</p>
       <button class="form-submit" id="register-submit" onclick="handleRegister(this)">Créer mon compte gratuit →</button>
     </div>
   </div>
@@ -8334,7 +8345,8 @@ async function lpRenderReader(token) {
   root.innerHTML = '<div style="position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #E2E5EC;padding:10px 16px;display:flex;align-items:center;gap:12px">'
     + '<b style="font-size:14px;color:#1B2D6B;flex:1">Document préparé pour vous</b>'
     + '<a id="lpr-open" target="_blank" rel="noopener" style="font-size:13px;color:#1B2D6B;text-decoration:none;border:1px solid #CBD2E0;border-radius:8px;padding:6px 12px">Ouvrir le PDF</a></div>'
-    + '<div id="lpr-pages" style="max-width:880px;margin:0 auto;padding:16px 12px 40px"><div style="text-align:center;color:#64748B;padding:40px">Chargement du document…</div></div>';
+    + '<div id="lpr-pages" style="max-width:880px;margin:0 auto;padding:16px 12px 40px"><div style="text-align:center;color:#64748B;padding:40px">Chargement du document…</div></div>'
+    + '<p style="max-width:880px;margin:0 auto;padding:0 16px 30px;font-size:12px;color:#64748B;text-align:center">Ce document vous a été envoyé par un professionnel. Votre lecture (durée, pages, clics) est mesurée sans cookie, avec une adresse IP tronquée. <a href="legal/confidentialite/#s4" style="color:#1B2D6B">En savoir plus et vos droits</a></p>';
   document.body.appendChild(root);
   const box = root.querySelector('#lpr-pages');
   let info;
@@ -9729,7 +9741,7 @@ async function lpAssistantSend(ev) {
 // Les anciens liens #/... sont redirigés vers ces pages.
 function lpRoutePages(){var p=location.hash.replace('#/','');if(!p){showScreen('landing',false);return}location.replace(p.replace(/\/?$/,'/'))}
 function lpGo(id){var go=function(){var e=document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth'})};var l=document.getElementById('landing');if(!l.classList.contains('active')){showScreen('landing');try{history.replaceState({screen:'landing'},'','#landing')}catch(e){}setTimeout(go,80)}else go()}
-function lpFooterHTML(){return '<footer class="pgf"><div class="pgf-in"><div><span class="pgl">Lead<i>Page</i></span><p style="margin-top:10px">Un document personnalisé par prospect, avec mesure de lecture.</p></div><div><b>Cas d\'usage</b><a href="cas/agences/">Agences et prestataires</a><a href="cas/commerciaux/">Équipes commerciales</a><a href="cas/consultants/">Consultants</a><a href="cas/recrutement/">Recrutement et événements</a></div><div><b>Ressources</b><a href="ressources/">Livres blancs</a><a href="templates/">Templates de mails</a><a href="outils/">Outils gratuits</a><a href="comparatif/">Comparatif</a></div><div><b>LeadPage</b><a onclick="lpGo(\'lp-pricing\')">Tarifs</a><a onclick="lpGo(\'lp-faq\')">FAQ</a><a onclick="showScreen(\'auth\')">Connexion</a></div></div><small>© 2026 LeadPage · Édité par Devoleads, La Rochelle</small></footer>'}
+function lpFooterHTML(){return '<footer class="pgf"><div class="pgf-in"><div><span class="pgl">Lead<i>Page</i></span><p style="margin-top:10px">Un document personnalisé par prospect, avec mesure de lecture.</p></div><div><b>Cas d\'usage</b><a href="cas/agences/">Agences et prestataires</a><a href="cas/commerciaux/">Équipes commerciales</a><a href="cas/consultants/">Consultants</a><a href="cas/recrutement/">Recrutement et événements</a></div><div><b>Ressources</b><a href="ressources/">Livres blancs</a><a href="templates/">Templates de mails</a><a href="outils/">Outils gratuits</a><a href="comparatif/">Comparatif</a></div><div><b>LeadPage</b><a onclick="lpGo(\'lp-pricing\')">Tarifs</a><a href="demo/">Démo en 60 s</a><a onclick="lpGo(\'lp-faq\')">FAQ</a><a onclick="showScreen(\'auth\')">Connexion</a></div><div><b>Confiance</b><a href="legal/mentions-legales/">Mentions légales</a><a href="legal/confidentialite/">Confidentialité</a><a href="legal/cgv/">CGV et CGU</a><a href="legal/donnees-et-securite/">Données et sécurité</a></div></div><small>© 2026 LeadPage · Édité par Devoleads, La Rochelle</small></footer>'}
 function lpFooter(){var f=document.querySelector('#landing .lp-footer');if(f)f.outerHTML=lpFooterHTML()}
 addEventListener('hashchange',function(){if(location.hash.startsWith('#/'))lpRoutePages()});
 </script>
@@ -9756,6 +9768,6 @@ if(g)me.insertBefore(z,g)}
 }
 if(document.readyState!=='loading')init();else document.addEventListener('DOMContentLoaded',init)})();
 </script>
-<script src="assets/fx.js" defer></script>
+<script src="assets/fx.js" defer></script><script src="assets/demo.js" defer></script>
 </body>
 </html>

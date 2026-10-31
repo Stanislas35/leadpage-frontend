@@ -223,4 +223,14 @@ routes.push({ r: 'comparatif', t: 'LeadPage et votre outil d\'envoi : complémen
     sec('Quand LeadPage n\'est pas fait pour vous', null, `<div class="pgvs"><div class="bad"><h3>Passez votre chemin si…</h3><ul><li>Vous envoyez des milliers de mails ultra-génériques</li><li>Vous n'avez aucune information sur vos contacts à part l'email</li><li>Vous cherchez un outil qui envoie les mails à votre place</li></ul></div><div class="good"><h3>Il vous sert si…</h3><ul><li>Vous visez des comptes précis, quelques centaines à quelques milliers</li><li>Votre fichier contient poste, entreprise et secteur</li><li>Vous voulez savoir qui lit vraiment</li></ul></div></div>`) +
     sec('Questions fréquentes', null, faq(cmpFaq)) + cta('Ajoutez le document à votre séquence actuelle') });
 
+
+// Démo
+routes.push({ r: 'demo', t: 'Visite guidée de LeadPage en 60 secondes', d: 'De l\'import du CSV au suivi de lecture : la visite guidée interactive de LeadPage, avec des données d\'exemple.', demo: true,
+  body: panel({ tag: 'Démo', h: 'LeadPage en 60 secondes', p: 'Un fichier de contacts devient un document personnalisé par prospect, puis une lecture mesurée. Six étapes, des données d\'exemple, sans inscription.', btns: false }) +
+    sec('La visite guidée', 'Cliquez sur une étape, mettez en pause ou avancez à votre rythme. Les contacts et les chiffres sont fictifs.', '<div data-demo></div>', 'tour') +
+    sec('Ce que vous venez de voir', null, `<div class="pggrid"><a class="pgcard c1" href="${B}cas/agences/"><h3>Pour une agence</h3><p>Une charte par client et un suivi partageable.</p><span class="pggo">Voir le cas →</span></a><a class="pgcard c2" href="${B}cas/commerciaux/"><h3>Pour une équipe commerciale</h3><p>Prioriser les relances selon la lecture réelle.</p><span class="pggo">Voir le cas →</span></a><a class="pgcard c3" href="${B}outils/"><h3>Préparer votre fichier</h3><p>Vérifiez votre CSV avant l'import.</p><span class="pggo">Essayer →</span></a></div>`) +
+    cta('Faites la même chose sur votre fichier') });
+
+routes.push(...require('./legal.js').routes);
+
 module.exports = { routes, CAS, GUIDES, TPL };

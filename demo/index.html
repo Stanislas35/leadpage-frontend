@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<script>try{var t=localStorage.getItem("lp_theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visite guidée de LeadPage en 60 secondes | LeadPage</title>
+<meta name="description" content="De l'import du CSV au suivi de lecture : la visite guidée interactive de LeadPage, avec des données d'exemple.">
+<link rel="canonical" href="https://stanislas35.github.io/leadpage-frontend/demo/">
+<meta name="theme-color" content="#2B50FF"><meta name="color-scheme" content="light dark">
+<meta property="og:type" content="website"><meta property="og:title" content="Visite guidée de LeadPage en 60 secondes | LeadPage"><meta property="og:description" content="De l'import du CSV au suivi de lecture : la visite guidée interactive de LeadPage, avec des données d'exemple."><meta property="og:url" content="https://stanislas35.github.io/leadpage-frontend/demo/"><meta property="og:image" content="https://stanislas35.github.io/leadpage-frontend/icon-512.png">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css"><link rel="stylesheet" href="../assets/fx.css"><link rel="stylesheet" href="../assets/demo.css">
+
+</head>
+<body>
+<div id="proProgress" aria-hidden="true"></div>
+<nav>
+  <a class="nav-logo" href="../" style="text-decoration:none;color:inherit">
+    <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" style="fill:var(--mk1)"/><path d="M9.5 5.5h8.8l6.2 6.2V25.5a1.5 1.5 0 0 1-1.5 1.5H9.5A1.5 1.5 0 0 1 8 25.5v-18A1.5 1.5 0 0 1 9.5 5.5z" fill="#fff"/><path d="M18.3 5.5v4.7a1.5 1.5 0 0 0 1.5 1.5h4.7z" style="fill:var(--mk2)"/><rect x="11.4" y="13" width="2.7" height="10.2" rx=".7" style="fill:var(--mk1)"/><rect x="11.4" y="20.5" width="8.4" height="2.7" rx=".7" style="fill:var(--mk1)"/><circle cx="19.2" cy="16.6" r="1.8" style="fill:var(--mk3)"/></svg><span class="brand-word">Lead<span>Page</span></span>
+  </a>
+  <div class="nav-links" id="nav-links">
+    <a href="../demo/">Démo</a><a href="../#lp-how">Fonctionnement</a><a href="../#lp-measure">Mesure</a><a href="../cas/">Cas d'usage</a><a href="../ressources/">Ressources</a><a href="../#lp-pricing">Tarifs</a><a href="../#lp-faq">FAQ</a>
+  </div>
+  <div class="nav-right">
+    <button id="theme-btn" aria-label="Changer de thème" title="Changer de thème">☾</button>
+    <a class="btn btn-ghost" id="nav-login" href="../#connexion" style="text-decoration:none">Connexion</a>
+    <a class="btn btn-primary" id="nav-signup" href="../#connexion" style="text-decoration:none">Essayer gratuitement</a>
+  </div>
+</nav>
+<div id="pages" class="screen active"><div id="pg-body"><section class="pgpanel solo"><div class="pgw"><div><span class="pgtag">Démo</span><h1>LeadPage en 60 secondes</h1><p>Un fichier de contacts devient un document personnalisé par prospect, puis une lecture mesurée. Six étapes, des données d'exemple, sans inscription.</p></div></div></section><section class="pgsec" id="tour"><div class="pgw"><h2>La visite guidée</h2><p class="sub">Cliquez sur une étape, mettez en pause ou avancez à votre rythme. Les contacts et les chiffres sont fictifs.</p><div data-demo></div></div></section><section class="pgsec"><div class="pgw"><h2>Ce que vous venez de voir</h2><div class="pggrid"><a class="pgcard c1" href="../cas/agences/"><h3>Pour une agence</h3><p>Une charte par client et un suivi partageable.</p><span class="pggo">Voir le cas →</span></a><a class="pgcard c2" href="../cas/commerciaux/"><h3>Pour une équipe commerciale</h3><p>Prioriser les relances selon la lecture réelle.</p><span class="pggo">Voir le cas →</span></a><a class="pgcard c3" href="../outils/"><h3>Préparer votre fichier</h3><p>Vérifiez votre CSV avant l'import.</p><span class="pggo">Essayer →</span></a></div></div></section><section class="pgsec"><div class="pgw"><div class="pgcta"><div><h2>Faites la même chose sur votre fichier</h2><p>Cinq crédits offerts, sans carte bancaire.</p></div><a class="pgbtn" href="../#connexion">Essayer gratuitement</a></div></div></section><footer class="pgf"><div class="pgf-in"><div><span class="pgl">Lead<i>Page</i></span><p style="margin-top:10px">Un document personnalisé par prospect, avec mesure de lecture.</p></div><div><b>Cas d'usage</b><a href="../cas/agences/">Agences et prestataires</a><a href="../cas/commerciaux/">Équipes commerciales</a><a href="../cas/consultants/">Consultants</a><a href="../cas/recrutement/">Recrutement et événements</a></div><div><b>Ressources</b><a href="../ressources/">Livres blancs</a><a href="../templates/">Templates de mails</a><a href="../outils/">Outils gratuits</a><a href="../comparatif/">Comparatif</a></div><div><b>LeadPage</b><a href="../#lp-pricing">Tarifs</a><a href="../#lp-faq">FAQ</a><a href="../demo/">Démo en 60 s</a><a href="../#connexion">Connexion</a></div><div><b>Confiance</b><a href="../legal/mentions-legales/">Mentions légales</a><a href="../legal/confidentialite/">Confidentialité</a><a href="../legal/cgv/">CGV et CGU</a><a href="../legal/donnees-et-securite/">Données et sécurité</a></div></div><small>© 2026 LeadPage · Édité par Devoleads, La Rochelle</small></footer></div></div>
+<script>(function(){var b=document.getElementById('theme-btn'),r=document.documentElement;function i(){b.textContent=r.getAttribute('data-theme')==='dark'?'☀':'☾'}i();b.onclick=function(){var n=r.getAttribute('data-theme')==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('lp_theme',n)}catch(e){}i()}})()</script>
+<script src="../assets/fx.js" defer></script><script src="../assets/demo.js" defer></script>
+</body></html>

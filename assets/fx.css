@@ -111,3 +111,4 @@ html[data-theme] .lp-results-grid.lp-uc>.lp-result-card:nth-child(1){background:
 html[data-theme] .lp-results-grid.lp-uc>.lp-result-card:nth-child(2){background:var(--t2)!important}
 html[data-theme] .lp-results-grid.lp-uc>.lp-result-card:nth-child(3){background:var(--t3)!important}
 html[data-theme] .lp-results-grid.lp-uc>.lp-result-card:nth-child(4){background:var(--t4)!important}
+mark.todo{background:#FFE14D;color:#0A0B0D;border-radius:6px;padding:1px 7px;font-weight:600;font-size:.92em}
