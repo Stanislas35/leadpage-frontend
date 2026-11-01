@@ -395,3 +395,28 @@ body.lm main{overflow-x:clip}
 .lm-slide-ul li{padding:5px 0 5px 24px;position:relative;font-size:14.5px;color:var(--ink2)}.lm-slide-ul li:before{content:"✓";position:absolute;left:0;color:var(--r);font-weight:700}
 @media(max-width:700px){.lm-slide{padding:22px}.lm-slide-ul{grid-template-columns:1fr}.lm-slide-ticks{font-size:11px}}
 .lm-slide .lm-btn{color:#fff;display:inline-block}
+
+/* FAQ */
+.lm-faqw{display:grid;grid-template-columns:340px 1fr;gap:56px;align-items:start}
+.lm-faqside{position:sticky;top:110px}
+.lm-faqside h2{margin:6px 0 12px}
+.lm-faqbox{margin-top:26px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px 22px}
+.lm-faqbox p{margin:6px 0 14px;font-size:14.5px;color:var(--ink2)}
+.lm-faqbox .lm-btn{display:inline-block;color:#fff}
+.lm-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.lm-chips button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 16px;font:600 14px Inter,sans-serif;color:var(--ink2);cursor:pointer;transition:all .2s}
+.lm-chips button:hover{border-color:var(--r);color:var(--r)}
+.lm-chips button.on{background:var(--r);border-color:var(--r);color:#fff}
+.lm-faqmain .lm-faq{margin-top:0;max-width:none}
+.lm-faqmain .lm-faq details{border-radius:18px;padding:0;margin-bottom:12px;transition:box-shadow .25s,border-color .25s}
+.lm-faqmain .lm-faq details[open]{border-color:var(--r);box-shadow:0 14px 34px rgba(228,51,46,.12)}
+.lm-faqmain .lm-faq summary{padding:20px 22px;font-size:16.5px;align-items:center}
+.lm-faqmain .lm-faq summary:after{content:none!important}
+.lm-faq summary i{flex:none;width:30px;height:30px;border-radius:50%;background:var(--rose);position:relative;transition:transform .3s,background .2s}
+.lm-faq summary i:before,.lm-faq summary i:after{content:"";position:absolute;left:50%;top:50%;width:12px;height:2px;margin:-1px 0 0 -6px;background:var(--r);border-radius:2px;transition:transform .3s}
+.lm-faq summary i:after{transform:rotate(90deg)}
+.lm-faq details[open] summary i{background:var(--r);transform:rotate(180deg)}.lm-faq details[open] summary i:before,.lm-faq details[open] summary i:after{background:#fff}
+.lm-faq details[open] summary i:after{transform:rotate(0)}
+.lm-faq .ans{padding:0 22px 20px}.lm-faq .ans p{margin:0;border-top:1px solid var(--line);padding-top:14px;line-height:1.65}
+.lm-faq details.hid{display:none}
+@media(max-width:900px){.lm-faqw{grid-template-columns:1fr;gap:26px}.lm-faqside{position:static}.lm-faqmain .lm-faq summary{padding:16px 16px;font-size:15.5px}.lm-faq .ans{padding:0 16px 16px}}

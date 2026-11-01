@@ -5773,6 +5773,11 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
     <div id="section-parametres" style="display:none">
       <div style="margin-bottom:32px"><h1 style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:800">Paramètres</h1><p style="color:var(--text2);font-size:14px;margin-top:4px">Configuration de votre compte</p></div>
       <div style="display:flex;flex-direction:column;gap:16px">
+        <div id="lm-reset-card" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px">
+          <h2 style="font-size:16px;font-weight:700;margin-bottom:8px">Repartir de zéro sur LeadMessage</h2>
+          <p style="font-size:13px;color:var(--text3);margin-bottom:16px">Supprime tous vos parcours de messages et remet votre solde LeadMessage à 5 contacts offerts, pour tester de A à Z comme un compte neuf. Vos PDF LeadPage, vos chartes et un éventuel abonnement payant ne sont pas touchés.</p>
+          <button class="btn" style="border:1px solid #E4332E;color:#E4332E;background:transparent" onclick="lpResetLeadMessage(this)">Repartir de zéro</button>
+        </div>
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px">
           <h2 style="font-size:16px;font-weight:700;margin-bottom:20px">Compte</h2>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
@@ -8107,6 +8112,10 @@ function showServerWaking(on) {
 
 function lpWsGet() { try { return localStorage.getItem('lp_ws') || ''; } catch (e) { return ''; } }
 async function apiCall(method, path, body = null, auth = false, quiet = false) {
+  // Deux produits, deux historiques : la liste et les stats ne portent que sur le produit actif
+  if (method === 'GET' && auth && (path === '/api/campaigns/' || path.indexOf('/api/campaigns/stats/overview') === 0)) {
+    try { path += (path.indexOf('?') < 0 ? '?' : '&') + 'product=' + (lpProduct() === 'leadmessage' ? 'leadmessage' : 'leadpage'); } catch (e) {}
+  }
   const headers = { 'Content-Type': 'application/json' };
   if (auth && authToken) headers['Authorization'] = 'Bearer ' + authToken;
   if (auth && authToken) { const w = lpWsGet(); if (w) headers['X-Workspace'] = w; }
@@ -8348,6 +8357,7 @@ function lpSyncUniverse(screenId) {
   if (sw) sw.style.display = (window.__lpBoth && screenId === 'dashboard') ? '' : 'none';
   if (swt) swt.textContent = on ? 'Passer à LeadPage' : 'Passer à LeadMessage';
   if (di) di.style.display = (!on && prod === 'leadpage' && !window.__lpBoth && screenId === 'dashboard') ? '' : 'none';
+  const rc = document.getElementById('lm-reset-card'); if (rc) rc.style.display = on ? '' : 'none';
   const swi = document.getElementById('sb-switch-i'); if (swi) swi.src = on ? 'logo.svg' : 'logo-lm.svg';
   try { updateFreeCredits(); } catch (e) {}
   if (on) { try { setGenFormat('msg'); } catch (e) {} }
@@ -8356,6 +8366,16 @@ function lpSyncUniverse(screenId) {
 function lpSwitchProduct() {
   lpSetProduct(lpProduct() === 'leadmessage' ? 'leadpage' : 'leadmessage');
   try { showDashSection('generate', null); loadDashboardData(); } catch (e) {}
+}
+async function lpResetLeadMessage(btn) {
+  if (!confirm('Supprimer tous vos parcours LeadMessage et remettre le solde à 5 contacts offerts ? Cette action est définitive. Vos PDF LeadPage ne sont pas touchés.')) return;
+  try {
+    setLoading(btn, true);
+    const r = await apiCall('POST', '/api/campaigns/reset-messages', {}, true);
+    showToast('LeadMessage remis à zéro (' + (r.deleted || 0) + ' parcours supprimé' + ((r.deleted || 0) > 1 ? 's' : '') + ')');
+    try { showDashSection('generate', null); loadDashboardData(); } catch (e) {}
+  } catch (e) { showToast('Réinitialisation impossible : ' + e.message, '#EF4444'); }
+  finally { setLoading(btn, false); }
 }
 async function lpTryLeadMessage() {
   // un clic : active LeadMessage sur ce compte (portefeuille séparé, 5 contacts offerts) et bascule dessus

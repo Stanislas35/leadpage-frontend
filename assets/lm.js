@@ -176,3 +176,15 @@ document.addEventListener('click', function (ev) {
   window.addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(onScroll); } }, { passive: true });
   onScroll();
 })();
+
+// FAQ : filtre par thème et une seule réponse ouverte à la fois
+(function () {
+  var box = document.querySelector('.lm-faq'); if (!box) return;
+  var chips = document.querySelectorAll('.lm-chips button'), ds = box.querySelectorAll('details');
+  chips.forEach(function (c) { c.addEventListener('click', function () {
+    chips.forEach(function (x) { x.classList.toggle('on', x === c); });
+    var g = c.getAttribute('data-g');
+    ds.forEach(function (d) { d.classList.toggle('hid', !!g && d.getAttribute('data-g') !== g); });
+  }); });
+  ds.forEach(function (d) { d.addEventListener('toggle', function () { if (d.open) ds.forEach(function (o) { if (o !== d) o.open = false; }); }); });
+})();

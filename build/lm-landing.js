@@ -134,7 +134,15 @@ Pour une marque de mobilier qui anime trois boutiques, garder le même discours 
   </div>
   <p class="lm-note">Pour commencer : 5 contacts offerts à l'inscription, sans carte bancaire. Plus de 10 000 contacts par mois ? Écrivez-nous pour un forfait sur mesure.</p></div></section>`;
 
-  const faqS = `<section class="lm-sec alt" id="faq"><div class="lm-w"><span class="lm-k">FAQ</span><h2>Questions fréquentes</h2><div class="lm-faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div></div></section>`;
+  const FG = [['Messages', /personnalis|ton\b|limites|fichier est pauvre|régénérer|agenda|Que reçoit|Qu'est-ce/i], ['Crédits et tarifs', /crédit|engagement|prix|coûte/i], ['Envoi et outils', /envoie|outils|relire|lien avec LeadPage/i], ['Données', /stock|donnée/i]];
+  const grp = q => { const g = FG.find(x => x[1].test(q)); return g ? g[0] : 'Messages'; };
+  const cats = FG.map(x => x[0]);
+  const faqS = `<section class="lm-sec alt" id="faq"><div class="lm-w"><div class="lm-faqw">
+  <div class="lm-faqside"><span class="lm-k">FAQ</span><h2>Vos questions, nos réponses</h2><p class="lm-sub">Tout ce qu'il faut savoir avant de lancer votre premier parcours.</p>
+  <div class="lm-faqbox"><b>Une question qui n'est pas ici ?</b><p>Écrivez-nous, nous répondons sous un jour ouvré.</p><a class="lm-btn sm" href="mailto:contact@devoleads.fr">Nous écrire</a></div></div>
+  <div class="lm-faqmain"><div class="lm-chips" role="tablist"><button class="on" data-g="">Toutes</button>${cats.map(c => `<button data-g="${c}">${c}</button>`).join('')}</div>
+  <div class="lm-faq">${faq.map(([q, a]) => `<details data-g="${grp(q)}"><summary><span>${q}</span><i aria-hidden="true"></i></summary><div class="ans"><p>${a}</p></div></details>`).join('')}</div></div>
+  </div></div></section>`;
 
   const fin = `<section class="lm-final lm-rv"><h2>Testez le parcours sur cinq contacts</h2><p>Cinq contacts offerts, sans carte bancaire. Relisez les textes, ajustez la charte, puis passez à l'échelle.</p>${cta('Essayer gratuitement')}</section>
 <p class="lm-cross">Vous préférez un document personnalisé avec mesure de lecture ? <a href="${B}">Découvrir LeadPage</a></p>`;
