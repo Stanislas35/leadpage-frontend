@@ -173,7 +173,7 @@ document.addEventListener('click', function (ev) {
   function onScroll() {
     var y = window.scrollY || 0, h = document.documentElement.scrollHeight - innerHeight;
     bar2.style.width = (h > 0 ? y / h * 100 : 0) + '%';
-    if (nav) { nav.classList.toggle('lm-scrolled', y > 8); if (!document.getElementById('lm-links') || !document.getElementById('lm-links').classList.contains('open')) nav.classList.toggle('lm-hide', y > 260 && y > last + 4); if (y < last - 4) nav.classList.remove('lm-hide'); }
+    if (nav) { nav.classList.toggle('lm-scrolled', y > 8); if (!document.getElementById('lm-links') || !document.getElementById('lm-links').classList.contains('open')) nav.classList.remove('lm-hide'); }
     if (!reduce && y < 900) { if (win) win.style.transform = 'translateY(' + (y * -0.06).toFixed(1) + 'px)'; if (fl2) fl2.style.transform = 'translateY(' + (y * -0.12).toFixed(1) + 'px)'; document.documentElement.style.setProperty('--hy', (y * 0.25).toFixed(1) + 'px'); }
     last = y; tick = false;
   }

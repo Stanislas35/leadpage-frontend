@@ -7,7 +7,7 @@ body.lm{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,syst
 .lm h1,.lm h2,.lm h3{font-family:'Bricolage Grotesque',Inter,sans-serif;letter-spacing:-.02em;line-height:1.08;margin:0}
 .lm-w{max-width:1120px;margin:0 auto;padding:0 24px}
 /* rideau d'entrée : on change d'univers */
-.lm-curtain{position:fixed;inset:0;z-index:100;background:linear-gradient(135deg,#F0483F,#B3201C);display:flex;align-items:center;justify-content:center;animation:lmcur .9s cubic-bezier(.7,0,.2,1) .25s forwards;pointer-events:none}
+.lm-curtain{display:none!important;position:fixed;inset:0;z-index:100;background:linear-gradient(135deg,#F0483F,#B3201C);display:flex;align-items:center;justify-content:center;animation:lmcur .9s cubic-bezier(.7,0,.2,1) .25s forwards;pointer-events:none}
 .lm-curtain img{width:76px;height:76px;animation:lmlogo .7s ease .05s both}
 @keyframes lmcur{to{transform:translateY(-101%)}}
 @keyframes lmlogo{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
@@ -355,7 +355,7 @@ body.lm .lm-hero{margin-top:0}
 .lm-prog{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--r),var(--sun));z-index:70;transition:width .1s linear}
 .lm-nav{transition:transform .4s cubic-bezier(.2,.7,.2,1),box-shadow .3s}
 .lm-nav.lm-scrolled{box-shadow:0 14px 40px rgba(70,10,8,.2)}
-.lm-nav.lm-hide{transform:translateY(-140%)}
+.lm-nav.lm-hide{transform:none}
 .lm-win{transition:transform .2s linear}
 .lm-float{transition:opacity .25s,transform .2s linear}.lm-float.out{opacity:0}
 .lm-card,.lm-bc,.lm-stat,.lm-pk{will-change:transform}

@@ -158,7 +158,7 @@ function casBody(B, k) {
 
 // ── Liste des routes ─────────────────────────────────────────────────────────────────────
 const routes = [
-  { r: 'messages', t: 'LeadMessage : une séquence de mails et de messages LinkedIn par prospect', d: 'Mail 1, 2 et 3, invitation et messages LinkedIn rédigés pour chaque prospect à partir de votre fichier CSV. Vous choisissez le parcours, 1 crédit par contact.', faq, curtain: true, active: 'home', body: B => landingBody(B), script: null },
+  { r: 'messages', t: 'LeadMessage : une séquence de mails et de messages LinkedIn par prospect', d: 'Mail 1, 2 et 3, invitation et messages LinkedIn rédigés pour chaque prospect à partir de votre fichier CSV. Vous choisissez le parcours, 1 crédit par contact.', faq, active: 'home', body: B => landingBody(B), script: null },
   { r: 'messages/demo', t: 'Démo guidée de LeadMessage en 60 secondes', d: 'De l\'import du fichier au parcours de messages exporté : la visite guidée interactive de LeadMessage, avec trois contacts fictifs.', active: 'demo', body: demoBody, script: 'lm-demo.js' },
   { r: 'messages/modeles', t: 'Modèles de séquences de prospection : mails et messages LinkedIn', d: 'Quatre séquences à copier : premier contact B2B, après un salon, chasse de profils, invitation à un webinaire. Mails 1 à 3 et messages LinkedIn.', active: 'modeles', body: modelesBody, script: null },
   { r: 'messages/cas', t: 'Cas d\'usage de LeadMessage : agences, commerciaux, indépendants, recrutement', d: 'Quatre façons d\'utiliser un parcours de messages personnalisé par prospect : agences, équipes commerciales, indépendants, recrutement et événements.', active: 'cas', body: casIndexBody, script: null },
