@@ -331,3 +331,51 @@ body.lm .lm-hero{margin-top:0}
 @media(max-width:350px){.lm-brand{font-size:0;gap:0}.lm-brand img{width:30px;height:30px}.lm-right .lm-btn.sm{padding:8px 10px;font-size:12px}}
 
 .lm-btn.sm,.lm-right .lm-btn{color:#fff;white-space:nowrap}
+
+/* ═══ Dynamisme ═══ */
+.lm-marq .it img{width:26px;height:26px;border-radius:8px;background:#fff;padding:2px;object-fit:contain}
+.lm-marq .it i{font-style:normal;width:26px;height:26px}
+.lm-marq:hover .track{animation-play-state:paused}
+.lm-marq .track{animation-duration:46s}
+.js .lm-rv.rv-l{transform:translateX(-34px)}.js .lm-rv.rv-r{transform:translateX(34px)}
+.js .lm-rv.in.rv-l,.js .lm-rv.in.rv-r{transform:none}
+.js .lm-rv{transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1),border-color .2s,box-shadow .2s}
+.js .lm-stat.lm-rv,.js .lm-bc.lm-rv,.js .lm-pk.lm-rv{transform:translateY(26px) scale(.97)}.js .lm-stat.lm-rv.in,.js .lm-bc.lm-rv.in,.js .lm-pk.lm-rv.in{transform:none}
+.lm-fmsg mark{background-size:0 100%;transition:background-size .7s ease,box-shadow .7s}
+.js .lm-fmsg mark{background-color:transparent;box-shadow:none}
+.js .lm-ftm.in .f1,.js .lm-ftm.in .f2,.js .lm-ftm.in .f3,.js .lm-ftm.in .f4{transition:background-color .6s ease .5s,box-shadow .6s ease .5s}
+.js .lm-ftm:not(.in) .f1,.js .lm-ftm:not(.in) .f2,.js .lm-ftm:not(.in) .f3,.js .lm-ftm:not(.in) .f4{background:transparent;box-shadow:none}
+.lm-cad div:before{transform-origin:left;transform:scaleX(0);transition:transform .8s ease}.lm-cad div:after{transform:scale(0);transition:transform .4s cubic-bezier(.3,1.6,.5,1)}
+.lm-cad.in div:before{transform:none}.lm-cad.in div:after{transform:none}
+.lm-cad div:nth-child(2):before,.lm-cad div:nth-child(2):after{transition-delay:.2s}.lm-cad div:nth-child(3):before,.lm-cad div:nth-child(3):after{transition-delay:.4s}.lm-cad div:nth-child(4):before,.lm-cad div:nth-child(4):after{transition-delay:.6s}.lm-cad div:nth-child(5):before,.lm-cad div:nth-child(5):after{transition-delay:.8s}
+.lm-mark{background-size:0% 100%;background-repeat:no-repeat;animation:lmmk 1s .5s forwards ease}
+@keyframes lmmk{to{background-size:100% 100%}}
+.lm-hero h1 .lm-mark{animation:none}
+.lm-hero:after{transform:translateY(var(--hy,0px))}
+.lm-prog{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--r),var(--sun));z-index:70;transition:width .1s linear}
+.lm-nav{transition:transform .4s cubic-bezier(.2,.7,.2,1),box-shadow .3s}
+.lm-nav.lm-scrolled{box-shadow:0 14px 40px rgba(70,10,8,.2)}
+.lm-nav.lm-hide{transform:translateY(-140%)}
+.lm-win{transition:transform .2s linear}
+.lm-float{transition:opacity .25s,transform .2s linear}.lm-float.out{opacity:0}
+.lm-card,.lm-bc,.lm-stat,.lm-pk{will-change:transform}
+.lm-btn{transition:transform .2s,box-shadow .2s,background .2s}.lm-btn:hover{transform:translateY(-2px)}
+/* animation du hero */
+.lm-ha-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.lm-ha-n{font-size:11px;font-weight:700;color:var(--r);background:var(--rose);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.lm-ha .lm-win{min-height:430px}
+.lm-win .in.swap h4,.lm-win .in.swap .sb{animation:lmsw .5s}
+@keyframes lmsw{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.lm-mini i{transition:background .3s,color .3s,border-color .3s}
+.lm-mini i.done{background:#E8F7EF;border-color:#12A150;color:#0C7A3B}
+.lm-mini i.on{background:var(--r);border-color:var(--r);color:#fff}
+.ha-r{opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s}.ha-r.on{opacity:1;transform:none}
+.ha-t{color:var(--ink3);font-size:12px}
+.ha-caret{display:inline-block;width:2px;height:12px;background:var(--r);margin-left:1px;vertical-align:-2px;animation:lmcr .7s steps(1) infinite}
+@keyframes lmcr{50%{opacity:0}}
+.lm-ha-bar{height:5px;border-radius:999px;background:var(--rose);margin-top:14px;overflow:hidden}.lm-ha-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--r),var(--sun));transition:width .5s ease}
+@media(max-width:900px){.lm-ha .lm-win{min-height:0}}
+@media(prefers-reduced-motion:reduce){.lm-prog{display:none}.lm-mark{animation:none;background-size:100% 100%}.lm-cad div:before,.lm-cad div:after{transform:none;transition:none}.js .lm-rv.rv-l,.js .lm-rv.rv-r{transform:none}}
+body.lm main{overflow-x:clip}
+@media(max-width:900px){.js .lm-rv.rv-l,.js .lm-rv.rv-r{transform:translateY(22px)}.js .lm-rv.in.rv-l,.js .lm-rv.in.rv-r{transform:none}}
+.lm-row em{white-space:nowrap}

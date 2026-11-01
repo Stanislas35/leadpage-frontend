@@ -2,8 +2,9 @@
 module.exports = function landing(B, c) {
   const { faq, pk, hdr, rows, e } = c;
   const M = B + 'messages/';
-  const tools = ['Sales Navigator', 'Snov.io', 'Lemlist', 'Kaspr', 'Lusha', 'PhantomBuster', 'Waalaxy', 'Hunter', 'Brevo', 'HeyReach'];
-  const marq = [...tools, ...tools].map(t => `<span class="it"><i>${t[0]}</i>${t}</span>`).join('');
+  const tools = [['Sales Navigator', 'linkedin.com'], ['Snov.io', 'snov.io'], ['Lemlist', 'lemlist.com'], ['Kaspr', 'kaspr.io'], ['Lusha', 'lusha.com'], ['PhantomBuster', 'phantombuster.com'], ['Waalaxy', 'waalaxy.com'], ['Hunter', 'hunter.io'], ['Brevo', 'brevo.com'], ['HeyReach', 'heyreach.io'], ['Apollo', 'apollo.io'], ['Instantly', 'instantly.ai']];
+  const logo = ([n, d], hid) => `<span class="it"${hid ? ' aria-hidden="true"' : ''}><img src="https://www.google.com/s2/favicons?domain=${d}&sz=128" alt="${hid ? '' : n}" width="26" height="26" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('i'),{textContent:'${n[0]}'}))">${n}</span>`;
+  const marq = tools.map(t => logo(t, false)).join('') + tools.map(t => logo(t, true)).join('');
   const cta = (t, cls) => `<a class="lm-btn${cls ? ' ' + cls : ''}" href="${B}?p=message#connexion">${t}</a>`;
   const S = (k, h, sub, inner, id, cl) => `<section class="lm-sec${cl ? ' ' + cl : ''}"${id ? ` id="${id}"` : ''}><div class="lm-w">${k ? `<span class="lm-k">${k}</span>` : ''}<h2>${h}</h2>${sub ? `<p class="lm-sub">${sub}</p>` : ''}${inner}</div></section>`;
   const win = (url, inner) => `<div class="lm-win"><div class="bar"><i></i><i></i><i></i><span>${url}</span></div><div class="in">${inner}</div></div>`;
@@ -18,13 +19,14 @@ module.exports = function landing(B, c) {
     <div class="row">${cta('Essayer gratuitement', 'wh')}<a class="lm-btn ghost" style="color:#fff;border-color:rgba(255,255,255,.7)" href="${M}demo/">Voir la démo guidée</a></div>
     <div class="lm-checks"><span>1 crédit par contact</span><span>Aucun fait inventé</span><span>5 contacts offerts</span><span>Sans carte bancaire</span></div>
   </div>
-  <div style="position:relative" aria-hidden="true">
-    ${win('leadmessage / nouvelle campagne', `<h4>Atelier Nova · Camille Roux</h4><p class="sb">Directrice marketing · Mobilier, trois boutiques</p>
-      <div class="lm-mini"><i class="on">Mail 1</i><i class="on">Mail 2</i><i>Mail 3</i><i class="on">Invitation</i><i class="on">Message 1</i><i>Message 2</i></div>
-      <div class="lm-row"><span class="ic">M1</span><div><b>Atelier Nova et vos trois boutiques</b><br><span style="color:var(--ink3);font-size:12px">Bonjour Camille, pour une marque de mobilier avec trois boutiques…</span></div><em class="ok">J0</em></div>
-      <div class="lm-row"><span class="ic" style="background:#1A2F5C">in</span><div><b>Invitation LinkedIn</b><br><span style="color:var(--ink3);font-size:12px">Bonjour Camille, je travaille avec des marques de mobilier…</span></div><em>287 / 300</em></div>
-      <div class="lm-row"><span class="ic">M2</span><div><b>Mail 2, relance</b><br><span style="color:var(--ink3);font-size:12px">Camille, une question plus concrète : comment adaptez-vous…</span></div><em>J+3</em></div>`)}
-    <div class="lm-float" style="left:-34px;bottom:-26px"><b>Garde-fou</b>Aucune information inventée : sans donnée précise, le texte reste général.</div>
+  <div class="lm-ha" id="lm-ha" style="position:relative" aria-hidden="true">
+    ${win('leadmessage / nouvelle campagne', `<div class="lm-ha-top"><div><h4 id="ha-name">Atelier Nova · Camille Roux</h4><p class="sb" id="ha-role">Directrice marketing · Mobilier, trois boutiques</p></div><span class="lm-ha-n" id="ha-n">Contact 1 / 3</span></div>
+      <div class="lm-mini" id="ha-chips"><i data-k="m1">Mail 1</i><i data-k="li0">Invitation</i><i data-k="m2">Mail 2</i><i data-k="li1">Message 1</i><i data-k="m3">Mail 3</i><i data-k="li2">Message 2</i></div>
+      <div id="ha-rows"><div class="lm-row ha-r on"><span class="ic">M1</span><div><b>Atelier Nova et vos trois boutiques</b><br><span class="ha-t">Bonjour Camille, pour une marque de mobilier avec trois boutiques…</span></div><em class="ok">J0</em></div>
+      <div class="lm-row ha-r on"><span class="ic" style="background:#1A2F5C">in</span><div><b>Invitation LinkedIn</b><br><span class="ha-t">Bonjour Camille, je travaille avec des marques de mobilier…</span></div><em>176 / 300</em></div>
+      <div class="lm-row ha-r on"><span class="ic">M2</span><div><b>Mail 2, relance</b><br><span class="ha-t">Camille, une question plus concrète : comment adaptez-vous…</span></div><em>J+3</em></div></div>
+      <div class="lm-ha-bar"><i id="ha-bar" style="width:100%"></i></div>`)}
+    <div class="lm-float" id="ha-float" style="left:-34px;bottom:-26px"><b>Garde-fou</b><span>Aucune information inventée : sans donnée précise, le texte reste général.</span></div>
   </div>
 </div>
 <div class="lm-marq"><p>Le fichier exporté s'importe dans vos outils de prospection</p><div class="track">${marq}</div></div>
