@@ -4062,13 +4062,13 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
   </div>
   <div class="nav-links" id="nav-links">
     <a href="demo/">Démo</a>
-    <a href="messages/" class="lm-link">LeadMessage</a>
     <a href="#" onclick="lpGo('lp-how');return false">Fonctionnement</a>
     <a href="#" onclick="lpGo('lp-measure');return false">Mesure</a>
     <a href="cas/">Cas d'usage</a>
     <a href="ressources/">Ressources</a>
     <a href="#" onclick="lpGo('lp-pricing');return false">Tarifs</a>
     <a href="#" onclick="lpGo('lp-faq');return false">FAQ</a>
+    <a class="nav-xlink" href="messages/" aria-label="Découvrir LeadMessage, parcours de messages" title="LeadMessage"><img src="logo-lm.svg" alt=""><span>Lead<b>Message</b></span></a>
   </div>
   <div class="nav-right">
     <button id="theme-btn" onclick="toggleTheme()" aria-label="Changer de thème" title="Changer de thème">☾</button>
@@ -4582,7 +4582,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
   <div class="lp-section" id="lp-messages">
     <div class="lp-section-label">Nouveau : LeadMessage</div>
     <h2 class="lp-h2">Pas besoin d'un PDF ? Générez le parcours de messages</h2>
-    <p class="lp-section-sub">Mails 1, 2 et 3, invitation et messages LinkedIn, rédigés pour chaque prospect. Vous choisissez le parcours, un crédit par contact.</p>
+    <p class="lp-section-sub">Mails 1, 2 et 3, invitation et messages LinkedIn, rédigés pour chaque prospect. Vous choisissez le parcours, un crédit par contact. LeadMessage est un produit distinct, avec son propre abonnement.</p>
     <p style="margin-top:22px"><a class="lm-go" href="messages/">Entrer dans LeadMessage</a></p>
   </div>
 
@@ -4802,7 +4802,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
             </div>
             <div class="plan-option-price">79€</div>
           </div>
-          <div class="plan-option" onclick="selectPlan(this)">
+          <div class="plan-option lp-agency" onclick="selectPlan(this)">
             <div class="plan-option-radio"></div>
             <div class="plan-option-info">
               <div class="plan-option-name">Agency</div>
@@ -4997,6 +4997,9 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
         </div>
         <div class="sidebar-item" id="sb-unlock" onclick="lpUnlockLeadPage()" style="display:none">
           <span class="sidebar-icon">📄</span> Activer LeadPage (PDF)
+        </div>
+        <div class="sidebar-item" id="sb-switch" onclick="lpSwitchProduct()" style="display:none">
+          <span class="sidebar-icon">⇄</span> <span id="sb-switch-t">Passer à LeadMessage</span>
         </div>
         <div class="sidebar-item" id="sb-discover" onclick="window.open('messages/','_blank')" style="display:none">
           <span class="sidebar-icon">✉</span> Découvrir LeadMessage
@@ -5754,7 +5757,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
             <div style="font-size:12px;color:var(--text3);margin:8px 0 16px">2 000 PDFs/mois</div>
             <button class="btn btn-primary" style="width:100%;font-size:13px" onclick="upgradeToGrowth()">Choisir</button>
           </div>
-          <div style="border:1px solid var(--border);border-radius:12px;padding:20px">
+          <div class="lp-agency" style="border:1px solid var(--border);border-radius:12px;padding:20px">
             <div style="font-weight:700;margin-bottom:4px">Agency</div>
             <div style="font-size:24px;font-weight:800;color:var(--pink)">199€<span style="font-size:13px;color:var(--text3)">/mois</span></div>
             <div style="font-size:12px;color:var(--text3);margin:8px 0 16px">10 000 PDFs/mois</div>
@@ -5827,7 +5830,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
         </div>
         <div style="font-size:18px;font-weight:800;color:var(--pink)">79€<span style="font-size:12px;font-weight:400;color:var(--text3)">/mois</span></div>
       </div>
-      <div onclick="selectUpgradePlan(this,'199')" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.2s">
+      <div class="lp-agency" onclick="selectUpgradePlan(this,'199')" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.2s">
         <div style="flex:1">
           <div style="font-size:14px;font-weight:600">Agency</div>
           <div style="font-size:12px;color:var(--text3)">10 000 PDFs + mails · volume agence</div>
@@ -8260,6 +8263,14 @@ function lpProduct() {
   try { if (authToken && currentUser) return localStorage.getItem('lp_product') || 'leadpage'; } catch (e) {}
   return lpEntryProduct();
 }
+// Deux produits, deux portefeuilles : on affiche le plan et les crédits du produit actif uniquement
+function lpWalletUser(u) {
+  try {
+    if (!u || !u.wallets) return u;
+    const w = u.wallets[lpProduct() === 'leadmessage' ? 'leadmessage' : 'leadpage'];
+    return Object.assign({}, u, { plan: w.plan, credits: w.credits, credits_used: w.credits_used });
+  } catch (e) { return u; }
+}
 function lpSwap(el, html) { if (!el) return; if (el.__lpO == null) el.__lpO = el.innerHTML; el.innerHTML = html; }
 function lpRestore(el) { if (el && el.__lpO != null) { el.innerHTML = el.__lpO; el.__lpO = null; } }
 function lpSetProduct(p) {
@@ -8271,6 +8282,9 @@ function lpSetProduct(p) {
 const LP_LM_TXT = [
   [/Un crédit par contact, quel que soit le parcours\. Pas de PDF\./g, 'Un crédit par contact, quel que soit le parcours.'],
   [/(\d[\d\s  ]*) PDFs\/mois/g, '$1 contacts/mois'],
+  [/2 000 PDFs \+ mails · ~8 campagnes\/mois/g, '2 000 contacts · parcours de messages'],
+  [/500 PDFs \+ mails · ~2 campagnes\/mois/g, '500 contacts · parcours de messages'],
+  [/5 PDFs \+ mails offerts/g, '5 contacts offerts'],
   [/PDFs générés/g, 'Parcours générés'], [/PDFs disponibles/g, 'Contacts disponibles'], [/PDFs utilisés/g, 'Contacts traités'],
   [/Stockage des PDFs/g, 'Stockage des fichiers'],
   [/Logo, couleurs et blocs PDF/g, 'Logo, offre, ton et lien d\'agenda'],
@@ -8328,20 +8342,27 @@ function lpSyncUniverse(screenId) {
   const gb = document.querySelector('#dash-generate-header button[onclick="startGeneration()"]'); if (gb) { if (on) lpSwap(gb, 'Générer les parcours'); else lpRestore(gb); }
   const lg = document.querySelector('#dash-kpi .kpi-card:nth-child(2) .kpi-label'); if (lg) { if (on) lpSwap(lg, 'Parcours générés'); else lpRestore(lg); }
   const un = document.getElementById('sb-unlock'), di = document.getElementById('sb-discover');
-  if (un) un.style.display = on ? '' : 'none';
+  if (un) un.style.display = (on && !window.__lpBoth) ? '' : 'none';
+  const sw = document.getElementById('sb-switch'), swt = document.getElementById('sb-switch-t');
+  if (sw) sw.style.display = (window.__lpBoth && screenId === 'dashboard') ? '' : 'none';
+  if (swt) swt.textContent = on ? 'Passer à LeadPage (abonnement séparé)' : 'Passer à LeadMessage (abonnement séparé)';
   if (di) di.style.display = (!on && prod === 'leadpage' && screenId === 'dashboard') ? '' : 'none';
   try { updateFreeCredits(); } catch (e) {}
   if (on) { try { setGenFormat('msg'); } catch (e) {} }
   else if (document.getElementById('gen-format') && window.__lpFmt === 'msg' && prod !== 'leadmessage' && !window.__lpUserPickedMsg) { /* l'utilisateur LeadPage garde son choix */ }
 }
+function lpSwitchProduct() {
+  lpSetProduct(lpProduct() === 'leadmessage' ? 'leadpage' : 'leadmessage');
+  try { showDashSection('generate', null); loadDashboardData(); } catch (e) {}
+}
 async function lpUnlockLeadPage() {
-  if (!confirm('Activer LeadPage sur ce compte ? Vous pourrez générer des PDF personnalisés avec les mêmes crédits.')) return;
+  if (!confirm('Activer LeadPage sur ce compte ? C\'est un produit distinct : il a son propre abonnement et ses propres crédits (5 PDF offerts), sans lien avec ceux de LeadMessage.')) return;
   try {
     await apiCall('POST', '/api/auth/unlock-product', {}, true);
     try { sessionStorage.removeItem('lp_entry'); } catch (e) {}
-    lpSetProduct('both');
+    window.__lpBoth = true; lpSetProduct('leadpage');
     try { setGenFormat('pdf'); } catch (e) {}
-    showToast('LeadPage activé : PDF disponibles');
+    showToast('LeadPage activé : 5 PDF offerts, abonnement séparé'); try { loadDashboardData(); } catch (e) {}
   } catch (e) { showToast('Activation impossible : ' + e.message, '#EF4444'); }
 }
 
@@ -8631,12 +8652,17 @@ async function loadDashboardData() {
   });
 
   try {
-    const [user, campaigns] = await Promise.all([
+    let [user, campaigns] = await Promise.all([
       apiCall('GET', '/api/auth/me', null, true),
       apiCall('GET', '/api/campaigns/', null, true)
     ]);
 
-    try { lpSetProduct(user.product || 'leadpage'); } catch (e) {}
+    try {
+      const sp = user.product || 'leadpage'; window.__lpBoth = sp === 'both';
+      if (sp === 'both') { let cur = ''; try { cur = localStorage.getItem('lp_product'); } catch (e) {} lpSetProduct(cur === 'leadmessage' ? 'leadmessage' : 'leadpage'); }
+      else lpSetProduct(sp);
+    } catch (e) {}
+    user = lpWalletUser(user);
     // Credits
     const creditsLeft = user.credits - (user.credits_used || 0);
     const creditsUsed = user.credits_used || 0;
@@ -8709,7 +8735,7 @@ async function saveSettings(btn) {
 async function upgradePlan(plan) {
   if (!authToken) { showToast('Connectez-vous dabord', '#EF4444'); return; }
   try {
-    const res = await apiCall('POST', '/api/billing/upgrade', { plan }, true);
+    const res = await apiCall('POST', '/api/billing/upgrade', { plan, product: (lpProduct() === 'leadmessage' ? 'leadmessage' : 'leadpage') }, true);
     if (res.checkout_url) window.location.href = res.checkout_url;
     else showToast('Paiement bientôt disponible, contactez le support', '#EF4444');
   } catch(e) { showToast('Paiement bientôt disponible, contactez le support', '#F59E0B'); }

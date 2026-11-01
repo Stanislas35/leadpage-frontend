@@ -165,3 +165,10 @@ body.lm-app #sb-unlock{color:#E4332E;font-weight:600}
 body.lm-app #cm-content3>:not(#cm-style-emoji-section){display:none!important}
 body.lm-app #camp-quick-stats>div:nth-child(3),body.lm-app #dash-kpi .kpi-card:nth-child(3){display:none!important}
 body.lm-app #camp-quick-stats{grid-template-columns:repeat(2,1fr)!important}
+body.lm-app .lp-agency{display:none!important}
+
+/* Passerelle vers l'autre produit : son logo, juste à droite du menu */
+.nav-links a.nav-xlink{display:inline-flex;align-items:center;gap:7px;margin-left:8px;padding:5px 12px 5px 8px;border:1px solid var(--border);border-radius:12px;font-weight:700;font-size:15px;letter-spacing:-.01em;color:var(--text)!important;text-decoration:none}
+.nav-xlink img{width:24px;height:24px}.nav-xlink b{color:#E4332E;font-weight:700}
+.nav-links a.nav-xlink:hover{border-color:#E4332E;background:#FFF5F1}
+.nav-links.open a.nav-xlink{display:flex!important;margin:8px 0 0;padding:12px 16px;font-size:17px}

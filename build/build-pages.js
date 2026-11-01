@@ -60,7 +60,7 @@ ${ld}
 <nav>
   <a class="nav-logo" href="${B}" style="text-decoration:none;color:inherit">${brand}</a>
   <div class="nav-links" id="nav-links">
-    <a href="${B}demo/">Démo</a><a href="${B}messages/" class="lm-link">LeadMessage</a><a href="${B}#lp-how">Fonctionnement</a><a href="${B}#lp-measure">Mesure</a><a href="${B}cas/">Cas d'usage</a><a href="${B}ressources/">Ressources</a><a href="${B}#lp-pricing">Tarifs</a><a href="${B}#lp-faq">FAQ</a>
+    <a href="${B}demo/">Démo</a><a href="${B}#lp-how">Fonctionnement</a><a href="${B}#lp-measure">Mesure</a><a href="${B}cas/">Cas d'usage</a><a href="${B}ressources/">Ressources</a><a href="${B}#lp-pricing">Tarifs</a><a href="${B}#lp-faq">FAQ</a><a class="nav-xlink" href="${B}messages/" aria-label="Découvrir LeadMessage, parcours de messages" title="LeadMessage"><img src="${B}logo-lm.svg" alt=""><span>Lead<b>Message</b></span></a>
   </div>
   <div class="nav-right">
     <button id="theme-btn" aria-label="Changer de thème" title="Changer de thème">☾</button>

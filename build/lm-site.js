@@ -1,11 +1,11 @@
 // Site LeadMessage : un univers à part (logo, rouge) : accueil, démo, modèles, cas d'usage.
 const faq = [
   ['Que reçois-je pour chaque contact ?', 'Le parcours que vous choisissez : jusqu\'à trois mails (le premier avec son objet), une note d\'invitation LinkedIn et deux messages LinkedIn. Chaque texte est ajouté dans une colonne de votre CSV.'],
-  ['Combien de crédits consomme un parcours ?', 'Un crédit par contact, que vous génériez un seul message ou les six. Les contacts en erreur ne sont pas débités. Ce sont les mêmes crédits que ceux de LeadPage.'],
+  ['Combien de crédits consomme un parcours ?', 'Un crédit par contact, que vous génériez un seul message ou les six. Les contacts en erreur ne sont pas débités. Ces crédits sont propres à LeadMessage : ils ne se partagent pas avec LeadPage.'],
   ['Les messages sont-ils vraiment personnalisés ?', 'Chacun est rédigé à partir des informations de votre fichier : poste, entreprise, secteur, taille, description. LeadMessage n\'invente ni fait, ni chiffre, ni référence. Si le fichier est pauvre, le texte reste général plutôt que faux.'],
   ['Quelles sont les limites des messages LinkedIn ?', 'La note d\'invitation est limitée à 300 caractères, ou 200 si votre compte LinkedIn l\'impose : vous choisissez au lancement. Le premier message fait 400 caractères au maximum, le second 350. Un texte trop long est raccourci proprement.'],
   ['LeadMessage envoie-t-il les messages ?', 'Non. Vous téléchargez le fichier enrichi et l\'importez dans votre outil d\'envoi de mails ou d\'automatisation LinkedIn. Vous gardez la main sur vos boîtes, vos volumes et votre délivrabilité.'],
-  ['Quel est le lien avec LeadPage ?', 'Même plateforme, même compte, mêmes chartes et mêmes crédits. LeadPage produit un document personnalisé avec mesure de lecture ; LeadMessage produit la séquence de messages. Vous pouvez utiliser l\'un sur tout votre fichier et l\'autre sur vos comptes prioritaires.'],
+  ['Quel est le lien avec LeadPage ?', 'Ce sont deux produits distincts, avec chacun son abonnement et ses crédits. LeadPage produit un document PDF personnalisé avec mesure de lecture ; LeadMessage produit la séquence de messages. Ils ne partagent ni crédits ni facturation.'],
   ['Puis-je choisir le ton ?', 'Oui. Le style d\'écriture (direct, professionnel, amical ou premium) et le choix entre tutoiement et vouvoiement viennent de la charte du client. Aucune signature n\'est ajoutée : celle de votre outil d\'envoi prend le relais.']
   ,['Puis-je relire les messages avant de les envoyer ?', 'Oui, et nous le recommandons : relisez une dizaine de messages pris au hasard. Vous téléchargez un fichier, rien n\'est envoyé automatiquement.'],
   ['Quels outils d\'envoi sont compatibles ?', 'Tout outil qui importe un CSV et accepte des colonnes comme variables : Lemlist, Snov.io, Waalaxy, HeyReach, Brevo ou votre messagerie en publipostage.'],
@@ -46,16 +46,15 @@ ${ld}
 </head>
 <body class="lm">
 ${o.curtain ? `<div class="lm-curtain" aria-hidden="true"><img src="${B}logo-lm.svg" alt=""></div>` : ''}
-<header class="lm-nav"><div class="lm-w">
+<header class="lm-nav">
   <a class="lm-brand" href="${M}" aria-label="LeadMessage, accueil"><img src="${B}logo-lm.svg" alt=""><span>Lead<b>Message</b></span></a>
-  <button class="lm-burger" id="lm-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="lm-links">☰</button>
-  <nav class="lm-links" id="lm-links" aria-label="Sections">${nav}</nav>
+  <nav class="lm-links" id="lm-links" aria-label="Sections">${nav}<a class="lm-xlink" href="${B}" aria-label="Découvrir LeadPage, documents PDF personnalisés" title="LeadPage"><img src="${B}logo.svg" alt=""><span>Lead<b>Page</b></span></a></nav>
   <div class="lm-right">
-    <div class="lm-uni" aria-label="Changer d'univers"><a href="${B}">LeadPage</a><span class="on">LeadMessage</span></div>
     <a class="lm-login" href="${B}?p=message#connexion">Connexion</a>
-    <a class="lm-btn sm" href="${B}?p=message#connexion">Essayer</a>
+    <a class="lm-btn sm" href="${B}?p=message#connexion">Essayer gratuitement</a>
   </div>
-</div></header>
+  <button class="lm-burger" id="lm-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="lm-links">☰</button>
+</header>
 <main>
 ${o.body}
 </main>
@@ -63,7 +62,7 @@ ${o.body}
 <footer class="lm-foot"><div class="lm-w">
   <div><a class="lm-brand" href="${M}"><img src="${B}logo-lm.svg" alt=""><span>Lead<b>Message</b></span></a><p style="max-width:300px;margin:10px 0 0">Un parcours de messages personnalisé par prospect.</p></div>
   <div><b>LeadMessage</b><a href="${M}demo/">Démo guidée</a><a href="${M}modeles/">Modèles de séquences</a><a href="${M}cas/">Cas d'usage</a><a href="${M}ressources/">Ressources et outils</a><a href="${M}#tarifs">Tarifs</a></div>
-  <div><b>Produits</b><a href="${B}">LeadPage, documents personnalisés</a><a href="${B}demo/">Démo LeadPage</a><a href="${B}outils/">Outils gratuits</a></div>
+  <div><b>Produits</b><a href="${B}">LeadPage, produit distinct</a><a href="${B}demo/">Démo LeadPage</a><a href="${B}outils/">Outils gratuits</a></div>
   <div><b>Confiance</b><a href="${B}legal/mentions-legales/">Mentions légales</a><a href="${B}legal/confidentialite/">Confidentialité</a><a href="${B}legal/cgv/">CGV et CGU</a><a href="${B}legal/cookies/">Cookies</a><a href="${B}legal/donnees-et-securite/">Données et sécurité</a></div>
   <small>© 2026 LeadMessage, un produit LeadPage · Édité par Devoleads, La Rochelle</small>
 </div></footer>

@@ -99,7 +99,7 @@ Pour une marque de mobilier qui anime trois boutiques, garder le même discours 
     <p class="lm-note">Repère de départ : adaptez-le à votre marché. LeadMessage prépare les textes, l'envoi et le rythme restent chez vous.</p>`, 'canaux', 'alt');
 
   const agences = S('Pour les agences', 'Une charte par client, un parcours par prospect', 'Vous prospectez pour plusieurs clients ? Chacun garde son ton, son offre et sa signature.', `
-    <div class="lm-split lm-rv" style="margin-top:34px"><div><ul><li>Une charte par client : ton, vouvoiement, offre, lien d'agenda</li><li>Le fichier du client enrichi, prêt à lui livrer</li><li>Mêmes crédits et même compte que LeadPage</li><li>Messages cohérents sur toute la liste</li></ul><p style="margin-top:18px"><a class="lm-btn" href="${M}cas/agences/">Lire le cas d'usage agences</a></p></div>
+    <div class="lm-split lm-rv" style="margin-top:34px"><div><ul><li>Une charte par client : ton, vouvoiement, offre, lien d'agenda</li><li>Le fichier du client enrichi, prêt à lui livrer</li><li>Un abonnement et des crédits propres à LeadMessage</li><li>Messages cohérents sur toute la liste</li></ul><p style="margin-top:18px"><a class="lm-btn" href="${M}cas/agences/">Lire le cas d'usage agences</a></p></div>
     <div class="lm-stage-bg">${win('leadmessage / chartes', `<h4>Chartes clients</h4><p class="sb">Un réglage par client</p><div class="lm-row"><b>Studio Arca</b><em>vouvoiement · sobre</em></div><div class="lm-row"><b>Maison Delta</b><em>tutoiement · direct</em></div><div class="lm-row"><b>Cabinet Vauban</b><em>vouvoiement · formel</em></div>`)}</div></div>`, 'agences');
 
   const export_ = S('Export', 'Un fichier prêt pour votre outil d\'envoi', 'Votre CSV d\'origine, avec une colonne par message choisi. Utilisez-les comme variables dans vos séquences.', `
@@ -121,7 +121,7 @@ Pour une marque de mobilier qui anime trois boutiques, garder le même discours 
 
   const tarifs = `<section class="lm-sec" id="tarifs"><div class="lm-w">
   <span class="lm-k">Tarifs</span><h2>Un contact, un crédit, quel que soit le parcours</h2>
-  <p class="lm-sub">Les crédits sont partagés avec LeadPage : un crédit couvre un parcours de messages complet ou un PDF. Sans engagement.</p>
+  <p class="lm-sub">LeadMessage a son propre abonnement et ses propres crédits, indépendants de LeadPage. Un crédit couvre un parcours de messages complet pour un contact. Sans engagement.</p>
   <div class="lm-price">${pk.map(k => `<div class="lm-pk${k[5] ? ' feat' : ''} lm-rv">${k[5] ? '<span class="bd">Le plus choisi</span>' : ''}<h3>${k[0]}</h3><p class="amt">${k[1]} <small>${k[2]}</small></p><p class="ct">${k[3]}</p><ul>${k[4].map(x => `<li>${x}</li>`).join('')}</ul><a class="lm-btn${k[5] ? '' : ' ghost'}" style="text-align:center" href="${B}?p=message#connexion">${k[6]}</a></div>`).join('')}</div>
   <div class="lm-calc lm-rv"><div><label for="lc-n">Combien de contacts par mois ?</label><input id="lc-r" type="range" min="1" max="2500" value="300" aria-label="Nombre de contacts"><p style="margin:10px 0 0"><input id="lc-n" type="number" min="1" max="100000" value="300" inputmode="numeric"> contacts</p></div><div class="res" id="lc-out" aria-live="polite"></div></div>
   <p class="lm-note">Moins de 0,06 € le contact avec Starter, moins de 0,04 € avec Growth. Besoin de plus de volume ? Écrivez-nous pour un forfait sur mesure.</p></div></section>`;
