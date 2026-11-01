@@ -5489,6 +5489,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
                 <div style="font-size:11px;color:var(--text3);margin-top:4px">L'IA imite la longueur, le rythme et le ton, jamais le contenu. Bien plus fiable qu'un adjectif comme « direct ».</div></div>
               <div id="cm-b-learned" style="display:none;margin-top:12px;border-top:1px dashed var(--border);padding-top:10px"></div>
             </details>
+            <label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:16px;font-size:13px;cursor:pointer"><input type="checkbox" id="cm-b-controle" checked style="margin-top:3px"><span><b>Contrôle d'envoi automatique</b> (LeadMessage)<br><span style="color:var(--text3);font-size:12px">Signale « À relire » les causes courantes de mise en spam : mots à risque, liens, longueur, mise en forme autre que du texte brut. C'est une aide, pas une garantie : la délivrabilité dépend aussi de votre domaine et de votre outil d'envoi.</span></span></label>
             <div class="form-group" id="cm-agenda-grp" style="margin-bottom:16px">
               <label class="form-label">Lien agenda (optionnel)</label>
               <input class="form-input" id="cm-calendly" placeholder="https://calendly.com/votre-lien ou cal.com/..." style="font-size:13px">
@@ -9826,6 +9827,7 @@ function cmBriefFill(b) {
   set('cm-b-diff', b.difference); set('cm-b-bans', (b.mots_interdits || []).join(', ')); set('cm-b-prefs', (b.mots_preferes || []).join(', '));
   [1, 2, 3].forEach(i => set('cm-b-ex' + i, (b.exemples || [])[i - 1]));
   cmApprises = (b.apprises || []).slice();
+  const ce = document.getElementById('cm-b-controle'); if (ce) ce.checked = b.controle_envoi !== false;
   const d = document.getElementById('cm-brief'); if (d) d.open = !!(b.cible || (b.preuves || []).length || (b.exemples || []).length);
   cmApprisesRender();
 }
@@ -9834,7 +9836,8 @@ function cmBriefRead() {
   const lines = t => t.split('\n').map(x => x.trim()).filter(Boolean);
   const csv = t => t.split(/[,;\n]/).map(x => x.trim()).filter(Boolean);
   return { cible: v('cm-b-cible'), problemes: lines(v('cm-b-problemes')), preuves: lines(v('cm-b-preuves')), difference: v('cm-b-diff'),
-    mots_interdits: csv(v('cm-b-bans')), mots_preferes: csv(v('cm-b-prefs')), exemples: [v('cm-b-ex1'), v('cm-b-ex2'), v('cm-b-ex3')].filter(Boolean), apprises: cmApprises.slice() };
+    mots_interdits: csv(v('cm-b-bans')), mots_preferes: csv(v('cm-b-prefs')), exemples: [v('cm-b-ex1'), v('cm-b-ex2'), v('cm-b-ex3')].filter(Boolean), apprises: cmApprises.slice(),
+    controle_envoi: !((document.getElementById('cm-b-controle') || {}).checked === false) };
 }
 function cmApprisesRender() {
   const box = document.getElementById('cm-b-learned'); if (!box) return;

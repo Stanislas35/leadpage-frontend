@@ -91,7 +91,10 @@ Pour une marque de mobilier qui anime trois boutiques, garder le même discours 
     ['❓', 'Une question par message', 'Un seul appel à l\'action par texte, jamais plusieurs demandes en même temps.'],
     ['🎙️', 'Ton constant', 'Style d\'écriture, vouvoiement ou tutoiement suivent la charte sur tout le parcours. Aucune signature : votre outil d\'envoi ajoute la vôtre.'],
     ['🧹', 'Sans formules creuses', 'Pas de « j\'espère que vous allez bien » ni de promesse vague. Chaque phrase dit quelque chose.'],
-    ['🔁', 'Relances qui avancent', 'Chaque relance apporte un angle nouveau et le dernier message laisse une sortie courtoise.']].map(card).join('')}</div>`, 'garde-fous', 'dark');
+    ['🔁', 'Relances qui avancent', 'Chaque relance apporte un angle nouveau et le dernier message laisse une sortie courtoise.'],
+    ['📬', 'Contrôle d\'envoi', 'Mots à risque, liens, longueur, mise en forme : les causes courantes de mise en spam sont repérées et marquées « À relire », avec du texte brut prêt à importer. Une aide, pas une garantie : votre domaine et votre outil d\'envoi comptent aussi.'],
+    ['🔎', 'D\'où vient l\'accroche', 'Chaque contact indique ce sur quoi s\'appuie sa première phrase (fichier, site, description, poste). Un message générique est signalé, vous voyez où enrichir.'],
+    ['🧠', 'Vos règles, apprises', 'Quand vous corrigez un message, l\'outil en déduit une règle d\'écriture visible dans votre charte. Vous la gardez ou la supprimez.']].map(card).join('')}</div>`, 'garde-fous', 'dark');
 
   const canaux = S('Canaux', 'Mails et LinkedIn : des formats pensés pour chaque canal', null, `
     <div class="lm-ch"><div class="lm-chc lm-rv"><h3>Mails <u>3 messages</u></h3><ul><li><span>Mail 1, avec son objet</span><b>60 à 90 mots</b></li><li><span>Mail 2, relance</span><b>35 à 60 mots</b></li><li><span>Mail 3, dernier message</span><b>25 à 45 mots</b></li></ul></div>
