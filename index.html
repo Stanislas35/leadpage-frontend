@@ -5208,6 +5208,18 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
           </div>
           <div style="margin-top:8px;color:var(--text3)">Un crédit par contact, quel que soit le parcours. Pas de PDF.
             <a href="messages/" target="_blank" rel="noopener" style="color:#E4332E">En savoir plus</a></div>
+          <div id="msg-focus" style="margin-top:12px;padding-top:12px;border-top:1px dashed rgba(228,51,46,.35)">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px"><b>Sur quoi insister ?</b><span style="color:var(--text3);font-size:12px">Facultatif, 2 choix au plus. Sans choix, l'IA décide message par message.</span>
+              <button type="button" class="btn btn-ghost" id="focus-ai-btn" style="padding:3px 11px;font-size:12px" onclick="lpFocusAi()">✨ Laisser l'IA proposer</button></div>
+            <div id="focus-why" style="display:none;margin:6px 0;padding:8px 10px;border-radius:8px;background:rgba(34,197,94,.1);font-size:12px"></div>
+            <div id="focus-levers" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:5px 14px;margin:8px 0"></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px 18px;font-size:13px">
+              <div><div style="font-size:12px;color:var(--text3);margin-bottom:3px">Demande du mail 1</div><div id="focus-ask"></div></div>
+              <div><div style="font-size:12px;color:var(--text3);margin-bottom:3px">Niveau de vente</div><div id="focus-lvl"></div></div>
+            </div>
+            <input class="form-input" id="focus-free" maxlength="200" placeholder="Autre consigne (ex : insister sur notre présence locale)" style="font-size:12px;margin-top:10px" oninput="lpFocusState()">
+            <div id="focus-hint" style="color:var(--text3);font-size:12px;margin-top:5px"></div>
+          </div>
         </div>
         <!-- OPTIONS -->
         <div class="generate-options" id="gen-options-pdf">
@@ -6964,6 +6976,7 @@ async function startGeneration() {
       formData.append('address', (document.getElementById('msg-address') || { value: 'auto' }).value);
       formData.append('read_site', (document.getElementById('msg-site') || { checked: true }).checked ? '1' : '0');
       formData.append('angles', lpAnglesJson());
+      formData.append('focus', lpFocusJson());
     }
     // Envoyer la charte sélectionnée si une est choisie
     const charteSel = document.getElementById('charte-selector');
@@ -9109,7 +9122,7 @@ async function loadCharteSelector() {
 }
 
 function onCharteChange(val) {
-  try { setTimeout(lpAgendaSync, 0); } catch (e) {}
+  try { setTimeout(lpAgendaSync, 0); setTimeout(lpFocusSync, 0); } catch (e) {}
   // L'utilisateur a choisi manuellement — on verrouille ce choix
   window.selectedCharteId = val;
 
@@ -9894,6 +9907,73 @@ function lpAnglesSave() {
   const m = document.getElementById('lp-angles'); if (m) m.remove();
 }
 function lpAnglesJson() { return (window.__lpAnglesKey === lpFileKey() && window.__lpAngles && Object.keys(window.__lpAngles).length) ? JSON.stringify(window.__lpAngles) : ''; }
+
+
+// ── Sur quoi insister (leviers, demande, niveau), choisi par le client ou proposé par l'IA ────────────
+const LP_LEVERS = [['temps', 'Le gain de temps', 0], ['economies', 'Les économies', 0], ['resultat', 'Un résultat chiffré', 1], ['preuve', 'Les preuves et références', 1], ['risque', 'Le problème ou le risque évité', 0],
+  ['rapidite', 'La rapidité de mise en place', 0], ['simplicite', 'La simplicité, sans engagement', 0], ['secteur', 'La spécialisation dans leur secteur', 0], ['actu', 'Un fait d’actualité de l’entreprise', 0]];
+const LP_ASKS = [['rdv', 'Un échange de 20 minutes'], ['question', 'Une question sur leur pratique'], ['ressource', 'L’envoi d’un exemple concret'], ['oui_non', 'Une réponse oui ou non']];
+const LP_LVLS = [['doux', 'Relationnel et doux'], ['direct', 'Direct, orienté offre']];
+function lpFocusRender() {
+  const box = document.getElementById('focus-levers'); if (!box || box.dataset.ok) return;
+  box.dataset.ok = '1';
+  box.innerHTML = LP_LEVERS.map(l => '<label data-need="' + l[2] + '"><input type="checkbox" data-f="' + l[0] + '" onchange="lpFocusClick(this)"> ' + l[1] + (l[2] ? ' <span style="color:var(--text3);font-size:11px">(preuve du brief)</span>' : '') + '</label>').join('');
+  document.getElementById('focus-ask').innerHTML = LP_ASKS.map((a, i) => '<label style="display:block"><input type="radio" name="focus-ask" value="' + a[0] + '"' + (i === 0 ? ' checked' : '') + ' onchange="lpFocusState()"> ' + a[1] + '</label>').join('');
+  document.getElementById('focus-lvl').innerHTML = '<label style="display:block"><input type="radio" name="focus-lvl" value="" checked onchange="lpFocusState()"> Laisser l’IA décider</label>' + LP_LVLS.map(a => '<label style="display:block"><input type="radio" name="focus-lvl" value="' + a[0] + '" onchange="lpFocusState()"> ' + a[1] + '</label>').join('');
+  lpFocusSync();
+}
+function lpCurrentBrief() {
+  const sel = document.getElementById('charte-selector'), id = sel ? sel.value : '';
+  const list = (typeof lpChartes !== 'undefined' && lpChartes.length ? lpChartes : (window._chartesCache || []));
+  const ch = list.find(c => String(c.id) === String(id)) || list.find(c => c.is_default) || {};
+  return ch.brief || {};
+}
+function lpFocusSync() {
+  lpFocusRender();
+  const proof = !!((lpCurrentBrief().preuves || []).length);
+  document.querySelectorAll('#focus-levers label[data-need="1"]').forEach(l => {
+    const i = l.querySelector('input'); i.disabled = !proof; if (!proof) i.checked = false; l.style.opacity = proof ? '' : '.5';
+    l.title = proof ? '' : 'Ajoutez des preuves dans le brief de votre charte pour l’activer';
+  });
+  lpFocusState();
+}
+function lpFocusClick(inp) {
+  const on = Array.from(document.querySelectorAll('#focus-levers input:checked'));
+  if (on.length > 2) { inp.checked = false; showToast('Deux choix au maximum : un message qui insiste sur tout ne convainc personne', '#F59E0B'); }
+  lpFocusState();
+}
+function lpFocusState() {
+  const f = lpFocusObj(), h = document.getElementById('focus-hint'); if (!h) return;
+  const n = (f.leviers || []).length;
+  h.textContent = (n || f.appel || f.niveau || f.libre) ? ('Pris en compte à la génération et dans l’aperçu gratuit : ' + (n ? n + ' angle' + (n > 1 ? 's' : '') + ' mis en avant' : 'aucun angle imposé') + (f.appel ? ', demande modifiée' : '') + (f.niveau ? ', niveau choisi' : '') + '.') : '';
+}
+function lpFocusObj() {
+  const lev = Array.from(document.querySelectorAll('#focus-levers input:checked')).map(i => i.dataset.f);
+  const ask = (document.querySelector('input[name="focus-ask"]:checked') || {}).value || 'rdv';
+  const lvl = (document.querySelector('input[name="focus-lvl"]:checked') || {}).value || '';
+  const free = ((document.getElementById('focus-free') || {}).value || '').trim();
+  const o = {}; if (lev.length) o.leviers = lev; if (ask !== 'rdv') o.appel = ask; if (lvl) o.niveau = lvl; if (free) o.libre = free;
+  return o;
+}
+function lpFocusJson() { lpFocusRender(); const o = lpFocusObj(); return Object.keys(o).length ? JSON.stringify(o) : ''; }
+async function lpFocusAi() {
+  if (!selectedCsvFile) { showToast('Importez d’abord votre fichier de contacts', '#F59E0B'); return; }
+  lpFocusRender();
+  const btn = document.getElementById('focus-ai-btn'); if (btn) { btn.disabled = true; btn.textContent = 'Analyse…'; }
+  const fd = new FormData(); fd.append('file', selectedCsvFile);
+  const cs = document.getElementById('charte-selector'); if (cs && cs.value && cs.value !== 'default') fd.append('charte_id', cs.value);
+  try {
+    const r = await fetch(API_URL + '/api/campaigns/propose-focus', { method: 'POST', headers: { 'Authorization': 'Bearer ' + authToken }, body: fd });
+    const d = await r.json(); if (!r.ok) throw new Error(d.detail || ('Erreur ' + r.status));
+    document.querySelectorAll('#focus-levers input').forEach(i => { i.checked = (d.leviers || []).indexOf(i.dataset.f) >= 0 && !i.disabled; });
+    const a = document.querySelector('input[name="focus-ask"][value="' + (d.appel || 'rdv') + '"]'); if (a) a.checked = true;
+    const l = document.querySelector('input[name="focus-lvl"][value="' + (d.niveau || '') + '"]'); if (l) l.checked = true;
+    const w = document.getElementById('focus-why'); if (w) { w.style.display = 'block'; w.innerHTML = '<b>Proposition de l’IA</b> (modifiable : cochez ou décochez) : ' + escHtml(d.raison || ''); }
+    lpFocusState();
+  } catch (e) { showToast('Proposition indisponible : ' + e.message, '#EF4444'); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = '✨ Laisser l’IA proposer'; } }
+}
+setTimeout(lpFocusRender, 0);
 
 async function cmSaveCharte() {
   if (!authToken) return;
