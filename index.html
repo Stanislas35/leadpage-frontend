@@ -5194,6 +5194,9 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
           </div>
           <div style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">Limite de la note d'invitation :
             <select id="msg-li-limit" style="padding:4px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text1);font-size:12px"><option value="300">300 caractères</option><option value="200">200 caractères</option></select>
+          
+            <span style="margin-left:14px">Adresse :</span>
+            <select id="msg-address" style="padding:4px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text1);font-size:12px"><option value="auto">Selon le style de la charte</option><option value="tu">Tutoiement</option><option value="vous">Vouvoiement</option></select>
           </div>
           <div style="margin-top:8px;color:var(--text3)">Un crédit par contact, quel que soit le parcours. Pas de PDF.
             <a href="messages/" target="_blank" rel="noopener" style="color:#E4332E">En savoir plus</a></div>
@@ -6930,6 +6933,7 @@ async function startGeneration() {
       formData.append('msg_steps', lpMsgSteps().join(','));
       formData.append('li_limit', (document.getElementById('msg-li-limit') || { value: '300' }).value);
       formData.append('agenda_steps', lpAgendaSteps());
+      formData.append('address', (document.getElementById('msg-address') || { value: 'auto' }).value);
     }
     // Envoyer la charte sélectionnée si une est choisie
     const charteSel = document.getElementById('charte-selector');
@@ -6937,6 +6941,16 @@ async function startGeneration() {
       formData.append('charte_id', charteSel.value);
     }
 
+    if (window.__lpPreview) {
+      window.__lpPreview = false;
+      pc.classList.remove('visible'); pc.style.display = 'none'; rc.style.display = 'none';
+      addLog('Aperçu gratuit', 'ok');
+      const pr = await fetch(API_URL + '/api/campaigns/preview-messages', { method: 'POST', headers: { 'Authorization': 'Bearer ' + authToken }, body: formData });
+      const pd = await pr.json();
+      if (!pr.ok) throw new Error(pd.detail || 'Aperçu impossible');
+      lpShowPreview(pd);
+      return;
+    }
     const res = await fetch(API_URL + '/api/campaigns/', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + authToken },
@@ -7846,7 +7860,7 @@ async function openCampaignDetail(campaignId) {
                 total: camp.total || list.length, errors: camp.error_rows || 0 };
     // Colonnes disponibles : celles du fichier d'origine, dans l'ordre d'apparition
     const seen = [];
-    list.forEach(x => Object.keys(x.raw).forEach(k => { if (!seen.includes(k)) seen.push(k); }));
+    list.forEach(x => Object.keys(x.raw).forEach(k => { if (k.charAt(0) !== '_' && !seen.includes(k)) seen.push(k); }));
     cdState.colOrder = seen;
     renderCampaignDetail();
   } catch (e) {
@@ -7860,7 +7874,7 @@ function renderCampaignDetail() {
   if (!d) return;
   const st = cdState;
   const f = st.filter.trim().toLowerCase();
-  const filtered = st.rows.filter(x => !f || (Object.values(x.raw).join(' ') + ' ' + (x.r.company || '')).toLowerCase().includes(f));
+  const filtered = st.rows.filter(x => (!st.onlyFlag || String(x.raw.A_relire || '').trim()) && (!f || (Object.values(x.raw).join(' ') + ' ' + (x.r.company || '')).toLowerCase().includes(f)));
   const shown = filtered.slice(0, st.limit);
   const baseCols = ['Prénom', 'Nom', 'Entreprise', 'Titre', 'Email', "Secteurs d'activité", 'Lieu'];
   const cols = st.allCols ? st.colOrder : baseCols.filter(c => st.colOrder.includes(c));
@@ -7878,6 +7892,7 @@ function renderCampaignDetail() {
     + '<button class="btn btn-primary" style="' + btn + '" id="cd-zip-btn" onclick="downloadAllPdfs()">⬇ Tous les PDF (zip)</button></div></div>'
     + '<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">'
     + '<input class="form-input" style="margin:0;max-width:320px;font-size:13px" placeholder="Rechercher un contact, une entreprise..." value="' + escAttr(st.filter) + '" oninput="cdState.filter=this.value;cdState.limit=100;renderCampaignDetail();this.focus();this.setSelectionRange(this.value.length,this.value.length)">'
+    + (st.rows.some(x => String(x.raw.A_relire || '').trim()) ? '<label style="font-size:12px;color:#92400E;display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:600"><input type="checkbox" ' + (st.onlyFlag ? 'checked' : '') + ' onchange="cdState.onlyFlag=this.checked;cdState.limit=100;renderCampaignDetail()"> Seulement à relire (' + st.rows.filter(x => String(x.raw.A_relire || '').trim()).length + ')</label>' : '')
     + '<label style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" ' + (st.allCols ? 'checked' : '') + ' onchange="cdState.allCols=this.checked;renderCampaignDetail()"> Toutes les colonnes du fichier</label>'
     + '<span id="cd-zip-status" style="font-size:12px;color:var(--text3)"></span></div>';
   html += '<div style="overflow:auto;border:1px solid var(--border);border-radius:12px;background:var(--bg2)"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr>';
@@ -7899,7 +7914,8 @@ function renderCampaignDetail() {
         + ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px;margin-left:4px" onclick="downloadOnePdf(' + idx + ')">⬇ PDF</button>'
         + (r.tracking_url ? ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px" onclick="copyText(\'' + escAttr(r.tracking_url) + '\')">Copier le lien</button>' : '')
         : (isErr(x) ? '<span style="color:#EF4444;cursor:help" title="' + escAttr(String(r.status || '').replace(/^error:\s*/, '')) + '">Erreur</span>' : '<span style="color:var(--text3)">—</span>'))
-      + (((r.mail1_corps || '').trim() || cdMsgs(r)) ? ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px" onclick="cdShowMail(' + idx + ')">✉ Mail</button>' : '')
+      + (((r.mail1_corps || '').trim() || cdMsgs(r)) ? ' <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px" onclick="cdShowMail(' + idx + ')">✉ ' + (cdMsgs(r) ? 'Messages' : 'Mail') + '</button>' : '')
+      + (String(x.raw.A_relire || '').trim() ? ' <span class="lpx-tag" style="background:#FEF3C7;color:#92400E;cursor:help" title="' + escAttr(x.raw.A_relire) + '">⚠ À relire</span>' : '')
       + '</td></tr>';
   });
   if (!shown.length) html += '<tr><td colspan="' + (cols.length + 2) + '" style="padding:24px;text-align:center;color:var(--text3)">Aucun contact</td></tr>';
@@ -7950,11 +7966,26 @@ function cdShowMail(idx) {
   o.onclick = e => { if (e.target === o) o.remove(); };
   o.innerHTML = '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;max-width:620px;width:100%;max-height:80vh;overflow:auto;padding:24px">'
     + '<div style="font-weight:700;margin-bottom:12px">' + (cdMsgs(r) ? 'Séquence pour ' : 'Mail pour ') + escHtml((r.first_name || '') + ' ' + (r.last_name || '')) + '</div>'
-    + (cdMsgs(r) ? cdMsgsHtml(r) : '<div style="white-space:pre-wrap;font-size:13px;line-height:1.6">' + escHtml(r.mail1_corps) + '</div>')
+    + '<div id="cd-mail-body">' + (cdMsgs(r) ? cdMsgsHtml(r) : '<div style="white-space:pre-wrap;font-size:13px;line-height:1.6">' + escHtml(r.mail1_corps) + '</div>') + '</div>'
     + '<div style="margin-top:16px;display:flex;gap:8px"><button class="btn btn-primary" style="padding:7px 14px;font-size:12px" id="cd-mail-copy">Copier</button>'
     + '<button class="btn btn-ghost" style="padding:7px 14px;font-size:12px" onclick="this.closest(\'div[style*=fixed]\').remove()">Fermer</button></div></div>';
   document.body.appendChild(o);
   document.getElementById('cd-mail-copy').onclick = () => copyText(cdMsgs(r) ? cdMsgsText(r) : r.mail1_corps);
+}
+async function cdRegen(idx, step, btn) {
+  const x = cdState.rows[idx]; if (!x) return;
+  const r = x.r;
+  if (btn) { btn.disabled = true; btn.textContent = 'Réécriture…'; }
+  try {
+    const res = await apiCall('POST', '/api/campaigns/' + cdState.id + '/regenerate', { result_id: r.id, step: step }, true);
+    let d = {}; try { d = JSON.parse(r.raw_data || '{}'); } catch (e) {}
+    Object.keys(res.messages || {}).forEach(k => { d[k] = res.messages[k]; if (k === 'mail1_corps') r.mail1_corps = res.messages[k]; });
+    d.A_relire = (res.a_relire || []).join(' ; '); d._regen = 5 - (res.restantes == null ? 5 : res.restantes);
+    r.raw_data = JSON.stringify(d); x.raw = Object.assign({}, x.raw, { A_relire: d.A_relire });
+    const body = document.getElementById('cd-mail-body'); if (body) body.innerHTML = cdMsgsHtml(r);
+    renderCampaignDetail();
+    showToast('Message réécrit (gratuit), ' + (res.restantes == null ? '' : res.restantes + ' réécriture' + (res.restantes > 1 ? 's' : '') + ' restante' + (res.restantes > 1 ? 's' : '')));
+  } catch (e) { showToast('Réécriture impossible : ' + e.message, '#EF4444'); if (btn) { btn.disabled = false; btn.textContent = '↻ Réécrire'; } }
 }
 function cdMsgs(r) {
   if (!r || !r.raw_data) return null;
@@ -7962,10 +7993,14 @@ function cdMsgs(r) {
 }
 function cdMsgsParts(r) {
   const d = cdMsgs(r) || {};
-  return [['Invitation LinkedIn', d.linkedin_1 || ''], ['Mail 1 · Objet : ' + (d.mail1_objet || ''), r.mail1_corps || ''], ['Mail 2 (relance)', d.mail2_corps || ''], ['Message LinkedIn 1 (après acceptation)', d.linkedin_2 || ''], ['Mail 3 (dernier message)', d.mail3_corps || ''], ['Message LinkedIn 2 (relance)', d.linkedin_3 || '']].filter(function (p) { return (p[1] || '').trim(); });
+  return [['Invitation LinkedIn', d.linkedin_1 || '', 'li0'], ['Mail 1 · Objet : ' + (d.mail1_objet || ''), r.mail1_corps || '', 'm1'], ['Mail 2 (relance)', d.mail2_corps || '', 'm2'], ['Message LinkedIn 1 (après acceptation)', d.linkedin_2 || '', 'li1'], ['Mail 3 (dernier message)', d.mail3_corps || '', 'm3'], ['Message LinkedIn 2 (relance)', d.linkedin_3 || '', 'li2']].filter(function (p) { return (p[1] || '').trim(); });
 }
 function cdMsgsHtml(r) {
-  return cdMsgsParts(r).map(p => '<div style="margin-bottom:14px"><div style="font-size:11px;font-weight:700;color:var(--pink);margin-bottom:4px">' + escHtml(p[0]) + '</div><div style="white-space:pre-wrap;font-size:13px;line-height:1.6">' + escHtml(p[1]) + '</div></div>').join('');
+  const d = cdMsgs(r) || {}, idx = cdState.rows.findIndex(x => x.r === r);
+  const warn = (d.A_relire || '').trim() ? '<div style="background:rgba(245,158,11,.12);border:1px solid #F59E0B;border-radius:8px;padding:8px 10px;font-size:12px;margin-bottom:14px"><b>À relire :</b> ' + escHtml(d.A_relire) + '</div>' : '';
+  const left = Math.max(0, 5 - (parseInt(d._regen, 10) || 0));
+  return warn + cdMsgsParts(r).map(p => '<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:11px;font-weight:700;color:var(--pink)">' + escHtml(p[0]) + '</span>'
+    + (idx >= 0 && left > 0 ? '<button class="btn btn-ghost" style="padding:2px 9px;font-size:11px" title="Gratuit : ' + left + ' réécriture' + (left > 1 ? 's' : '') + ' restante' + (left > 1 ? 's' : '') + ' pour ce contact" onclick="cdRegen(' + idx + ',\'' + p[2] + '\',this)">↻ Réécrire</button>' : '') + '</div><div style="white-space:pre-wrap;font-size:13px;line-height:1.6">' + escHtml(p[1]) + '</div></div>').join('');
 }
 function cdMsgsText(r) { return cdMsgsParts(r).map(p => p[0] + '\n' + p[1]).join('\n\n'); }
 
@@ -9932,11 +9967,38 @@ function lpRenderEstimate(n) {
   let h = '<div class="lpx-est-row"><div><b>' + need + ' crédit' + (need > 1 ? 's' : '') + '</b><span>1 par contact, remboursé si un contact échoue</span></div>'
     + '<div><b>≈ ' + dur + '</b><span>durée estimée, vous pouvez quitter la page</span></div>'
     + (left !== null ? '<div><b' + (short ? ' style="color:#EF4444"' : '') + '>' + left + '</b><span>crédits disponibles' + (short ? ' : insuffisant' : '') + '</span></div>' : '') + '</div>';
-  if (n > 3) h += '<div class="lpx-est-test"><span>Pas encore sûr du rendu ? Testez la charte sur les 3 premiers contacts avant de lancer le reste.</span>'
+  if (n > 3 && lpMsgMode()) h += '<div class="lpx-est-test"><span>Pas sûr du ton ? Voyez le résultat sur 3 contacts avant de dépenser vos crédits : <b>gratuit, sans débit</b>.</span>'
+    + '<button class="btn btn-primary" onclick="lpPreviewMsgs()">Aperçu gratuit de 3 contacts</button></div>';
+  else if (n > 3) h += '<div class="lpx-est-test"><span>Pas encore sûr du rendu ? Testez la charte sur les 3 premiers contacts avant de lancer le reste.</span>'
     + '<button class="btn btn-ghost" onclick="startGenerationTest()">Tester sur 3 contacts (' + lpCredits(3) + ' crédit' + (lpCredits(3) > 1 ? 's' : '') + ')</button></div>';
   box.innerHTML = h;
 }
 
+function lpPreviewMsgs() { window.__lpTestN = 3; window.__lpPreview = true; return startGeneration(); }
+function lpShowPreview(d) {
+  const old = document.getElementById('lp-preview'); if (old) old.remove();
+  const o = document.createElement('div'); o.id = 'lp-preview';
+  o.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  const lab = { mail1_objet: 'Objet du mail 1', mail1_corps: 'Mail 1', mail2_corps: 'Mail 2', mail3_corps: 'Mail 3', linkedin_1: 'Invitation LinkedIn', linkedin_2: 'Message LinkedIn 1', linkedin_3: 'Message LinkedIn 2' };
+  const order = ['linkedin_1', 'mail1_objet', 'mail1_corps', 'linkedin_2', 'mail2_corps', 'mail3_corps', 'linkedin_3'];
+  const cards = (d.contacts || []).map(c => {
+    const msgs = order.filter(k => c.messages && c.messages[k]).map(k => '<div style="margin-bottom:12px"><div style="font-size:11px;font-weight:700;color:#E4332E;margin-bottom:3px">' + lab[k] + '</div><div style="white-space:pre-wrap;font-size:13px;line-height:1.55">' + escHtml(c.messages[k]) + '</div></div>').join('');
+    const warn = (c.a_relire || []).length ? '<div style="background:rgba(245,158,11,.12);border:1px solid #F59E0B;border-radius:8px;padding:8px 10px;font-size:12px;margin-bottom:10px"><b>À relire :</b> ' + c.a_relire.map(escHtml).join(' · ') + '</div>' : '';
+    return '<div style="border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;background:var(--bg3)"><div style="font-weight:700;margin-bottom:2px">' + escHtml((c.prenom || '') + ' ' + (c.nom || '')) + '</div><div style="font-size:12px;color:var(--text3);margin-bottom:10px">' + escHtml([c.titre, c.entreprise].filter(Boolean).join(' · ')) + '</div>'
+      + (c.erreur ? '<div style="color:#EF4444;font-size:13px">Génération impossible : ' + escHtml(c.erreur) + '</div>' : warn + msgs) + '</div>';
+  }).join('');
+  const total = d.total_contacts || 0;
+  o.innerHTML = '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;max-width:760px;width:100%;max-height:90vh;display:flex;flex-direction:column">'
+    + '<div style="padding:20px 24px 8px"><div style="font-size:18px;font-weight:800">Aperçu sur 3 contacts</div><div style="font-size:13px;color:var(--text3);margin-top:3px">Gratuit : aucun crédit débité. Le ton et le style viennent de votre charte. Pas satisfait ? Modifiez la charte, puis relancez l’aperçu.</div></div>'
+    + '<div style="padding:8px 24px;overflow:auto;flex:1">' + cards + '</div>'
+    + '<div style="padding:14px 24px 20px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--border)">'
+    + '<button class="btn btn-primary" onclick="document.getElementById(\'lp-preview\').remove();startGeneration()">Lancer les ' + total + ' contacts (' + total + ' crédit' + (total > 1 ? 's' : '') + ')</button>'
+    + '<button class="btn btn-ghost" onclick="document.getElementById(\'lp-preview\').remove();showDashSection(\'chartes\',null,true)">Modifier ma charte</button>'
+    + '<button class="btn btn-ghost" onclick="document.getElementById(\'lp-preview\').remove();lpPreviewMsgs()">Refaire l’aperçu</button>'
+    + '<button class="btn btn-ghost" style="margin-left:auto" onclick="document.getElementById(\'lp-preview\').remove()">Fermer</button></div></div>';
+  o.addEventListener('click', e => { if (e.target === o) o.remove(); });
+  document.body.appendChild(o);
+}
 function startGenerationTest() { window.__lpTestN = 3; return startGeneration(); }
 
 function showPreviewBeforeGen(csvText, filename) {
