@@ -60,23 +60,19 @@ document.addEventListener('click', function (ev) {
   b.addEventListener('click', function () { var o = l.classList.toggle('open'); b.setAttribute('aria-expanded', o ? 'true' : 'false'); b.textContent = o ? '✕' : '☰'; });
   l.addEventListener('click', function (e) { if (e.target.tagName === 'A') { l.classList.remove('open'); b.textContent = '☰'; } });
 })();
-// calculateur de crédits
+// curseur d'abonnement
 (function () {
-  var n = document.getElementById('lc-n'), r = document.getElementById('lc-r'), out = document.getElementById('lc-out');
-  if (!n || !out) return;
+  var r = document.getElementById('ls-r'); if (!r) return;
+  var T = [[200, 19], [500, 39], [1000, 59], [2500, 119], [5000, 199], [10000, 349]];
   function fmt(x) { return x.toLocaleString('fr-FR'); }
-  function calc(v) {
-    v = Math.max(1, Math.min(100000, Math.round(+v || 0)));
-    var plan, price, per;
-    if (v <= 5) { plan = 'Gratuit'; price = 0; }
-    else if (v <= 500) { plan = 'Starter'; price = 29; }
-    else if (v <= 2000) { plan = 'Growth'; price = 79; }
-    else { plan = 'Forfait sur mesure'; price = null; }
-    out.innerHTML = '<b>' + fmt(v) + ' crédit' + (v > 1 ? 's' : '') + '</b><p>Parcours de 1 à 6 messages par contact, un crédit par contact.</p><p style="margin-top:10px"><b style="font-size:20px">' + plan + '</b>' + (price === null ? '</p><p>Au-delà de 2 000 contacts par mois, écrivez-nous pour un forfait adapté.' : (price === 0 ? '</p><p>Offert à l\'inscription, sans carte bancaire.' : ' · ' + price + ' € par mois</p><p>Soit environ ' + (price / (plan === 'Starter' ? 500 : 2000)).toFixed(3).replace('.', ',') + ' € par contact si vous utilisez tout votre forfait.')) + '</p>';
+  function upd() {
+    var t = T[+r.value];
+    document.getElementById('ls-n').textContent = fmt(t[0]);
+    document.getElementById('ls-p').textContent = t[1] + ' €';
+    document.getElementById('ls-u').textContent = 'Soit ' + (t[1] / t[0]).toFixed(3).replace('.', ',') + ' € par contact';
+    r.style.setProperty('--fill', (r.value / 5 * 100) + '%');
   }
-  n.addEventListener('input', function () { r.value = Math.min(+n.value || 1, +r.max); calc(n.value); });
-  r.addEventListener('input', function () { n.value = r.value; calc(r.value); });
-  calc(n.value);
+  r.addEventListener('input', upd); upd();
 })();
 
 // ═══ Dynamisme : hero animé, apparitions variées, compteurs, parallaxe, barre de progression ═══

@@ -379,3 +379,19 @@ body.lm .lm-hero{margin-top:0}
 body.lm main{overflow-x:clip}
 @media(max-width:900px){.js .lm-rv.rv-l,.js .lm-rv.rv-r{transform:translateY(22px)}.js .lm-rv.in.rv-l,.js .lm-rv.in.rv-r{transform:none}}
 .lm-row em{white-space:nowrap}
+
+/* Curseur d'abonnement */
+.lm-slide{background:#fff;border:1px solid var(--line);border-radius:26px;padding:34px;margin-top:36px;box-shadow:0 24px 60px rgba(180,30,25,.10)}
+.lm-slide-top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.lm-slide-n{font:800 clamp(40px,6vw,64px) 'Bricolage Grotesque',sans-serif;line-height:1}
+.lm-slide-u{color:var(--ink3);font-size:16px}
+.lm-slide-p b{font:800 clamp(34px,5vw,52px) 'Bricolage Grotesque',sans-serif;color:var(--r)}.lm-slide-p small{color:var(--ink3);font-size:14px}
+.lm-slide input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:10px;border-radius:99px;margin:26px 0 10px;background:linear-gradient(90deg,var(--r) var(--fill,40%),#eadfdc var(--fill,40%));outline:none}
+.lm-slide input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:#fff;border:4px solid var(--r);box-shadow:0 4px 12px rgba(0,0,0,.2);cursor:pointer}
+.lm-slide input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:4px solid var(--r);cursor:pointer}
+.lm-slide-ticks{display:flex;justify-content:space-between;font-size:13px;color:var(--ink3)}
+.lm-slide-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:20px 0 6px;font-size:14px;color:var(--ink2)}.lm-slide-meta span:first-child{font-weight:700;color:var(--ink)}
+.lm-slide-ul{list-style:none;padding:0;margin:18px 0 24px;display:grid;grid-template-columns:1fr 1fr;gap:4px 24px}
+.lm-slide-ul li{padding:5px 0 5px 24px;position:relative;font-size:14.5px;color:var(--ink2)}.lm-slide-ul li:before{content:"✓";position:absolute;left:0;color:var(--r);font-weight:700}
+@media(max-width:700px){.lm-slide{padding:22px}.lm-slide-ul{grid-template-columns:1fr}.lm-slide-ticks{font-size:11px}}
+.lm-slide .lm-btn{color:#fff;display:inline-block}

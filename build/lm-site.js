@@ -15,7 +15,7 @@ const faq = [
   ['Puis-je insérer mon lien d\'agenda ?', 'Oui. Vous enregistrez le lien (Calendly, Cal.com, HubSpot) dans la charte, puis vous cochez au lancement les étapes qui le contiennent : Mail 1, Mail 2, Mail 3, Message LinkedIn 1 ou Message LinkedIn 2. Le lien est écrit en toutes lettres dans le message, jamais dans la note d\'invitation.'],
   ['Où sont stockées mes données ?', 'Les détails sont publics sur la page Données et sécurité. Vos fichiers ne servent qu\'à rédiger vos messages.']
 ];
-const pk = [['Gratuit', '0 €', 'offert à l\'inscription', '5 contacts', ['Parcours complet possible', 'Une charte', 'Sans carte bancaire'], 0, 'Créer un compte'], ['Starter', '29 €', 'par mois', '500 contacts', ['500 crédits par mois', 'Trois chartes', 'Export compatible Snov.io, Lemlist, HeyReach'], 0, 'Choisir Starter'], ['Growth', '79 €', 'par mois', '2 000 contacts', ['2 000 crédits par mois', 'Chartes illimitées, une par client', 'Support prioritaire'], 1, 'Choisir Growth']];
+const pk = [];
 const hdr = ['email', 'prénom', 'entreprise', 'mail1_objet', 'mail1_corps', 'mail2_corps', 'mail3_corps', 'linkedin_1', 'linkedin_2', 'linkedin_3'];
 const rows = [['camille@atelier-nova.fr', 'Camille', 'Atelier Nova', 'Atelier Nova et vos trois…', 'Bonjour Camille, pour une…', 'Camille, une question plus…', 'Camille, je ne veux pas…', 'Bonjour Camille, je travaille…', 'Merci pour la connexion…', 'Camille, un dernier mot…'], ['thomas@maison-delta.fr', 'Thomas', 'Maison Delta', 'Maison Delta : vos…', 'Bonjour Thomas, avec une…', 'Thomas, une question…', 'Thomas, je ne veux pas…', 'Bonjour Thomas, je suis…', 'Merci Thomas, pour…', 'Thomas, un dernier…']];
 

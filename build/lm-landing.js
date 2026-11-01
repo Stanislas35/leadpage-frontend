@@ -122,11 +122,17 @@ Pour une marque de mobilier qui anime trois boutiques, garder le même discours 
   const conf = S('Confiance', 'Vos données restent les vôtres', 'Les informations de votre fichier servent uniquement à rédiger vos messages. Les détails sont publics.', `<div class="lm-grid3">${[['Données et sécurité', 'Ce qui est stocké, où, et combien de temps.', B + 'legal/donnees-et-securite/'], ['Confidentialité', 'Traitement des données et vos droits RGPD.', B + 'legal/confidentialite/'], ['CGV et CGU', 'Crédits, facturation et conditions d\'usage.', B + 'legal/cgv/']].map(([h, p, l]) => `<a class="lm-card lm-link-card lm-rv" href="${l}"><h3>${h}</h3><p>${p}</p><span class="lm-go">Lire →</span></a>`).join('')}</div>`, 'confiance', 'alt');
 
   const tarifs = `<section class="lm-sec" id="tarifs"><div class="lm-w">
-  <span class="lm-k">Tarifs</span><h2>Un contact, un crédit, quel que soit le parcours</h2>
-  <p class="lm-sub">LeadMessage a son propre abonnement et ses propres crédits, indépendants de LeadPage. Un crédit couvre un parcours de messages complet pour un contact. Sans engagement.</p>
-  <div class="lm-price">${pk.map(k => `<div class="lm-pk${k[5] ? ' feat' : ''} lm-rv">${k[5] ? '<span class="bd">Le plus choisi</span>' : ''}<h3>${k[0]}</h3><p class="amt">${k[1]} <small>${k[2]}</small></p><p class="ct">${k[3]}</p><ul>${k[4].map(x => `<li>${x}</li>`).join('')}</ul><a class="lm-btn${k[5] ? '' : ' ghost'}" style="text-align:center" href="${B}?p=message#connexion">${k[6]}</a></div>`).join('')}</div>
-  <div class="lm-calc lm-rv"><div><label for="lc-n">Combien de contacts par mois ?</label><input id="lc-r" type="range" min="1" max="2500" value="300" aria-label="Nombre de contacts"><p style="margin:10px 0 0"><input id="lc-n" type="number" min="1" max="100000" value="300" inputmode="numeric"> contacts</p></div><div class="res" id="lc-out" aria-live="polite"></div></div>
-  <p class="lm-note">Moins de 0,06 € le contact avec Starter, moins de 0,04 € avec Growth. Besoin de plus de volume ? Écrivez-nous pour un forfait sur mesure.</p></div></section>`;
+  <span class="lm-k">Tarifs</span><h2>Choisissez votre volume de contacts, payez au mois</h2>
+  <p class="lm-sub">LeadMessage a son propre abonnement et ses propres crédits, indépendants de LeadPage. Un crédit couvre un parcours de messages complet pour un contact. Déplacez le curseur : le prix par contact baisse avec le volume.</p>
+  <div class="lm-slide lm-rv">
+    <div class="lm-slide-top"><div><span class="lm-slide-n" id="ls-n">1 000</span> <span class="lm-slide-u">contacts par mois</span></div><div class="lm-slide-p"><b id="ls-p">59 €</b> <small>par mois, HT</small></div></div>
+    <input id="ls-r" type="range" min="0" max="5" step="1" value="2" aria-label="Contacts par mois">
+    <div class="lm-slide-ticks"><span>200</span><span>500</span><span>1 000</span><span>2 500</span><span>5 000</span><span>10 000</span></div>
+    <div class="lm-slide-meta"><span id="ls-u">Soit 0,059 € par contact</span><span>Sans engagement, changement de palier à tout moment</span></div>
+    <ul class="lm-slide-ul"><li>Un crédit par contact, quel que soit le parcours</li><li>Mails 1, 2, 3, invitation et messages LinkedIn</li><li>Chartes de ton illimitées, une par client</li><li>Lien d'agenda à l'étape de votre choix</li><li>Export compatible Snov.io, Lemlist, HeyReach</li></ul>
+    <a class="lm-btn" style="text-align:center" href="${B}?p=message#connexion">S'abonner ou essayer gratuitement</a>
+  </div>
+  <p class="lm-note">Pour commencer : 5 contacts offerts à l'inscription, sans carte bancaire. Plus de 10 000 contacts par mois ? Écrivez-nous pour un forfait sur mesure.</p></div></section>`;
 
   const faqS = `<section class="lm-sec alt" id="faq"><div class="lm-w"><span class="lm-k">FAQ</span><h2>Questions fréquentes</h2><div class="lm-faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div></div></section>`;
 
