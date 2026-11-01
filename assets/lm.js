@@ -188,3 +188,36 @@ document.addEventListener('click', function (ev) {
   }); });
   ds.forEach(function (d) { d.addEventListener('toggle', function () { if (d.open) ds.forEach(function (o) { if (o !== d) o.open = false; }); }); });
 })();
+
+// mesure d'audience sans cookie ni identifiant : pages vues, sections atteintes, clics sur les boutons d'essai
+(function () {
+  if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
+  var URL_API = 'https://leadpage-backend.onrender.com/api/site-events', q = [], seen = {}, t = null;
+  var page = location.pathname.replace(/index\.html$/, '');
+  function flush() {
+    if (!q.length) return;
+    var body = JSON.stringify({ events: q.splice(0, 20) });
+    try { if (navigator.sendBeacon) navigator.sendBeacon(URL_API, body); else fetch(URL_API, { method: 'POST', body: body, keepalive: true, mode: 'cors', headers: { 'Content-Type': 'text/plain' } }); } catch (e) {}
+  }
+  function ev(e, s, extra) { q.push({ e: e, p: page, s: s || '', r: extra || '' }); clearTimeout(t); t = setTimeout(flush, 1500); }
+  var ref = ''; try { ref = document.referrer ? new URL(document.referrer).hostname : ''; } catch (e) {}
+  ev('view', '', ref);
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (x) {
+      var id = x.target.id; if (x.isIntersecting && id && !seen[id]) { seen[id] = 1; ev('section', id); }
+    }); }, { threshold: .35 });
+    document.querySelectorAll('section[id]').forEach(function (s) { io.observe(s); });
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a.lm-btn, .lm-sticky a');
+    if (!a) return;
+    var sec = a.closest('section[id], header, .lm-sticky'); var id = sec ? (sec.id || (sec.classList.contains('lm-sticky') ? 'barre-mobile' : 'entete')) : 'autre';
+    var href = a.getAttribute('href') || '';
+    if (/connexion|\?p=message/.test(href)) ev('cta', id);
+  });
+  var r = document.getElementById('ls-r'); var rt = null;
+  if (r) r.addEventListener('input', function () { clearTimeout(rt); rt = setTimeout(function () { ev('plan', r.value); }, 800); });
+  var dm = document.getElementById('dm-next'); if (dm) dm.addEventListener('click', function () { ev('demo', 'suivant'); });
+  window.addEventListener('pagehide', flush);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flush(); });
+})();

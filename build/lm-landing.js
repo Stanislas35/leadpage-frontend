@@ -144,8 +144,16 @@ Pour une marque de mobilier qui anime trois boutiques, garder le même discours 
   <div class="lm-faq">${faq.map(([q, a]) => `<details data-g="${grp(q)}"><summary><span>${q}</span><i aria-hidden="true"></i></summary><div class="ans"><p>${a}</p></div></details>`).join('')}</div></div>
   </div></div></section>`;
 
+  // Preuve : à remplir avec de vrais résultats (aucun chiffre ni témoignage n'est affiché tant que PROOF est vide)
+  const PROOF = { stats: [], quotes: [] };   // ex. stats: [['38 %', 'de réponses sur une campagne LinkedIn de 400 contacts, mars 2026']], quotes: [['Texte exact du client', 'Prénom Nom, fonction, entreprise']]
+  const preuve = `<section class="lm-sec" id="preuve"><div class="lm-w"><span class="lm-k">Conçu par une agence de prospection</span><h2>Né de la prospection de tous les jours</h2>
+  <p class="lm-sub">LeadMessage est fabriqué par Devoleads, agence de prospection B2B par email et LinkedIn à La Rochelle, qui mène des campagnes pour des clients en France, en Belgique et en Suisse. Les règles du produit (un angle par message, aucune statistique inventée, des relances courtes) s'inspirent de ce métier.</p>
+  ${PROOF.stats.length ? `<div class="lm-stats">${PROOF.stats.map(x => `<div class="lm-stat lm-rv"><b>${e(x[0])}</b><span>${e(x[1])}</span></div>`).join('')}</div>` : ''}
+  ${PROOF.quotes.length ? `<div class="lm-grid3">${PROOF.quotes.map(x => `<div class="lm-card lm-rv"><p>« ${e(x[0])} »</p><small>${e(x[1])}</small></div>`).join('')}</div>` : ''}
+  <div class="lm-grid3">${[['Pensé pour les agences', 'Une charte par client : ton, offre et lien d\'agenda restent séparés.'], ['Transparent sur ses limites', 'Aucun envoi automatique, aucun chiffre inventé : vous relisez avant d\'importer.'], ['Éditeur identifié', 'Édité par Devoleads SARL, La Rochelle. Mentions légales et CGV publiques.']].map(x => `<div class="lm-card lm-rv"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join('')}</div></div></section>`;
+
   const fin = `<section class="lm-final lm-rv"><h2>Testez le parcours sur cinq contacts</h2><p>Cinq contacts offerts, sans carte bancaire. Relisez les textes, ajustez la charte, puis passez à l'échelle.</p>${cta('Essayer gratuitement')}</section>
 <p class="lm-cross">Vous préférez un document personnalisé avec mesure de lecture ? <a href="${B}">Découvrir LeadPage</a></p>`;
 
-  return hero + stats + pourquoi + sim + comment + ftm + gardefous + canaux + agences + export_ + cas + res + conf + tarifs + faqS + fin;
+  return hero + stats + pourquoi + sim + comment + ftm + gardefous + canaux + agences + export_ + cas + res + conf + preuve + tarifs + faqS + fin;
 };

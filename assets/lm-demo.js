@@ -70,5 +70,23 @@
     else if (b.dataset.k) { sel[b.dataset.k] = sel[b.dataset.k] ? 0 : 1; view(); }
     else if (b.dataset.w != null) { who = +b.dataset.w; view(); }
   });
+  // lecture automatique : démarre quand la démo est visible, s'arrête dès que le visiteur agit
+  var auto = null, playBtn = document.getElementById('dm-play'), playing = false;
+  function setPlay(on) {
+    playing = on; clearInterval(auto);
+    if (playBtn) { playBtn.textContent = on ? '⏸ Pause' : '▶ Lecture automatique'; playBtn.setAttribute('aria-pressed', on ? 'true' : 'false'); }
+    if (on) auto = setInterval(function () { step = step === 4 ? 0 : step + 1; view(); }, step === 2 ? 3200 : 4200);
+  }
+  root.addEventListener('click', function (ev) {
+    var b = ev.target.closest('button'); if (!b) return;
+    if (b.id === 'dm-play') setPlay(!playing); else if (playing) setPlay(false);
+  }, true);
   view();
+  if ('IntersectionObserver' in window && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+    var seen = false;
+    new IntersectionObserver(function (es) { es.forEach(function (e) {
+      if (e.isIntersecting && !seen) { seen = true; setPlay(true); }
+      else if (!e.isIntersecting && playing) setPlay(false);
+    }); }, { threshold: .45 }).observe(root);
+  } else setPlay(false);
 })();

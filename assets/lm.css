@@ -420,3 +420,13 @@ body.lm main{overflow-x:clip}
 .lm-faq .ans{padding:0 22px 20px}.lm-faq .ans p{margin:0;border-top:1px solid var(--line);padding-top:14px;line-height:1.65}
 .lm-faq details.hid{display:none}
 @media(max-width:900px){.lm-faqw{grid-template-columns:1fr;gap:26px}.lm-faqside{position:static}.lm-faqmain .lm-faq summary{padding:16px 16px;font-size:15.5px}.lm-faq .ans{padding:0 16px 16px}}
+
+/* Avant / après */
+.lm-ba{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:30px 0 8px}
+.lm-ba-c{border-radius:20px;padding:22px;border:1px solid var(--line);background:#fff}
+.lm-ba-c.bad{background:#faf6f5}.lm-ba-c.bad .lm-k{color:var(--ink3)}
+.lm-ba-c.good{border-color:var(--r);box-shadow:0 18px 44px rgba(228,51,46,.12)}
+.lm-ba-c p{margin:10px 0;font-size:15.5px;line-height:1.6;color:var(--ink)}.lm-ba-c.bad p{color:var(--ink2)}
+.lm-ba-c small{color:var(--ink3);font-size:12.5px}
+.lm-demo-ctl{gap:8px;flex-wrap:wrap}
+@media(max-width:760px){.lm-ba{grid-template-columns:1fr}}
