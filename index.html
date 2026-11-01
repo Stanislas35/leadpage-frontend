@@ -5048,6 +5048,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
       </div>
 
       <!-- HEADER -->
+      <div id="lp-onboard"></div>
       <div class="dash-header" id="dash-generate-header">
         <div class="dash-title">
           <h1>Nouvelle campagne</h1>
@@ -5096,6 +5097,7 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
           <input type="file" id="csvInput" accept=".csv" style="display:none" onchange="handleFileSelect(this)">
           <div class="drop-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg></div>
           <h3>Glissez votre fichier CSV ici</h3>
+          <p style="margin-top:2px"><a href="#" onclick="event.stopPropagation();lpDownloadSampleCsv();return false" style="color:var(--pink);font-weight:600">Pas de fichier ? Télécharger un CSV d'exemple (5 contacts fictifs)</a></p>
           <p>ou cliquez pour parcourir · Max 10MB</p>
         </div>
 
@@ -6772,6 +6774,7 @@ function handleFileSelect(input) {
   if (input.files[0]) {
     selectedCsvFile = input.files[0];
     showFileInfo(input.files[0]);
+    try { lpMountOnboard(); } catch (e) {}
     openMappingModal(input.files[0]);
   }
 }
@@ -8107,7 +8110,7 @@ async function downloadCampaignCsv(campaignId) {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    showToast('CSV téléchargé', '#22C55E');
+    showToast('CSV téléchargé', '#22C55E'); try { localStorage.setItem('lp_lm_exported', '1'); lpMountOnboard(); } catch (e) {}
   } catch(e) { showToast('Erreur téléchargement', '#EF4444'); }
 }
 
@@ -8402,6 +8405,62 @@ function lpSwitchProduct() {
   lpSetProduct(lpProduct() === 'leadmessage' ? 'leadpage' : 'leadmessage');
   try { showDashSection('generate', null); loadDashboardData(); } catch (e) {}
 }
+// CSV d'exemple : 5 contacts fictifs pour tester un parcours en 2 minutes
+function lpDownloadSampleCsv() {
+  const rows = [
+    ['Prénom', 'Nom', 'Entreprise', 'Poste', 'Email', "Secteurs d'activité", "Taille de l'entreprise", 'Lieu', "Description de l'entreprise"],
+    ['Camille', 'Roux', 'Atelier Nova', 'Directrice marketing', 'camille@exemple-atelier-nova.fr', 'Mobilier', '11-50', 'Lyon', "Mobilier d'intérieur, trois boutiques en France"],
+    ['Julien', 'Marchand', 'Brasserie des Quais', 'Directeur commercial', 'julien@exemple-brasserie.fr', 'Boissons', '11-50', 'Nantes', 'Brasserie artisanale, vente aux cafés et restaurants'],
+    ['Sophie', 'Lemaire', 'Clinique Saint-Loup', 'Responsable RH', 'sophie@exemple-clinique.fr', 'Santé', '201-500', 'Rennes', 'Clinique privée, recrutement de personnel soignant'],
+    ['Thomas', 'Girard', 'Cabinet Girard & Associés', 'Associé', 'thomas@exemple-girard.fr', 'Services juridiques', '2-10', 'Bordeaux', "Cabinet d'avocats en droit des affaires"],
+    ['Élodie', 'Perrin', 'Studio Lumen', 'Fondatrice', 'elodie@exemple-lumen.fr', 'Design', '2-10', 'Lille', 'Studio de design graphique pour des marques de cosmétique']
+  ];
+  const q = v => '"' + String(v).replace(/"/g, '""') + '"';
+  const blob = new Blob(['\ufeff' + rows.map(r => r.map(q).join(',')).join('\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'contacts-exemple.csv';
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  showToast('CSV d\'exemple téléchargé : importez-le ci-dessous', '#22C55E');
+}
+// Bloc d'accueil : checklist LeadMessage (compte neuf) ou invitation à tester LeadMessage (compte LeadPage seul)
+window.__lpOnb = { campaigns: [], chartes: null };
+async function lpMountOnboard() {
+  const box = document.getElementById('lp-onboard'); if (!box) return;
+  const lm = lpProduct() === 'leadmessage';
+  let dismissed = {}; try { dismissed = JSON.parse(localStorage.getItem('lp_onb_dismiss') || '{}'); } catch (e) {}
+  if (lm) {
+    if (dismissed.lm) { box.innerHTML = ''; return; }
+    const camps = (window.__lpOnb.campaigns || []).filter(c => String(c.mode || '').indexOf('messages') === 0);
+    if (window.__lpOnb.chartes === null) { try { const r = await apiCall('GET', '/api/chartes/', null, true, true); window.__lpOnb.chartes = Array.isArray(r) ? r.length : 0; } catch (e) { window.__lpOnb.chartes = 0; } }
+    let exported = false; try { exported = localStorage.getItem('lp_lm_exported') === '1'; } catch (e) {}
+    const steps = [
+      [window.__lpOnb.chartes > 0, '1. Votre charte', 'Offre, ton et lien d\'agenda : c\'est ce qui rend les messages justes.', "showDashSection('chartes',null,true)", 'Créer ma charte'],
+      [!!selectedCsvFile || camps.length > 0, '2. Votre fichier', 'Un CSV avec prénom, entreprise et poste. Pas de fichier ? Prenez le CSV d\'exemple.', 'lpDownloadSampleCsv()', 'CSV d\'exemple'],
+      [camps.length > 0, '3. Un parcours', 'Lancez l\'aperçu gratuit sur 3 contacts, puis générez.', "document.getElementById('dash-upload').scrollIntoView({behavior:'smooth'})", 'Importer'],
+      [exported, '4. L\'export', 'Téléchargez le CSV : une colonne par message, prête à importer dans votre outil d\'envoi.', "showDashSection('campaigns',null,true)", 'Mes parcours']
+    ];
+    const done = steps.filter(x => x[0]).length;
+    if (done === steps.length) { box.innerHTML = ''; return; }
+    const cur = steps.findIndex(x => !x[0]);
+    box.innerHTML = '<div style="background:rgba(228,51,46,.06);border:1px solid #E4332E;border-radius:16px;padding:18px 20px;margin-bottom:18px">'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><b style="color:#E4332E">Démarrer avec LeadMessage : ' + done + ' étape' + (done > 1 ? 's' : '') + ' sur 4</b>'
+      + '<button class="btn btn-ghost" style="padding:2px 10px;font-size:11px" onclick="lpDismissOnboard(\'lm\')">Masquer</button></div>'
+      + '<div style="height:6px;background:rgba(228,51,46,.15);border-radius:99px;margin:10px 0 14px"><i style="display:block;height:100%;width:' + (done / 4 * 100) + '%;background:#E4332E;border-radius:99px"></i></div>'
+      + '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">'
+      + steps.map((x, i) => '<div style="border:1px solid ' + (i === cur ? '#E4332E' : 'var(--border)') + ';border-radius:12px;padding:12px;background:var(--bg2);opacity:' + (x[0] ? .6 : 1) + '">'
+        + '<div style="font-weight:700;font-size:13px">' + (x[0] ? '✓ ' : '') + x[1] + '</div><div style="font-size:12px;color:var(--text3);margin:4px 0 8px">' + x[2] + '</div>'
+        + (x[0] ? '' : '<button class="btn ' + (i === cur ? 'btn-primary' : 'btn-ghost') + '" style="padding:4px 12px;font-size:12px" onclick="' + x[3] + '">' + x[4] + '</button>') + '</div>').join('')
+      + '</div></div>';
+    return;
+  }
+  // LeadPage seul : invitation à essayer LeadMessage
+  if (window.__lpBoth || dismissed.lp || !currentUser) { box.innerHTML = ''; return; }
+  box.innerHTML = '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;border:1px solid var(--border);border-radius:16px;padding:14px 18px;margin-bottom:18px;background:var(--bg2)">'
+    + '<img src="logo-lm.svg" alt="" style="width:38px;height:38px">'
+    + '<div style="flex:1;min-width:220px"><b>Nouveau : LeadMessage</b><div style="font-size:13px;color:var(--text3)">Un mail, une invitation et des messages LinkedIn écrits pour chaque prospect, depuis le même CSV. Produit séparé, 5 contacts offerts.</div></div>'
+    + '<button class="btn btn-primary" onclick="lpTryLeadMessage()">Tester en un clic</button>'
+    + '<button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" onclick="lpDismissOnboard(\'lp\')">Plus tard</button></div>';
+}
+function lpDismissOnboard(k) { try { const d = JSON.parse(localStorage.getItem('lp_onb_dismiss') || '{}'); d[k] = 1; localStorage.setItem('lp_onb_dismiss', JSON.stringify(d)); } catch (e) {} lpMountOnboard(); }
 async function lpResetLeadMessage(btn) {
   if (!confirm('Supprimer tous vos parcours LeadMessage et remettre le solde à 5 contacts offerts ? Cette action est définitive. Vos PDF LeadPage ne sont pas touchés.')) return;
   try {
@@ -8765,6 +8824,7 @@ async function loadDashboardData() {
       planLabel.textContent = 'Plan actuel : ' + lpPlanName(user.plan);
     }
     lpMountLmSlider(user);
+    try { window.__lpOnb.campaigns = campaigns; lpMountOnboard(); } catch (e) {}
 
     // Stat-pdfs
     set('stat-pdfs', totalPdfs);
