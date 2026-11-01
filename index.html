@@ -5200,6 +5200,12 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
             <span style="margin-left:14px">Adresse :</span>
             <select id="msg-address" style="padding:4px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text1);font-size:12px"><option value="auto">Selon le style de la charte</option><option value="tu">Tutoiement</option><option value="vous">Vouvoiement</option></select>
           </div>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px dashed rgba(228,51,46,.35)">
+            <label style="font-weight:600"><input type="checkbox" id="msg-site" checked> Lire le site de l'entreprise quand la description est courte</label>
+            <div style="margin:4px 0 0 22px;color:var(--text3);font-size:12px">Sans surcoût. L'IA en tire 2 ou 3 faits vérifiables, jamais inventés. Un site déjà lu n'est pas relu, et rien n'est lu si la description suffit ou si vous fournissez une « Accroche perso ».</div>
+            <div style="margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><button type="button" class="btn btn-ghost" style="padding:4px 11px;font-size:12px" onclick="lpAngles()">Choisir l'angle par type de poste</button><span id="msg-angles-state" style="color:var(--text3);font-size:12px">Facultatif : sans choix, l'IA s'adapte à chaque poste.</span></div>
+            <div style="margin-top:8px;color:var(--text3);font-size:12px">Astuce : une colonne <b>Accroche perso</b> dans votre fichier (un post récent, un événement, une recommandation) devient la première phrase du message.</div>
+          </div>
           <div style="margin-top:8px;color:var(--text3)">Un crédit par contact, quel que soit le parcours. Pas de PDF.
             <a href="messages/" target="_blank" rel="noopener" style="color:#E4332E">En savoir plus</a></div>
         </div>
@@ -5465,6 +5471,24 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
               <select class="form-input" id="cm-client" style="font-size:13px"><option value="">Aucun client</option></select>
               <div style="font-size:11px;color:var(--text3);margin-top:5px">Les campagnes lancées avec cette charte sont rattachées à ce client. Gérez vos clients dans l'onglet Clients.</div>
             </div>
+            <details id="cm-brief" style="margin-bottom:16px;border:1px solid var(--border);border-radius:10px;padding:12px 14px;background:var(--bg3)">
+              <summary style="cursor:pointer;font-weight:700;font-size:13px">Brief pour LeadMessage <span style="font-weight:500;color:var(--text3)">(facultatif, le plus gros gain de qualité)</span></summary>
+              <div style="font-size:12px;color:var(--text3);margin:8px 0 12px">Ce que vous savez et que l'IA ne peut pas deviner. Les « preuves » sont les seules références ou chiffres que l'IA aura le droit de citer.</div>
+              <div class="form-group" style="margin-bottom:10px"><label class="form-label">À qui vous vendez</label><input class="form-input" id="cm-b-cible" maxlength="300" placeholder="Ex : dirigeants de PME industrielles de 20 à 200 salariés" style="font-size:13px"></div>
+              <div class="form-group" style="margin-bottom:10px"><label class="form-label">3 problèmes que votre offre résout (un par ligne)</label><textarea class="form-input" id="cm-b-problemes" rows="3" style="font-size:13px" placeholder="Prospection irrégulière&#10;Pas le temps de relancer&#10;Aucune visibilité sur les résultats"></textarea></div>
+              <div class="form-group" style="margin-bottom:10px"><label class="form-label">Preuves autorisées (un par ligne)</label><textarea class="form-input" id="cm-b-preuves" rows="3" style="font-size:13px" placeholder="Ex : 120 clients accompagnés depuis 2021&#10;Premiers rendez-vous en 10 jours"></textarea></div>
+              <div class="form-group" style="margin-bottom:10px"><label class="form-label">Ce qui vous distingue</label><input class="form-input" id="cm-b-diff" maxlength="300" placeholder="Ex : un interlocuteur unique, pas d'engagement de durée" style="font-size:13px"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+                <div class="form-group"><label class="form-label">Mots interdits (séparés par des virgules)</label><input class="form-input" id="cm-b-bans" placeholder="synergie, solution, leader" style="font-size:13px"></div>
+                <div class="form-group"><label class="form-label">Mots à privilégier</label><input class="form-input" id="cm-b-prefs" placeholder="concret, rendez-vous, délai" style="font-size:13px"></div>
+              </div>
+              <div class="form-group" style="margin-bottom:6px"><label class="form-label">1 à 3 messages que vous aimez (collez-les, un par case)</label>
+                <textarea class="form-input" id="cm-b-ex1" rows="3" style="font-size:13px;margin-bottom:6px" placeholder="Exemple 1"></textarea>
+                <textarea class="form-input" id="cm-b-ex2" rows="3" style="font-size:13px;margin-bottom:6px" placeholder="Exemple 2 (facultatif)"></textarea>
+                <textarea class="form-input" id="cm-b-ex3" rows="3" style="font-size:13px" placeholder="Exemple 3 (facultatif)"></textarea>
+                <div style="font-size:11px;color:var(--text3);margin-top:4px">L'IA imite la longueur, le rythme et le ton, jamais le contenu. Bien plus fiable qu'un adjectif comme « direct ».</div></div>
+              <div id="cm-b-learned" style="display:none;margin-top:12px;border-top:1px dashed var(--border);padding-top:10px"></div>
+            </details>
             <div class="form-group" id="cm-agenda-grp" style="margin-bottom:16px">
               <label class="form-label">Lien agenda (optionnel)</label>
               <input class="form-input" id="cm-calendly" placeholder="https://calendly.com/votre-lien ou cal.com/..." style="font-size:13px">
@@ -6937,6 +6961,8 @@ async function startGeneration() {
       formData.append('li_limit', (document.getElementById('msg-li-limit') || { value: '300' }).value);
       formData.append('agenda_steps', lpAgendaSteps());
       formData.append('address', (document.getElementById('msg-address') || { value: 'auto' }).value);
+      formData.append('read_site', (document.getElementById('msg-site') || { checked: true }).checked ? '1' : '0');
+      formData.append('angles', lpAnglesJson());
     }
     // Envoyer la charte sélectionnée si une est choisie
     const charteSel = document.getElementById('charte-selector');
@@ -7975,12 +8001,44 @@ function cdShowMail(idx) {
   document.body.appendChild(o);
   document.getElementById('cd-mail-copy').onclick = () => copyText(cdMsgs(r) ? cdMsgsText(r) : r.mail1_corps);
 }
-async function cdRegen(idx, step, btn) {
+const CD_REASONS = [['plus_court', 'Plus court'], ['plus_direct', 'Plus direct'], ['moins_commercial', 'Moins commercial'], ['plus_chaleureux', 'Plus chaleureux'], ['autre_angle', 'Autre angle'], ['', 'Sans précision']];
+const CD_STEP_KEY = { li0: 'linkedin_1', m1: 'mail1_corps', m2: 'mail2_corps', li1: 'linkedin_2', m3: 'mail3_corps', li2: 'linkedin_3' };
+function cdRegenMenu(idx, step, btn) {
+  const id = 'cd-rg-' + idx + '-' + step, ex = document.getElementById(id);
+  if (ex) { ex.remove(); return; }
+  const m = document.createElement('div'); m.id = id; m.style.cssText = 'display:flex;gap:5px;flex-wrap:wrap;margin:0 0 6px';
+  m.innerHTML = '<span style="font-size:11px;color:var(--text3);align-self:center">Qu’aimeriez-vous changer ?</span>' + CD_REASONS.map(rs => '<button class="btn btn-ghost" style="padding:2px 9px;font-size:11px" onclick="this.parentNode.remove();cdRegen(' + idx + ',\'' + step + '\',null,\'' + rs[0] + '\')">' + rs[1] + '</button>').join('');
+  btn.parentNode.parentNode.insertBefore(m, btn.parentNode.nextSibling);
+}
+function cdEdit(idx, step) {
+  const x = cdState.rows[idx]; if (!x) return;
+  const key = CD_STEP_KEY[step], p = cdMsgsParts(x.r).filter(q => q[2] === step)[0]; if (!p) return;
+  const box = document.getElementById('cd-msg-' + idx + '-' + step); if (!box) return;
+  box.innerHTML = '<textarea id="cd-ed-' + idx + '-' + step + '" class="form-input" rows="6" style="font-size:13px;line-height:1.5;width:100%">' + escHtml(p[1]) + '</textarea>'
+    + '<div style="display:flex;gap:6px;margin-top:6px"><button class="btn btn-primary" style="padding:3px 12px;font-size:12px" onclick="cdEditSave(' + idx + ',\'' + step + '\',this)">Enregistrer</button><button class="btn btn-ghost" style="padding:3px 12px;font-size:12px" onclick="document.getElementById(\'cd-mail-body\').innerHTML=cdMsgsHtml(cdState.rows[' + idx + '].r)">Annuler</button></div>'
+    + '<div style="font-size:11px;color:var(--text3);margin-top:4px">Si votre correction est significative, l’IA en déduit une règle d’écriture qu’elle appliquera à vos prochaines campagnes (visible et modifiable dans la charte).</div>';
+}
+async function cdEditSave(idx, step, btn) {
+  const x = cdState.rows[idx]; if (!x) return;
+  const r = x.r, key = CD_STEP_KEY[step], t = (document.getElementById('cd-ed-' + idx + '-' + step) || {}).value || '';
+  if (!t.trim()) { showToast('Le message ne peut pas être vide', '#F59E0B'); return; }
+  btn.disabled = true; btn.textContent = 'Enregistrement…';
+  try {
+    const res = await apiCall('POST', '/api/campaigns/' + cdState.id + '/edit-message', { result_id: r.id, key: key, text: t }, true);
+    let d = {}; try { d = JSON.parse(r.raw_data || '{}'); } catch (e) {}
+    d[key] = t.trim(); if (key === 'mail1_corps') r.mail1_corps = t.trim();
+    d.A_relire = (res.a_relire || []).join(' ; '); r.raw_data = JSON.stringify(d);
+    const body = document.getElementById('cd-mail-body'); if (body) body.innerHTML = cdMsgsHtml(r);
+    renderCampaignDetail();
+    showToast(res.regle ? 'Enregistré. Règle apprise : ' + res.regle : 'Message enregistré', '#22C55E');
+  } catch (e) { showToast('Enregistrement impossible : ' + e.message, '#EF4444'); btn.disabled = false; btn.textContent = 'Enregistrer'; }
+}
+async function cdRegen(idx, step, btn, reason) {
   const x = cdState.rows[idx]; if (!x) return;
   const r = x.r;
   if (btn) { btn.disabled = true; btn.textContent = 'Réécriture…'; }
   try {
-    const res = await apiCall('POST', '/api/campaigns/' + cdState.id + '/regenerate', { result_id: r.id, step: step }, true);
+    const res = await apiCall('POST', '/api/campaigns/' + cdState.id + '/regenerate', { result_id: r.id, step: step, reason: reason || null }, true);
     let d = {}; try { d = JSON.parse(r.raw_data || '{}'); } catch (e) {}
     Object.keys(res.messages || {}).forEach(k => { d[k] = res.messages[k]; if (k === 'mail1_corps') r.mail1_corps = res.messages[k]; });
     d.A_relire = (res.a_relire || []).join(' ; '); d._regen = 5 - (res.restantes == null ? 5 : res.restantes);
@@ -8002,8 +8060,12 @@ function cdMsgsHtml(r) {
   const d = cdMsgs(r) || {}, idx = cdState.rows.findIndex(x => x.r === r);
   const warn = (d.A_relire || '').trim() ? '<div style="background:rgba(245,158,11,.12);border:1px solid #F59E0B;border-radius:8px;padding:8px 10px;font-size:12px;margin-bottom:14px"><b>À relire :</b> ' + escHtml(d.A_relire) + '</div>' : '';
   const left = Math.max(0, 5 - (parseInt(d._regen, 10) || 0));
-  return warn + cdMsgsParts(r).map(p => '<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:11px;font-weight:700;color:var(--pink)">' + escHtml(p[0]) + '</span>'
-    + (idx >= 0 && left > 0 ? '<button class="btn btn-ghost" style="padding:2px 9px;font-size:11px" title="Gratuit : ' + left + ' réécriture' + (left > 1 ? 's' : '') + ' restante' + (left > 1 ? 's' : '') + ' pour ce contact" onclick="cdRegen(' + idx + ',\'' + p[2] + '\',this)">↻ Réécrire</button>' : '') + '</div><div style="white-space:pre-wrap;font-size:13px;line-height:1.6">' + escHtml(p[1]) + '</div></div>').join('');
+  const sc = d['Source accroche'] || '', gen = /générique/i.test(sc);
+  const src = sc ? '<div style="display:inline-block;font-size:11px;font-weight:600;padding:2px 9px;border-radius:100px;margin-bottom:12px;background:' + (gen ? 'rgba(245,158,11,.15)' : 'rgba(34,197,94,.14)') + ';color:' + (gen ? '#B45309' : '#15803D') + '" title="D’où vient l’élément précis utilisé dans la première phrase">Accroche : ' + escHtml(sc) + '</div>' : '';
+  const faits = (d._site_faits || []).length ? '<div style="font-size:11px;color:var(--text3);margin:-4px 0 12px">Relevé sur son site : ' + escHtml(d._site_faits.join(' · ')) + '</div>' : '';
+  return warn + src + faits + cdMsgsParts(r).map(p => '<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:11px;font-weight:700;color:var(--pink)">' + escHtml(p[0]) + '</span><span style="display:flex;gap:5px">'
+    + (idx >= 0 ? '<button class="btn btn-ghost" style="padding:2px 9px;font-size:11px" title="Corriger le texte à la main : l’IA en tire des règles pour vos prochaines campagnes" onclick="cdEdit(' + idx + ',\'' + p[2] + '\')">Modifier</button>' : '')
+    + (idx >= 0 && left > 0 ? '<button class="btn btn-ghost" style="padding:2px 9px;font-size:11px" title="Gratuit : ' + left + ' réécriture' + (left > 1 ? 's' : '') + ' restante' + (left > 1 ? 's' : '') + ' pour ce contact" onclick="cdRegenMenu(' + idx + ',\'' + p[2] + '\',this)">↻ Réécrire</button>' : '') + '</span></div><div id="cd-msg-' + idx + '-' + p[2] + '" style="white-space:pre-wrap;font-size:13px;line-height:1.6">' + escHtml(p[1]) + '</div></div>').join('');
 }
 function cdMsgsText(r) { return cdMsgsParts(r).map(p => p[0] + '\n' + p[1]).join('\n\n'); }
 
@@ -8408,12 +8470,12 @@ function lpSwitchProduct() {
 // CSV d'exemple : 5 contacts fictifs pour tester un parcours en 2 minutes
 function lpDownloadSampleCsv() {
   const rows = [
-    ['Prénom', 'Nom', 'Entreprise', 'Poste', 'Email', "Secteurs d'activité", "Taille de l'entreprise", 'Lieu', "Description de l'entreprise"],
-    ['Camille', 'Roux', 'Atelier Nova', 'Directrice marketing', 'camille@exemple-atelier-nova.fr', 'Mobilier', '11-50', 'Lyon', "Mobilier d'intérieur, trois boutiques en France"],
-    ['Julien', 'Marchand', 'Brasserie des Quais', 'Directeur commercial', 'julien@exemple-brasserie.fr', 'Boissons', '11-50', 'Nantes', 'Brasserie artisanale, vente aux cafés et restaurants'],
-    ['Sophie', 'Lemaire', 'Clinique Saint-Loup', 'Responsable RH', 'sophie@exemple-clinique.fr', 'Santé', '201-500', 'Rennes', 'Clinique privée, recrutement de personnel soignant'],
-    ['Thomas', 'Girard', 'Cabinet Girard & Associés', 'Associé', 'thomas@exemple-girard.fr', 'Services juridiques', '2-10', 'Bordeaux', "Cabinet d'avocats en droit des affaires"],
-    ['Élodie', 'Perrin', 'Studio Lumen', 'Fondatrice', 'elodie@exemple-lumen.fr', 'Design', '2-10', 'Lille', 'Studio de design graphique pour des marques de cosmétique']
+    ['Prénom', 'Nom', 'Entreprise', 'Poste', 'Email', "Secteurs d'activité", "Taille de l'entreprise", 'Lieu', "Description de l'entreprise", 'Site web', 'Accroche perso'],
+    ['Camille', 'Roux', 'Atelier Nova', 'Directrice marketing', 'camille@exemple-atelier-nova.fr', 'Mobilier', '11-50', 'Lyon', "Mobilier d'intérieur, trois boutiques en France", 'atelier-nova.example', 'Vient d\'ouvrir sa troisième boutique à Lyon'],
+    ['Julien', 'Marchand', 'Brasserie des Quais', 'Directeur commercial', 'julien@exemple-brasserie.fr', 'Boissons', '11-50', 'Nantes', 'Brasserie artisanale, vente aux cafés et restaurants', '', ''],
+    ['Sophie', 'Lemaire', 'Clinique Saint-Loup', 'Responsable RH', 'sophie@exemple-clinique.fr', 'Santé', '201-500', 'Rennes', 'Clinique privée, recrutement de personnel soignant', '', ''],
+    ['Thomas', 'Girard', 'Cabinet Girard & Associés', 'Associé', 'thomas@exemple-girard.fr', 'Services juridiques', '2-10', 'Bordeaux', "Cabinet d'avocats en droit des affaires", '', ''],
+    ['Élodie', 'Perrin', 'Studio Lumen', 'Fondatrice', 'elodie@exemple-lumen.fr', 'Design', '2-10', 'Lille', 'Studio de design graphique pour des marques de cosmétique', '', '']
   ];
   const q = v => '"' + String(v).replace(/"/g, '""') + '"';
   const blob = new Blob(['\ufeff' + rows.map(r => r.map(q).join(',')).join('\n')], { type: 'text/csv;charset=utf-8' });
@@ -9264,7 +9326,7 @@ function cmAiApply() {
 
 // ── Ouvrir / fermer ──
 function openNewCharte() {
-  cmStep = 1; cmEditId = null; cmLogoBase64 = null; cmAiBlocs = null; cmAiReset(); cmTplReset(null);
+  cmStep = 1; cmEditId = null; cmLogoBase64 = null; cmAiBlocs = null; cmAiReset(); cmTplReset(null); cmBriefFill(null);
   cmColor1 = '#1B2D6B'; cmColor2 = '#E91E8C'; cmSecteur = 'prospection';
   document.getElementById('charte-modal-title').textContent = 'Nouvelle charte';
   document.getElementById('cm-name').value = '';
@@ -9292,6 +9354,7 @@ function openEditCharte(id, data) {
   document.getElementById('cm-website').value = data.website || '';
   document.getElementById('cm-desc').value    = data.offer_description || '';
   document.getElementById('cm-calendly').value = data.calendly_url || '';
+  cmBriefFill(data.brief);
   lpLoadClients().then(() => { const cs = document.getElementById('cm-client'); if (cs) cs.value = data.client_id || ''; });
   cmApplyColors(cmColor1, cmColor2);
   // Recharger l'aperçu logo si présent
@@ -9645,6 +9708,7 @@ async function duplicateCharte(id) {
   if (!name) return;
   const payload = { name: name, website: ch.website, offer_description: ch.offer_description, color_primary: ch.color_primary, color_accent: ch.color_accent,
     sector: ch.sector, blocs: ch.blocs, logo_base64: ch.logo_base64, writing_style: ch.writing_style, emoji_level: ch.emoji_level, calendly_url: ch.calendly_url };
+  if (ch.brief && Object.keys(ch.brief).length) payload.brief = ch.brief;
   if (ch.custom_template) payload.custom_template = ch.custom_template;
   if (ch.client_id) payload.client_id = ch.client_id;
   try { await apiCall('POST', '/api/chartes/', payload, true); showToast('Charte dupliquée'); loadChartes(); loadCharteSelector(); }
@@ -9752,6 +9816,82 @@ async function cmTplRemove() {
 }
 function cmTplReset(tpl) { cmTemplate = tpl || null; cmTplDraft = null; cmTplBusy = null; cmTplErr = ''; cmTplClear = false; cmTplRender(); }
 
+
+// ── Brief de charte (LeadMessage) ─────────────────────────────────────────────────────────
+let cmApprises = [];
+function cmBriefFill(b) {
+  b = b || {};
+  const set = (id, v) => { const e = document.getElementById(id); if (e) e.value = v || ''; };
+  set('cm-b-cible', b.cible); set('cm-b-problemes', (b.problemes || []).join('\n')); set('cm-b-preuves', (b.preuves || []).join('\n'));
+  set('cm-b-diff', b.difference); set('cm-b-bans', (b.mots_interdits || []).join(', ')); set('cm-b-prefs', (b.mots_preferes || []).join(', '));
+  [1, 2, 3].forEach(i => set('cm-b-ex' + i, (b.exemples || [])[i - 1]));
+  cmApprises = (b.apprises || []).slice();
+  const d = document.getElementById('cm-brief'); if (d) d.open = !!(b.cible || (b.preuves || []).length || (b.exemples || []).length);
+  cmApprisesRender();
+}
+function cmBriefRead() {
+  const v = id => ((document.getElementById(id) || {}).value || '').trim();
+  const lines = t => t.split('\n').map(x => x.trim()).filter(Boolean);
+  const csv = t => t.split(/[,;\n]/).map(x => x.trim()).filter(Boolean);
+  return { cible: v('cm-b-cible'), problemes: lines(v('cm-b-problemes')), preuves: lines(v('cm-b-preuves')), difference: v('cm-b-diff'),
+    mots_interdits: csv(v('cm-b-bans')), mots_preferes: csv(v('cm-b-prefs')), exemples: [v('cm-b-ex1'), v('cm-b-ex2'), v('cm-b-ex3')].filter(Boolean), apprises: cmApprises.slice() };
+}
+function cmApprisesRender() {
+  const box = document.getElementById('cm-b-learned'); if (!box) return;
+  if (!cmApprises.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.style.display = 'block';
+  box.innerHTML = '<div style="font-weight:700;font-size:12px;margin-bottom:2px">Règles apprises de vos corrections</div><div style="font-size:11px;color:var(--text3);margin-bottom:6px">Déduites des messages que vous avez modifiés à la main. Supprimez celles qui ne vous conviennent pas, puis enregistrez la charte.</div>'
+    + cmApprises.map((r, i) => '<div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;margin-bottom:4px"><span style="flex:1">' + escHtml(r) + '</span><button type="button" class="btn btn-ghost" style="padding:0 7px;font-size:12px" title="Supprimer cette règle" onclick="cmApprises.splice(' + i + ',1);cmApprisesRender()">×</button></div>').join('');
+}
+
+// ── Angles par type de poste (avant génération) ───────────────────────────────────────────
+async function lpAngles() {
+  if (!selectedCsvFile) { showToast('Importez d’abord votre fichier de contacts', '#F59E0B'); return; }
+  const st = document.getElementById('msg-angles-state'); if (st) st.textContent = 'Analyse des postes…';
+  const fd = new FormData(); fd.append('file', selectedCsvFile);
+  const cs = document.getElementById('charte-selector'); if (cs && cs.value && cs.value !== 'default') fd.append('charte_id', cs.value);
+  let d;
+  try {
+    const r = await fetch(API_URL + '/api/campaigns/propose-angles', { method: 'POST', headers: { 'Authorization': 'Bearer ' + authToken }, body: fd });
+    d = await r.json(); if (!r.ok) throw new Error(d.detail || ('Erreur ' + r.status));
+  } catch (e) { if (st) st.textContent = 'Facultatif : sans choix, l’IA s’adapte à chaque poste.'; showToast('Angles indisponibles : ' + e.message, '#EF4444'); return; }
+  const cur = (window.__lpAnglesKey === lpFileKey() ? (window.__lpAngles || {}) : {});
+  const old = document.getElementById('lp-angles'); if (old) old.remove();
+  const o = document.createElement('div'); o.id = 'lp-angles';
+  o.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  window.__lpAngleOpts = d.groupes || [];
+  const cards = (d.groupes || []).map((g, gi) => {
+    const sel = cur[g.famille] || '';
+    const opts = g.angles.map((a, ai) => '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;margin-bottom:6px;cursor:pointer"><input type="radio" name="ang-' + gi + '" value="' + ai + '"' + (sel === a ? ' checked' : '') + '> <span>' + escHtml(a) + '</span></label>').join('');
+    return '<div style="border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;background:var(--bg3)"><div style="font-weight:700">' + escHtml(g.famille) + ' <span style="font-weight:500;color:var(--text3)">· ' + g.nb + ' contact' + (g.nb > 1 ? 's' : '') + '</span></div>'
+      + '<div style="font-size:11px;color:var(--text3);margin-bottom:8px">' + escHtml((g.postes || []).join(', ')) + '</div>' + opts
+      + '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;margin-bottom:6px;cursor:pointer"><input type="radio" name="ang-' + gi + '" value="none"' + (!sel ? ' checked' : '') + '> <span>Aucun angle imposé</span></label>'
+      + '<input class="form-input" id="ang-own-' + gi + '" maxlength="300" placeholder="Ou écrivez votre propre angle" style="font-size:12px;margin-top:2px" value="' + (sel && g.angles.indexOf(sel) < 0 ? escHtml(sel) : '') + '"></div>';
+  }).join('');
+  o.innerHTML = '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;max-width:720px;width:100%;max-height:90vh;display:flex;flex-direction:column">'
+    + '<div style="padding:20px 24px 8px"><div style="font-size:18px;font-weight:800">Angle par type de poste</div><div style="font-size:13px;color:var(--text3);margin-top:3px">Vos ' + (d.total_contacts || 0) + ' contacts sont regroupés par poste. Choisissez le fil rouge de chaque groupe : chaque message le combine avec un fait propre au contact.</div></div>'
+    + '<div style="padding:8px 24px;overflow:auto;flex:1">' + cards + '</div>'
+    + '<div style="padding:14px 24px 20px;display:flex;gap:8px;border-top:1px solid var(--border)"><button class="btn btn-primary" onclick="lpAnglesSave()">Valider</button><button class="btn btn-ghost" onclick="document.getElementById(\'lp-angles\').remove()">Annuler</button></div></div>';
+  o.addEventListener('click', e => { if (e.target === o) o.remove(); });
+  document.body.appendChild(o);
+  if (st) st.textContent = 'Facultatif : sans choix, l’IA s’adapte à chaque poste.';
+}
+function lpFileKey() { return selectedCsvFile ? (selectedCsvFile.name + ':' + selectedCsvFile.size) : ''; }
+function lpAnglesSave() {
+  const out = {};
+  (window.__lpAngleOpts || []).forEach((g, gi) => {
+    const own = ((document.getElementById('ang-own-' + gi) || {}).value || '').trim();
+    const r = document.querySelector('input[name="ang-' + gi + '"]:checked');
+    if (own) out[g.famille] = own;
+    else if (r && r.value !== 'none') out[g.famille] = g.angles[parseInt(r.value, 10)];
+  });
+  window.__lpAngles = out; window.__lpAnglesKey = lpFileKey();
+  const n = Object.keys(out).length, st = document.getElementById('msg-angles-state');
+  if (st) st.textContent = n ? (n + ' angle' + (n > 1 ? 's' : '') + ' choisi' + (n > 1 ? 's' : '') + ' (pris en compte à la génération et dans l’aperçu)') : 'Facultatif : sans choix, l’IA s’adapte à chaque poste.';
+  const m = document.getElementById('lp-angles'); if (m) m.remove();
+}
+function lpAnglesJson() { return (window.__lpAnglesKey === lpFileKey() && window.__lpAngles && Object.keys(window.__lpAngles).length) ? JSON.stringify(window.__lpAngles) : ''; }
+
 async function cmSaveCharte() {
   if (!authToken) return;
   const btn = document.getElementById('cm-btn-next');
@@ -9770,6 +9910,7 @@ async function cmSaveCharte() {
     logo_base64:       cmLogoBase64 || null,
     client_id:         (document.getElementById('cm-client') || {}).value || '',
   };
+  payload.brief = cmBriefRead();
   if (cmTemplate && !cmTplClear) payload.custom_template = cmTemplate;
   else if (cmEditId && cmTplClear) payload.custom_template_clear = true;
   try {
@@ -10044,7 +10185,9 @@ function lpShowPreview(d) {
   const cards = (d.contacts || []).map(c => {
     const msgs = order.filter(k => c.messages && c.messages[k]).map(k => '<div style="margin-bottom:12px"><div style="font-size:11px;font-weight:700;color:#E4332E;margin-bottom:3px">' + lab[k] + '</div><div style="white-space:pre-wrap;font-size:13px;line-height:1.55">' + escHtml(c.messages[k]) + '</div></div>').join('');
     const warn = (c.a_relire || []).length ? '<div style="background:rgba(245,158,11,.12);border:1px solid #F59E0B;border-radius:8px;padding:8px 10px;font-size:12px;margin-bottom:10px"><b>À relire :</b> ' + c.a_relire.map(escHtml).join(' · ') + '</div>' : '';
-    return '<div style="border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;background:var(--bg3)"><div style="font-weight:700;margin-bottom:2px">' + escHtml((c.prenom || '') + ' ' + (c.nom || '')) + '</div><div style="font-size:12px;color:var(--text3);margin-bottom:10px">' + escHtml([c.titre, c.entreprise].filter(Boolean).join(' · ')) + '</div>'
+    const gen = /générique/i.test(c.source || '');
+    const src = c.source ? '<div style="display:inline-block;font-size:11px;font-weight:600;padding:2px 9px;border-radius:100px;margin-bottom:10px;background:' + (gen ? 'rgba(245,158,11,.15)' : 'rgba(34,197,94,.14)') + ';color:' + (gen ? '#B45309' : '#15803D') + '">Accroche : ' + escHtml(c.source) + '</div>' : '';
+    return '<div style="border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;background:var(--bg3)"><div style="font-weight:700;margin-bottom:2px">' + escHtml((c.prenom || '') + ' ' + (c.nom || '')) + '</div><div style="font-size:12px;color:var(--text3);margin-bottom:6px">' + escHtml([c.titre, c.entreprise].filter(Boolean).join(' · ')) + '</div>' + (c.erreur ? '' : src)
       + (c.erreur ? '<div style="color:#EF4444;font-size:13px">Génération impossible : ' + escHtml(c.erreur) + '</div>' : warn + msgs) + '</div>';
   }).join('');
   const total = d.total_contacts || 0;
