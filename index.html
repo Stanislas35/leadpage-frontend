@@ -4999,10 +4999,10 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
           <span class="sidebar-icon">📄</span> Activer LeadPage (PDF)
         </div>
         <div class="sidebar-item" id="sb-switch" onclick="lpSwitchProduct()" style="display:none">
-          <span class="sidebar-icon">⇄</span> <span id="sb-switch-t">Passer à LeadMessage</span>
+          <span class="sidebar-icon"><img id="sb-switch-i" src="logo-lm.svg" alt="" style="width:20px;height:20px;vertical-align:middle"></span> <span id="sb-switch-t">Passer à LeadMessage</span>
         </div>
-        <div class="sidebar-item" id="sb-discover" onclick="window.open('messages/','_blank')" style="display:none">
-          <span class="sidebar-icon">✉</span> Découvrir LeadMessage
+        <div class="sidebar-item" id="sb-discover" onclick="lpTryLeadMessage()" style="display:none">
+          <span class="sidebar-icon"><img src="logo-lm.svg" alt="" style="width:20px;height:20px;vertical-align:middle"></span> Tester <b style="font-weight:700">Lead<span style="color:#E4332E">Message</span></b> <span style="font-size:10px;font-weight:700;background:#E4332E;color:#fff;border-radius:99px;padding:2px 7px;margin-left:6px">1 clic</span>
         </div>
         <div class="sidebar-item" onclick="handleLogout()" style="margin-top:auto;color:var(--text3)">
           <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></span> Déconnexion
@@ -8346,8 +8346,9 @@ function lpSyncUniverse(screenId) {
   if (un) un.style.display = (on && !window.__lpBoth) ? '' : 'none';
   const sw = document.getElementById('sb-switch'), swt = document.getElementById('sb-switch-t');
   if (sw) sw.style.display = (window.__lpBoth && screenId === 'dashboard') ? '' : 'none';
-  if (swt) swt.textContent = on ? 'Passer à LeadPage (abonnement séparé)' : 'Passer à LeadMessage (abonnement séparé)';
-  if (di) di.style.display = (!on && prod === 'leadpage' && screenId === 'dashboard') ? '' : 'none';
+  if (swt) swt.textContent = on ? 'Passer à LeadPage' : 'Passer à LeadMessage';
+  if (di) di.style.display = (!on && prod === 'leadpage' && !window.__lpBoth && screenId === 'dashboard') ? '' : 'none';
+  const swi = document.getElementById('sb-switch-i'); if (swi) swi.src = on ? 'logo.svg' : 'logo-lm.svg';
   try { updateFreeCredits(); } catch (e) {}
   if (on) { try { setGenFormat('msg'); } catch (e) {} }
   else if (document.getElementById('gen-format') && window.__lpFmt === 'msg' && prod !== 'leadmessage' && !window.__lpUserPickedMsg) { /* l'utilisateur LeadPage garde son choix */ }
@@ -8355,6 +8356,16 @@ function lpSyncUniverse(screenId) {
 function lpSwitchProduct() {
   lpSetProduct(lpProduct() === 'leadmessage' ? 'leadpage' : 'leadmessage');
   try { showDashSection('generate', null); loadDashboardData(); } catch (e) {}
+}
+async function lpTryLeadMessage() {
+  // un clic : active LeadMessage sur ce compte (portefeuille séparé, 5 contacts offerts) et bascule dessus
+  try {
+    if (!window.__lpBoth) await apiCall('POST', '/api/auth/unlock-product', {}, true);
+    window.__lpBoth = true; lpSetProduct('leadmessage');
+    try { showDashSection('generate', null); } catch (e) {}
+    showToast('LeadMessage activé : 5 contacts offerts, abonnement séparé de LeadPage');
+    try { loadDashboardData(); } catch (e) {}
+  } catch (e) { showToast('Activation impossible : ' + e.message, '#EF4444'); }
 }
 async function lpUnlockLeadPage() {
   if (!confirm('Activer LeadPage sur ce compte ? C\'est un produit distinct : il a son propre abonnement et ses propres crédits (5 PDF offerts), sans lien avec ceux de LeadMessage.')) return;
