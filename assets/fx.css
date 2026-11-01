@@ -162,6 +162,6 @@ body.lm-app .auth-tab.active{border-color:#E4332E;color:#E4332E}
 body.lm-app .sidebar-item[onclick*="'stats'"],body.lm-app #gen-format,body.lm-app #gen-options-pdf,body.lm-app #dash-kpi .kpi-card:first-child{display:none!important}
 body.lm-app #sb-unlock{color:#E4332E;font-weight:600}
 
-body.lm-app #cm-step3,body.lm-app #cm-agenda-grp{display:none!important}
+body.lm-app #cm-content3>:not(#cm-style-emoji-section){display:none!important}
 body.lm-app #camp-quick-stats>div:nth-child(3),body.lm-app #dash-kpi .kpi-card:nth-child(3){display:none!important}
 body.lm-app #camp-quick-stats{grid-template-columns:repeat(2,1fr)!important}

@@ -13,7 +13,7 @@ module.exports = function (ctx) {
         ['Pas de pitch dans la note', 'La note sert à être accepté, pas à vendre. Gardez l\'offre pour le message qui suit l\'acceptation.'],
         ['Pas de lien', 'Un lien dans la note fait chuter l\'acceptation. Mettez-le, si besoin, dans le deuxième message.'],
         ['Vérifiez la limite de votre compte', 'Selon l\'abonnement, la note est limitée à 200 ou 300 caractères. LeadMessage vous laisse choisir la limite au lancement et raccourcit proprement les textes trop longs.']],
-      check: ['Moins de 200 ou 300 caractères selon le compte', 'Une raison précise de se connecter', 'Aucune offre commerciale', 'Aucun lien', 'Signature réduite au prénom'] },
+      check: ['Moins de 200 ou 300 caractères selon le compte', 'Une raison précise de se connecter', 'Aucune offre commerciale', 'Aucun lien', 'Aucune signature'] },
     'combien-de-messages': { t: 'Combien de messages, et à quel rythme ?', d: 'Un parcours de six messages sur dix jours : cadence conseillée entre mails et LinkedIn, et comment l\'ajuster à votre marché.', lead: 'Il n\'existe pas de rythme universel, mais un point de départ raisonnable évite de saturer vos contacts.',
       secs: [['Un parcours de six messages', 'Trois mails (60 à 90, 35 à 60, puis 25 à 45 mots), une invitation LinkedIn et deux messages LinkedIn. Cela couvre les deux canaux sans harceler.'],
         ['Cadence de départ', 'J0 : invitation et mail 1. J+3 : mail 2. J+4 : message LinkedIn 1 si l\'invitation est acceptée. J+7 : mail 3. J+9 : message LinkedIn 2.'],

@@ -5175,6 +5175,20 @@ html[data-theme="dark"] .auth-tab.active{background:var(--bg4)!important;color:#
             <label><input type="checkbox" data-s="li1" checked onchange="validateGenOptions()"> Message LinkedIn 1</label>
             <label><input type="checkbox" data-s="li2" onchange="validateGenOptions()"> Message LinkedIn 2</label>
           </div>
+          <div id="msg-agenda" style="margin-top:12px;padding-top:12px;border-top:1px dashed rgba(228,51,46,.35)">
+            <label style="font-weight:600"><input type="checkbox" id="msg-agenda-on" onchange="lpAgendaSync(true)"> Proposer mon lien d'agenda dans les messages</label>
+            <div id="msg-agenda-hint" style="margin:4px 0 0 22px;color:var(--text3);font-size:12px"></div>
+            <div id="msg-agenda-steps" style="display:none;margin:8px 0 0 22px">
+              <div style="margin-bottom:6px">À quelle étape ? Le lien est écrit en toutes lettres dans le message.</div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:6px 14px">
+                <label><input type="checkbox" data-a="m1"> Mail 1</label>
+                <label><input type="checkbox" data-a="m2"> Mail 2 (relance)</label>
+                <label><input type="checkbox" data-a="m3"> Mail 3 (dernier message)</label>
+                <label><input type="checkbox" data-a="li1"> Message LinkedIn 1</label>
+                <label><input type="checkbox" data-a="li2"> Message LinkedIn 2</label>
+              </div>
+            </div>
+          </div>
           <div style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">Limite de la note d'invitation :
             <select id="msg-li-limit" style="padding:4px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text1);font-size:12px"><option value="300">300 caractères</option><option value="200">200 caractères</option></select>
           </div>
@@ -6906,6 +6920,7 @@ async function startGeneration() {
     if (lpMsgMode()) {
       formData.append('msg_steps', lpMsgSteps().join(','));
       formData.append('li_limit', (document.getElementById('msg-li-limit') || { value: '300' }).value);
+      formData.append('agenda_steps', lpAgendaSteps());
     }
     // Envoyer la charte sélectionnée si une est choisie
     const charteSel = document.getElementById('charte-selector');
@@ -8258,7 +8273,10 @@ const LP_LM_TXT = [
   [/(\d[\d\s  ]*) PDFs\/mois/g, '$1 contacts/mois'],
   [/PDFs générés/g, 'Parcours générés'], [/PDFs disponibles/g, 'Contacts disponibles'], [/PDFs utilisés/g, 'Contacts traités'],
   [/Stockage des PDFs/g, 'Stockage des fichiers'],
-  [/Logo, couleurs et blocs PDF/g, 'Logo, offre et ton'],
+  [/Logo, couleurs et blocs PDF/g, 'Logo, offre, ton et lien d\'agenda'],
+  [/Blocs PDF/g, 'Ton'],
+  [/Apparaît en lien cliquable dans le CTA du PDF · /g, 'Inséré en toutes lettres dans les messages de votre choix, au lancement · '],
+  [/Comment l'IA rédige les PDFs pour cette charte/g, 'Comment l\'IA rédige vos messages'],
   [/personnaliser les PDFs dans votre ton et avec votre identité/g, 'rédiger les messages dans votre ton et avec votre identité'],
   [/rédiger des PDFs ultra-pertinents/g, 'rédiger des messages ultra-pertinents'],
   [/ \(affiché dans le PDF\)/g, ''],
@@ -8276,7 +8294,7 @@ function lpTextSwap(on) {
     while ((n = w.nextNode())) {
       const par = n.parentElement; if (!par || par.tagName === 'SCRIPT' || par.tagName === 'STYLE') continue;
       if (on) {
-        const cur = n.nodeValue; if (!/PDF|couleurs, l'offre/.test(cur) && n.__lpT == null) continue;
+        const cur = n.nodeValue; if (!/PDF|couleurs, l'offre|CTA du PDF/.test(cur) && n.__lpT == null) continue;
         const base = (n.__lpT != null && n.__lpV === cur) ? n.__lpT : cur;
         let out = base; LP_LM_TXT.forEach(function (x) { out = out.replace(x[0], x[1]); });
         if (out !== base || n.__lpT != null) { if (n.__lpT == null || n.__lpV !== cur) n.__lpT = base; n.nodeValue = out; n.__lpV = out; }
@@ -8831,6 +8849,7 @@ async function loadCharteSelector() {
 }
 
 function onCharteChange(val) {
+  try { setTimeout(lpAgendaSync, 0); } catch (e) {}
   // L'utilisateur a choisi manuellement — on verrouille ce choix
   window.selectedCharteId = val;
 
@@ -9123,7 +9142,7 @@ function cmRenderStep(step) {
     content.style.display = isActive ? 'block' : 'none';
   });
   document.getElementById('cm-btn-back').style.display = step > 1 ? '' : 'none';
-  document.getElementById('cm-btn-next').textContent = (step === 3 || (step === 2 && document.body.classList.contains('lm-app'))) ? 'Sauvegarder ✓' : 'Suivant →';
+  document.getElementById('cm-btn-next').textContent = step === 3 ? 'Sauvegarder ✓' : 'Suivant →';
 }
 
 function cmNextStep() {
@@ -9149,7 +9168,6 @@ function cmNextStep() {
       cmUpdateBlocsCount();
       cmPendingBlocs = null;
     }
-    if (document.body.classList.contains('lm-app')) { cmSaveCharte(); return; }
     cmRenderStep(3);
   } else {
     cmSaveCharte();
@@ -9758,6 +9776,26 @@ function setGenFormat(f) {
 }
 function lpMsgMode() { return window.__lpFmt === 'msg'; }
 function lpCredits(n) { return n; }
+function lpAgendaUrl() {
+  const sel = document.getElementById('charte-selector'); const id = sel ? sel.value : '';
+  const ch = (typeof lpChartes !== 'undefined' ? lpChartes : []).find(function (c) { return String(c.id) === String(id); });
+  return ch && ch.calendly_url ? String(ch.calendly_url).trim() : '';
+}
+function lpAgendaSync(fromToggle) {
+  const on = document.getElementById('msg-agenda-on'), hint = document.getElementById('msg-agenda-hint'), box = document.getElementById('msg-agenda-steps');
+  if (!on || !hint || !box) return;
+  const url = lpAgendaUrl(), chosen = lpMsgSteps();
+  hint.innerHTML = url ? 'Lien de la charte : <b>' + escHtml(url) + '</b>' : 'Aucun lien d\'agenda dans cette charte. Ajoutez-le dans Mes chartes, étape Identité.';
+  box.style.display = on.checked && url ? '' : 'none';
+  Array.prototype.forEach.call(box.querySelectorAll('input'), function (i) {
+    const ok = chosen.indexOf(i.dataset.a) >= 0; i.disabled = !ok; if (!ok) i.checked = false; i.parentElement.style.opacity = ok ? '' : '.45';
+  });
+  if (fromToggle && on.checked && url && !box.querySelector('input:checked')) { const d = box.querySelector('input[data-a="m2"]:not(:disabled)') || box.querySelector('input:not(:disabled)'); if (d) d.checked = true; }
+}
+function lpAgendaSteps() {
+  const on = document.getElementById('msg-agenda-on'); if (!on || !on.checked || !lpAgendaUrl()) return '';
+  return Array.prototype.map.call(document.querySelectorAll('#msg-agenda-steps input:checked'), function (i) { return i.dataset.a; }).join(',');
+}
 function lpMsgSteps() {
   return Array.prototype.map.call(document.querySelectorAll('#msg-steps input:checked'), function (i) { return i.dataset.s; });
 }
@@ -9768,6 +9806,7 @@ function setMsgPreset(p) {
 }
 
 function validateGenOptions() {
+  try { lpAgendaSync(false); } catch (e) {}
   const pdf   = document.getElementById('chk-pdf');
   const mail  = document.getElementById('chk-mail');
   const err   = document.getElementById('gen-opt-error');
